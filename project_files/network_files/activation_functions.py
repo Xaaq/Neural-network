@@ -20,6 +20,7 @@ class AbstractActivationFunction(ABC):
         :param input_data: input data to calculate function on
         :return: result of function
         """
+        raise NotImplementedError
 
     @staticmethod
     @abstractmethod
@@ -30,6 +31,7 @@ class AbstractActivationFunction(ABC):
         :param input_data: input data to calculate gradient on
         :return: result of gradient of function
         """
+        raise NotImplementedError
 
 
 class ReluFunction(AbstractActivationFunction):
