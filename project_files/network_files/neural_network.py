@@ -9,7 +9,22 @@ class NeuralNetwork:
     Class used to contain neural network. It can do actions on it like learning and predicting learned classes.
     To create instance of this class use :class:`NeuralNetworkDirector`.
     """
-    pass
+
+    def __init__(self):
+        """
+        Initializes empty layer list for this neural network.
+        """
+        self.__layer_list = list()
+
+    def add_layer(self, layer_to_add):
+        """
+        Adds layer to this network. This method returns this object so can be chained with itself.
+
+        :param layer_to_add: layer to add to network
+        :return: self
+        """
+        self.__layer_list.append(layer_to_add)
+        return self
 
 
 class AbstractNeuralNetworkBuilder(ABC):
