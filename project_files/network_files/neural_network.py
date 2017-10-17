@@ -3,6 +3,8 @@ Module containing neural network class and things needed to create it - builder 
 """
 from abc import ABC, abstractmethod
 
+import numpy
+
 
 class NeuralNetwork:
     """
@@ -25,6 +27,20 @@ class NeuralNetwork:
         """
         self.__layer_list.append(layer_to_add)
         return self
+
+    @staticmethod
+    def __normalize_data(data_to_normalize):
+        """
+        Normalizes given matrix - transforms values in it to range [0, 1].
+
+        :param data_to_normalize: data to process
+        :return: normalized data
+        """
+        max_number = numpy.max(data_to_normalize)
+        min_number = numpy.min(data_to_normalize)
+        difference = max_number - min_number
+        normalized_data = (data_to_normalize - min_number) / difference
+        return normalized_data
 
 
 class AbstractNeuralNetworkBuilder(ABC):
