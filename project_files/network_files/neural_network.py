@@ -10,7 +10,7 @@ from project_files.network_files.network_layers import FlatteningLayer
 
 class NeuralNetwork:
     """
-    Class used to contain neural network. It can do actions on it like learning and predicting learned classes.
+    Class used to do operations on neural network. It can do actions on it like learning and predicting learned classes.
     To create instance of this class use :class:`NeuralNetworkDirector`.
     """
 
