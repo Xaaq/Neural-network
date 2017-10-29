@@ -49,6 +49,13 @@ class AbstractNeuralNetworkBuilder(ABC):
     """
 
     @abstractmethod
+    def create_neural_network(self):
+        """
+        Creates empty neural network.
+        """
+        raise NotImplementedError
+
+    @abstractmethod
     def set_layers(self):
         """
         Sets layers of neural network.
