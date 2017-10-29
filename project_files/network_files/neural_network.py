@@ -76,6 +76,12 @@ class NeuralNetworkBuilder(AbstractNeuralNetworkBuilder):
     """
     Builder used to build neural network with given number of partially and fully connected layers.
     """
+    def __init__(self):
+        self.__neural_network = None
+
+    def create_neural_network(self):
+        self.__neural_network = NeuralNetwork()
+        pass
 
     def get_result(self):
         pass
