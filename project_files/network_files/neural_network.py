@@ -5,6 +5,8 @@ from abc import ABC, abstractmethod
 
 import numpy
 
+from project_files.network_files.network_layers import FlatteningLayer
+
 
 class NeuralNetwork:
     """
@@ -84,10 +86,10 @@ class NeuralNetworkBuilder(AbstractNeuralNetworkBuilder):
         self.__neural_network = NeuralNetwork()
 
     def set_layers(self):
-        pass
+        self.__neural_network.add_layer(FlatteningLayer())
 
     def get_result(self):
-        pass
+        return self.__neural_network
 
 
 class NeuralNetworkDirector:
@@ -111,5 +113,6 @@ class NeuralNetworkDirector:
         :return: constructed neural network
         :rtype: NeuralNetwork
         """
+        self.__builder.create_neural_network()
         self.__builder.set_layers()
         return self.__builder.get_result()
