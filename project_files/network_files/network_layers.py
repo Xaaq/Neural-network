@@ -3,6 +3,8 @@ Module containing types of layers used in neural networks.
 """
 from abc import ABC, abstractmethod
 
+import numpy
+
 
 class AbstractLayer(ABC):
     """
@@ -30,3 +32,18 @@ class AbstractLayer(ABC):
         :return: output of this layer
         """
         raise NotImplementedError
+
+
+class FlatteningLayer(AbstractLayer):
+    """
+    Layer that flattens or de-flattens data. Used to flatten data that are output of convolutional layers, so
+    fully-connected layers are able to understand this.
+    """
+
+    def forward_propagation(self, input_data):
+        input_image_count, channel_count, image_width, image_height = numpy.shape(input_data)
+        flattened_data = numpy.reshape(input_data, (input_image_count, channel_count * image_width * image_height))
+        return flattened_data
+
+    def backward_propagation(self, input_data):
+        pass
