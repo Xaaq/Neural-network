@@ -56,7 +56,7 @@ class ReluFunction(AbstractActivationFunction):
 class SigmoidFunction(AbstractActivationFunction):
     """
     Sigmoid function used in neural networks. Equation of this function is as follows:
-        `y = 1 / (1 + e^-x)`
+        `y = 1 / (1 + e^(-x))`
     """
 
     @staticmethod
