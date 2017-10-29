@@ -30,6 +30,20 @@ class NeuralNetwork:
         self.__layer_list.append(layer_to_add)
         return self
 
+    def teach_network(self, input_data, data_labels):
+        """
+        Teaches neural network on given data.
+
+        :param input_data: data on which network has to learn on, format of data is multi-dimensional matrix:\n
+            `number of input images x number of channels in image x width of single image x height of single image`
+        :param data_labels: labels of input_data, format of this is vector of labels:\n
+            `number of input images x 1`
+        """
+        print(numpy.shape(input_data))
+        output_data = self.__layer_list[0].forward_propagation(input_data)
+        print(numpy.shape(output_data))
+
+
     @staticmethod
     def __normalize_data(data_to_normalize):
         """
