@@ -43,7 +43,6 @@ class NeuralNetwork:
         output_data = self.__layer_list[0].forward_propagation(input_data)
         print(numpy.shape(output_data))
 
-
     @staticmethod
     def __normalize_data(data_to_normalize):
         """
