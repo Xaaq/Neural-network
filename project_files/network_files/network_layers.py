@@ -47,3 +47,16 @@ class FlatteningLayer(AbstractLayer):
 
     def backward_propagation(self, input_data):
         pass
+
+
+class FullyConnectedLayer(AbstractLayer):
+    """
+    Layer, in which every neuron from previous layer is connected to every neuron in next layer.
+    """
+
+    def forward_propagation(self, input_data):
+        pass
+
+    def backward_propagation(self, input_data):
+        pass
+
