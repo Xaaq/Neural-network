@@ -12,6 +12,17 @@ class AbstractLayer(ABC):
     """
 
     @abstractmethod
+    def initialize_layer(self, data_from_previous_layer):
+        """
+        Initializes this layer parameters based on data from previous layer.
+
+        :param data_from_previous_layer: output data from previous layer
+        :return: output data for next layer
+        """
+        # TODO: tu zrobic zeby inicjalizacja layerow przekazywala sobie tylko rozmiary a nie cale layery
+        raise NotImplementedError
+
+    @abstractmethod
     def forward_propagation(self, input_data):
         # TODO: sprawdzic docstring tej funkcji i to co zwraca
         """
@@ -41,8 +52,8 @@ class FlatteningLayer(AbstractLayer):
     """
 
     def forward_propagation(self, input_data):
-        input_image_count, channel_count, image_width, image_height = numpy.shape(input_data)
-        flattened_data = numpy.reshape(input_data, (input_image_count, channel_count * image_width * image_height))
+        image_count, channel_count, image_width, image_height = numpy.shape(input_data)
+        flattened_data = numpy.reshape(input_data, (image_count, channel_count * image_width * image_height))
         return flattened_data
 
     def backward_propagation(self, input_data):
@@ -54,9 +65,33 @@ class FullyConnectedLayer(AbstractLayer):
     Layer, in which every neuron from previous layer is connected to every neuron in next layer.
     """
 
+    def __init__(self, output_neuron_count):
+        """
+        Sets the number of output neurons from this layer. To initialize theta value use `initialize_layer` method.
+
+        :param output_neuron_count: number of output neurons from this layer
+        """
+        self.__output_neuron_count = output_neuron_count
+
+    def initialize_layer(self, input_neuron_count):
+        # TODO: dokonczyc ta funkcje i te ponizej
+        pass
+
     def forward_propagation(self, input_data):
         pass
 
     def backward_propagation(self, input_data):
         pass
 
+    @staticmethod
+    def __add_bias(input_data):
+        """
+        Adds bias to given data.
+
+        :param input_data: data to which add bias to
+        :return: data wit added bias
+        """
+        image_count, neuron_count = numpy.shape(input_data)
+        bias = numpy.ones(image_count, 1)
+        data_with_bias = numpy.concatenate((bias, input_data), 1)
+        return data_with_bias
