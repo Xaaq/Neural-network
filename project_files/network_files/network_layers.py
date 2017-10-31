@@ -147,5 +147,5 @@ class FullyConnectedLayer(AbstractLayer):
         :return: data multiplied by theta matrix
         """
         transposed_theta = numpy.transpose(self.__theta_matrix)
-        multiplied_data = input_data * transposed_theta
+        multiplied_data = numpy.dot(input_data, transposed_theta)
         return multiplied_data
