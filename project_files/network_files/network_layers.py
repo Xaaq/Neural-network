@@ -12,14 +12,15 @@ class AbstractLayer(ABC):
     """
 
     @abstractmethod
-    def initialize_layer(self, data_from_previous_layer):
+    def initialize_layer(self, input_data_dimensions):
         """
         Initializes this layer parameters based on data from previous layer.
 
-        :param data_from_previous_layer: output data from previous layer
-        :return: output data for next layer
+        :param input_data_dimensions: tuple of dimensions of single image data coming into this layer
+        :type input_data_dimensions: tuple of int
+        :return: tuple of dimensions of single output image data coming from this layer
+        :rtype: tuple of int
         """
-        # TODO: tu zrobic zeby inicjalizacja layerow przekazywala sobie tylko rozmiary a nie cale layery
         raise NotImplementedError
 
     @abstractmethod
@@ -51,13 +52,33 @@ class FlatteningLayer(AbstractLayer):
     fully-connected layers are able to understand this.
     """
 
+    def __init__(self):
+        self.__input_channel_count = None
+        self.__input_image_width = None
+        self.__input_image_height = None
+        self.__output_image_neurons = None
+
+    def initialize_layer(self, input_data_dimensions):
+        (self.__input_channel_count,
+         self.__input_image_width,
+         self.__input_image_height) = input_data_dimensions
+
+        self.__output_image_neurons = (self.__input_channel_count
+                                       * self.__input_image_width
+                                       * self.__input_image_height)
+        return self.__output_image_neurons
+
     def forward_propagation(self, input_data):
-        image_count, channel_count, image_width, image_height = numpy.shape(input_data)
-        flattened_data = numpy.reshape(input_data, (image_count, channel_count * image_width * image_height))
+        image_count, _, _, _ = numpy.shape(input_data)
+        flattened_data = numpy.reshape(input_data, (image_count, self.__output_image_neurons))
         return flattened_data
 
     def backward_propagation(self, input_data):
-        pass
+        image_count, _ = numpy.shape(input_data)
+        multidimensional_data = numpy.reshape(input_data, (self.__input_channel_count,
+                                                           self.__input_image_width,
+                                                           self.__input_image_height))
+        return multidimensional_data
 
 
 class FullyConnectedLayer(AbstractLayer):
