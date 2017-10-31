@@ -29,6 +29,19 @@ class NeuralNetwork:
         """
         self.__layer_list.append(layer_to_add)
         return self
+    
+    def initialize_layers(self, input_data_dimensions):
+        """
+        Initializes all layers in this network. This method should be called after all needed layers have been added to
+        the network.
+
+        :param input_data_dimensions: tuple of dimensions of single input image data
+        """
+        next_layer_dimensions = input_data_dimensions
+
+        for layer in self.__layer_list:
+            next_layer_dimensions = layer.initialize_layer(next_layer_dimensions)
+            
 
     def teach_network(self, input_data, data_labels):
         """
@@ -100,6 +113,9 @@ class NeuralNetworkBuilder(AbstractNeuralNetworkBuilder):
 
     def set_layers(self):
         self.__neural_network.add_layer(FlatteningLayer())
+        
+    def initialize_layers(self):
+        self.__neural_network.initialize_layers()
 
     def get_result(self):
         return self.__neural_network
