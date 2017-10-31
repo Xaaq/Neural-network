@@ -5,6 +5,8 @@ from abc import ABC, abstractmethod
 
 import numpy
 
+from project_files.network_files.activation_functions import SigmoidFunction
+
 
 class AbstractLayer(ABC):
     """
@@ -87,6 +89,7 @@ class FullyConnectedLayer(AbstractLayer):
     Layer, in which every neuron from previous layer is connected to every neuron in next layer.
     """
 
+    # TODO: zobaczyc czy nie lepiej zrobić sub-layery jako osobne klasy
     def __init__(self, output_neuron_count):
         """
         Sets the number of output neurons from this layer. To initialize theta value use `initialize_layer` method.
@@ -101,7 +104,10 @@ class FullyConnectedLayer(AbstractLayer):
         return self.__output_neuron_count
 
     def forward_propagation(self, input_data):
-        pass
+        data_with_bias = self.__add_bias(input_data)
+        multiplied_data = self.__multiply_by_theta(data_with_bias)
+        activated_data = SigmoidFunction.calculate_result(multiplied_data)
+        return activated_data
 
     def backward_propagation(self, input_data):
         pass
@@ -132,3 +138,14 @@ class FullyConnectedLayer(AbstractLayer):
         bias = numpy.ones(image_count, 1)
         data_with_bias = numpy.concatenate((bias, input_data), 1)
         return data_with_bias
+
+    def __multiply_by_theta(self, input_data):
+        """
+        Does multiplicaion of data by theta matrix.
+
+        :param input_data: data to multiply by theta matrix
+        :return: data multiplied by theta matrix
+        """
+        transposed_theta = numpy.transpose(self.__theta_matrix)
+        multiplied_data = input_data * transposed_theta
+        return multiplied_data
