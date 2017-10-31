@@ -94,16 +94,31 @@ class FullyConnectedLayer(AbstractLayer):
         :param output_neuron_count: number of output neurons from this layer
         """
         self.__output_neuron_count = output_neuron_count
+        self.__theta_matrix = None
 
-    def initialize_layer(self, input_neuron_count):
-        # TODO: dokonczyc ta funkcje i te ponizej
-        pass
+    def initialize_layer(self, input_data_dimensions):
+        self.__theta_matrix = self.__random_initialize_theta(input_data_dimensions, self.__output_neuron_count)
+        return self.__output_neuron_count
 
     def forward_propagation(self, input_data):
         pass
 
     def backward_propagation(self, input_data):
         pass
+
+    @staticmethod
+    def __random_initialize_theta(input_neuron_count, output_neuron_count):
+        """
+        Randomly initializes theta matrix based in number of input and output neurons. All values in matrix are
+        initialized in range [-0.5, 0.5].
+
+        :param input_neuron_count: number of input neurons
+        :param output_neuron_count: number of output neurons
+        :return: randomly initialized theta matrix
+        """
+        theta = numpy.random.rand(output_neuron_count, input_neuron_count + 1)
+        theta -= 0.5
+        return theta
 
     @staticmethod
     def __add_bias(input_data):
@@ -113,7 +128,7 @@ class FullyConnectedLayer(AbstractLayer):
         :param input_data: data to which add bias to
         :return: data wit added bias
         """
-        image_count, neuron_count = numpy.shape(input_data)
+        image_count, _ = numpy.shape(input_data)
         bias = numpy.ones(image_count, 1)
         data_with_bias = numpy.concatenate((bias, input_data), 1)
         return data_with_bias
