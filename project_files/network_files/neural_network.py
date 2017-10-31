@@ -29,7 +29,7 @@ class NeuralNetwork:
         """
         self.__layer_list.append(layer_to_add)
         return self
-    
+
     def initialize_layers(self, input_data_dimensions):
         """
         Initializes all layers in this network. This method should be called after all needed layers have been added to
@@ -41,7 +41,6 @@ class NeuralNetwork:
 
         for layer in self.__layer_list:
             next_layer_dimensions = layer.initialize_layer(next_layer_dimensions)
-            
 
     def teach_network(self, input_data, data_labels):
         """
@@ -91,6 +90,13 @@ class AbstractNeuralNetworkBuilder(ABC):
         raise NotImplementedError
 
     @abstractmethod
+    def initialize_layers(self):
+        """
+        Initializes layers of neural network.
+        """
+        raise NotImplementedError
+
+    @abstractmethod
     def get_result(self):
         """
         Returns built neural network.
@@ -113,9 +119,10 @@ class NeuralNetworkBuilder(AbstractNeuralNetworkBuilder):
 
     def set_layers(self):
         self.__neural_network.add_layer(FlatteningLayer())
-        
+
     def initialize_layers(self):
-        self.__neural_network.initialize_layers()
+        input_data_dimensions = (1, 50, 50)
+        self.__neural_network.initialize_layers(input_data_dimensions)
 
     def get_result(self):
         return self.__neural_network
@@ -144,4 +151,5 @@ class NeuralNetworkDirector:
         """
         self.__builder.create_neural_network()
         self.__builder.set_layers()
+        self.__builder.initialize_layers()
         return self.__builder.get_result()
