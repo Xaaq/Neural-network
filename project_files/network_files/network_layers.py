@@ -75,7 +75,8 @@ class FlatteningLayer(AbstractLayer):
 
     def backward_propagation(self, input_data):
         image_count, _ = numpy.shape(input_data)
-        multidimensional_data = numpy.reshape(input_data, (self.__input_channel_count,
+        multidimensional_data = numpy.reshape(input_data, (image_count,
+                                                           self.__input_channel_count,
                                                            self.__input_image_width,
                                                            self.__input_image_height))
         return multidimensional_data
