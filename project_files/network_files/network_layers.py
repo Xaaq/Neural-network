@@ -135,7 +135,7 @@ class FullyConnectedLayer(AbstractLayer):
         :return: data wit added bias
         """
         image_count, _ = numpy.shape(input_data)
-        bias = numpy.ones(image_count, 1)
+        bias = numpy.ones((image_count, 1))
         data_with_bias = numpy.concatenate((bias, input_data), 1)
         return data_with_bias
 
