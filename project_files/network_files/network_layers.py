@@ -141,7 +141,7 @@ class FullyConnectedLayer(AbstractLayer):
 
     def __multiply_by_theta(self, input_data):
         """
-        Does multiplicaion of data by theta matrix.
+        Does multiplication of data by theta matrix.
 
         :param input_data: data to multiply by theta matrix
         :return: data multiplied by theta matrix
