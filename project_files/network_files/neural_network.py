@@ -89,7 +89,7 @@ class NeuralNetwork:
         second_component = numpy.dot(1 - numpy.transpose(data_labels),
                                      numpy.log(1 - network_output_data))
         cost = - (first_component + second_component) / data_count
-        return cost
+        return cost[0][0]
 
 
 class AbstractNeuralNetworkBuilder(ABC):
