@@ -8,6 +8,7 @@ import numpy
 from project_files.network_files.network_layers import FlatteningLayer, FullyConnectedLayer
 
 
+# TODO: sprawdzic w calym projekcie komentarze (szczegolnie pod katem tego czy jest w nich slowo "image", ew. zastapic "data sample"
 class NeuralNetwork:
     """
     Class used to do operations on neural network. It can do actions on it like learning and predicting learned classes.
@@ -35,7 +36,7 @@ class NeuralNetwork:
         Initializes all layers in this network. This method should be called after all needed layers have been added to
         the network.
 
-        :param input_data_dimensions: tuple of dimensions of single input image data
+        :param input_data_dimensions: tuple of dimensions of single input data sample
         :type input_data_dimensions: tuple of int
         """
         next_layer_dimensions = input_data_dimensions
@@ -49,16 +50,20 @@ class NeuralNetwork:
 
         :param input_data: data on which network has to learn on, format of data is multi-dimensional matrix:\n
             `number of input images x number of channels in image x width of single image x height of single image`
-        :param data_labels: labels of input_data, format of this is vector of labels:\n
+        :param data_labels: labels of input data, format of this is vector of labels:\n
             `number of input images x 1`
         """
-        # TODO: dodac do docstring returna i dodac parametr z iloscia iteracji uczenia
+        # TODO: dodac do docstring returna (albo i nie) i dodac parametr z iloscia iteracji uczenia
         normalized_data = self.__normalize_data(input_data)
-        data_after_forward_pass = self.__forward_propagation(normalized_data)
-        subtracted_data = data_after_forward_pass - data_labels
-        self.__backward_propagation(subtracted_data)
 
-        return self.__count_cost(data_after_forward_pass, data_labels)
+        for _ in range(50):
+            data_after_forward_pass = self.__forward_propagation(normalized_data)
+            subtracted_data = data_after_forward_pass - data_labels
+            self.__backward_propagation(subtracted_data)
+            self.__update_weights()
+
+            cost = self.__count_cost(data_after_forward_pass, data_labels)
+            print(cost)
 
     @staticmethod
     def __normalize_data(data_to_normalize):
@@ -96,8 +101,15 @@ class NeuralNetwork:
         """
         data_for_previous_layer = input_data
 
-        for layer in self.__layer_list:
+        for layer in reversed(self.__layer_list):
             data_for_previous_layer = layer.backward_propagation(data_for_previous_layer)
+
+    def __update_weights(self):
+        """
+        Updates weights in all layers in this network based on data from forward and backward propagation.
+        """
+        for layer in self.__layer_list:
+            layer.update_weights()
 
     @staticmethod
     def __count_cost(network_output_data, data_labels):
