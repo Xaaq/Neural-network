@@ -52,12 +52,11 @@ class NeuralNetwork:
         :param data_labels: labels of input_data, format of this is vector of labels:\n
             `number of input images x 1`
         """
-        data_for_next_layer = self.__normalize_data(input_data)
+        normalized_data = self.__normalize_data(input_data)
+        data_after_forward_pass = self.__forward_propagation(normalized_data)
+        self.__backward_propagation(data_after_forward_pass)
 
-        for layer in self.__layer_list:
-            data_for_next_layer = layer.forward_propagation(data_for_next_layer)
-
-        return self.__count_cost(data_for_next_layer, data_labels)
+        return self.__count_cost(data_after_forward_pass, data_labels)
 
     @staticmethod
     def __normalize_data(data_to_normalize):
@@ -72,6 +71,31 @@ class NeuralNetwork:
         difference = max_number - min_number
         normalized_data = (data_to_normalize - min_number) / difference
         return normalized_data
+
+    def __forward_propagation(self, input_data):
+        """
+        Does forward propagation for every layer in this network based on given data.
+
+        :param input_data: data on which to make forward pass
+        :return: output data of network
+        """
+        data_for_next_layer = input_data
+
+        for layer in self.__layer_list:
+            data_for_next_layer = layer.forward_propagation(data_for_next_layer)
+
+        return data_for_next_layer
+
+    def __backward_propagation(self, output_data):
+        """
+        Does backward propagation for every layer in this network based on given data.
+
+        :param output_data: data that are output of neural network used to make backward pass
+        """
+        data_for_previous_layer = output_data
+
+        for layer in self.__layer_list:
+            data_for_previous_layer = layer.backward_propagation(data_for_previous_layer)
 
     @staticmethod
     def __count_cost(network_output_data, data_labels):
@@ -89,6 +113,7 @@ class NeuralNetwork:
         second_component = numpy.dot(1 - numpy.transpose(data_labels),
                                      numpy.log(1 - network_output_data))
         cost = - (first_component + second_component) / data_count
+        # TODO: zobaczyc czy da sie cos zrobic z rym [0][0]
         return cost[0][0]
 
 
