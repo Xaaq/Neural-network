@@ -108,11 +108,13 @@ class FullyConnectedLayer(AbstractLayer):
 
     def forward_propagation(self, input_data):
         data_with_bias = self.__add_bias(input_data)
-        multiplied_data = self.__multiply_by_theta(data_with_bias)
+        multiplied_data = self.__multiply_by_transposed_theta(data_with_bias)
         activated_data = SigmoidFunction.calculate_result(multiplied_data)
         return activated_data
 
     def backward_propagation(self, input_data):
+        data_after_gradient = SigmoidFunction.calculate_gradient(input_data)
+        multiplied_data = self.__multiply_by_theta(data_after_gradient)
         pass
 
     @staticmethod
@@ -142,6 +144,17 @@ class FullyConnectedLayer(AbstractLayer):
         data_with_bias = numpy.concatenate((bias, input_data), 1)
         return data_with_bias
 
+    def __multiply_by_transposed_theta(self, input_data):
+        """
+        Does multiplication of data by transposed theta matrix.
+
+        :param input_data: data to multiply by transposed theta matrix
+        :return: data multiplied by transposed theta matrix
+        """
+        transposed_theta = numpy.transpose(self.__theta_matrix)
+        multiplied_data = numpy.dot(input_data, transposed_theta)
+        return multiplied_data
+
     def __multiply_by_theta(self, input_data):
         """
         Does multiplication of data by theta matrix.
@@ -149,6 +162,5 @@ class FullyConnectedLayer(AbstractLayer):
         :param input_data: data to multiply by theta matrix
         :return: data multiplied by theta matrix
         """
-        transposed_theta = numpy.transpose(self.__theta_matrix)
-        multiplied_data = numpy.dot(input_data, transposed_theta)
+        multiplied_data = numpy.dot(input_data, self.__theta_matrix)
         return multiplied_data
