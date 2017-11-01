@@ -50,7 +50,7 @@ class AbstractLayer(ABC):
         """
         Updates weights of layer based on data gathered from forward and back propagation passes.
         """
-        NotImplementedError
+        raise NotImplementedError
 
 
 class FlatteningLayer(AbstractLayer):
