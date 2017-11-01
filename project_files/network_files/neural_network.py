@@ -73,7 +73,8 @@ class NeuralNetwork:
         normalized_data = (data_to_normalize - min_number) / difference
         return normalized_data
 
-    def __count_cost(self, network_output_data, data_labels):
+    @staticmethod
+    def __count_cost(network_output_data, data_labels):
         """
         Counts cost of learned data.
 
