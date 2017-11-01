@@ -56,7 +56,6 @@ class NeuralNetwork:
         for layer in self.__layer_list:
             data_for_next_layer = layer.forward_propagation(data_for_next_layer)
 
-        print(data_for_next_layer)
         return self.__count_cost(data_for_next_layer, data_labels)
 
     @staticmethod
@@ -84,8 +83,10 @@ class NeuralNetwork:
         """
         data_count, _ = numpy.shape(network_output_data)
 
-        first_component = numpy.transpose(data_labels) * numpy.log(network_output_data)
-        second_component = (1 - numpy.transpose(data_labels)) * numpy.log(1 - network_output_data)
+        first_component = numpy.dot(numpy.transpose(data_labels),
+                                    numpy.log(network_output_data))
+        second_component = numpy.dot((1 - numpy.transpose(data_labels)),
+                                     numpy.log(1 - network_output_data))
         cost = - (first_component + second_component) / data_count
         return cost
 
