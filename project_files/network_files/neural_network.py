@@ -36,6 +36,7 @@ class NeuralNetwork:
         the network.
 
         :param input_data_dimensions: tuple of dimensions of single input image data
+        :type input_data_dimensions: tuple of int
         """
         next_layer_dimensions = input_data_dimensions
 
