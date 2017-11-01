@@ -64,6 +64,7 @@ class NeuralNetwork:
             self.__update_weights()
 
             cost = self.__count_cost(data_after_forward_pass, data_labels)
+            # TODO: zrobic cos z tym printem (albo log albo nie wiem)
             print(cost)
 
     def predict(self, input_data):
