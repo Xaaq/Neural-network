@@ -47,6 +47,13 @@ class AbstractLayer(ABC):
         """
         raise NotImplementedError
 
+    @abstractmethod
+    def update_weights(self):
+        """
+        Updates weights of layer based on data gathered from forward and back propagation passes.
+        """
+        NotImplementedError
+
 
 class FlatteningLayer(AbstractLayer):
     """
@@ -86,6 +93,9 @@ class FlatteningLayer(AbstractLayer):
                                                            self.__input_image_height))
         return multidimensional_data
 
+    def update_weights(self):
+        pass
+
 
 class FullyConnectedLayer(AbstractLayer):
     """
@@ -101,6 +111,8 @@ class FullyConnectedLayer(AbstractLayer):
         """
         self.__output_neuron_count = output_neuron_count
         self.__theta_matrix = None
+        self.__data_before_forward_multiplication = None
+        self.__data_before_backward_multiplication = None
 
     def initialize_layer(self, input_data_dimensions):
         self.__theta_matrix = self.__random_initialize_theta(input_data_dimensions, self.__output_neuron_count)
@@ -110,13 +122,20 @@ class FullyConnectedLayer(AbstractLayer):
         data_with_bias = self.__add_bias(input_data)
         multiplied_data = self.__multiply_by_transposed_theta(data_with_bias)
         activated_data = SigmoidFunction.calculate_result(multiplied_data)
+
+        self.__data_before_forward_multiplication = data_with_bias
         return activated_data
 
     def backward_propagation(self, input_data):
         data_after_gradient = SigmoidFunction.calculate_gradient(input_data)
         multiplied_data = self.__multiply_by_theta(data_after_gradient)
         data_with_removed_bias = self.__remove_bias(multiplied_data)
+
+        self.__data_before_backward_multiplication = data_after_gradient
         return data_with_removed_bias
+
+    def update_weights(self):
+        self.__theta_matrix -= 0.1 * self.__count_weights_gradient()
 
     @staticmethod
     def __random_initialize_theta(input_neuron_count, output_neuron_count):
@@ -175,3 +194,18 @@ class FullyConnectedLayer(AbstractLayer):
         """
         multiplied_data = numpy.dot(input_data, self.__theta_matrix)
         return multiplied_data
+
+    def __count_weights_gradient(self):
+        """
+        Counts and returns gradient of weights based on data saved during forward and backward propagation. After that
+        cleans variables in which these data were contained.
+
+        :return: gradient of weights of this layer
+        """
+        transposed_backward_data = numpy.transpose(self.__data_before_backward_multiplication)
+        weights_gradient = numpy.dot(transposed_backward_data, self.__data_before_forward_multiplication)
+
+        self.__data_before_forward_multiplication = None
+        self.__data_before_backward_multiplication = None
+
+        return weights_gradient
