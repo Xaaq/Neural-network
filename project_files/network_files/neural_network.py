@@ -5,7 +5,7 @@ from abc import ABC, abstractmethod
 
 import numpy
 
-from project_files.network_files.network_layers import FlatteningLayer
+from project_files.network_files.network_layers import FlatteningLayer, FullyConnectedLayer
 
 
 class NeuralNetwork:
@@ -51,9 +51,12 @@ class NeuralNetwork:
         :param data_labels: labels of input_data, format of this is vector of labels:\n
             `number of input images x 1`
         """
-        print(numpy.shape(input_data))
-        output_data = self.__layer_list[0].forward_propagation(input_data)
-        print(numpy.shape(output_data))
+        data_for_next_layer = self.__normalize_data(input_data)
+
+        for layer in self.__layer_list:
+            data_for_next_layer = layer.forward_propagation(data_for_next_layer)
+
+        print(data_for_next_layer)
 
     @staticmethod
     def __normalize_data(data_to_normalize):
@@ -119,6 +122,9 @@ class NeuralNetworkBuilder(AbstractNeuralNetworkBuilder):
 
     def set_layers(self):
         self.__neural_network.add_layer(FlatteningLayer())
+        self.__neural_network.add_layer(FullyConnectedLayer(25))
+        self.__neural_network.add_layer(FullyConnectedLayer(25))
+        self.__neural_network.add_layer(FullyConnectedLayer(1))
 
     def initialize_layers(self):
         input_data_dimensions = (1, 50, 50)
