@@ -27,13 +27,11 @@ class AbstractLayer(ABC):
 
     @abstractmethod
     def forward_propagation(self, input_data):
-        # TODO: sprawdzic docstring tej funkcji i to co zwraca
         """
-        Does forward pass through this layer and returns tuple of outputs: one before and one after activation function.
+        Does forward pass through this layer and returns its output.
 
         :param input_data: data on which make forward pass
-        :return: data before activation function, data after activation function
-        :rtype: AbstractLayer.ForwardPropagationData
+        :return: output data of this layer
         """
         raise NotImplementedError
 
@@ -127,7 +125,7 @@ class FullyConnectedLayer(AbstractLayer):
         return activated_data
 
     def backward_propagation(self, input_data):
-        data_after_gradient = SigmoidFunction.calculate_gradient(input_data)
+        data_after_gradient = input_data * SigmoidFunction.calculate_gradient(input_data)
         multiplied_data = self.__multiply_by_theta(data_after_gradient)
         data_with_removed_bias = self.__remove_bias(multiplied_data)
 
@@ -135,6 +133,7 @@ class FullyConnectedLayer(AbstractLayer):
         return data_with_removed_bias
 
     def update_weights(self):
+        # TODO: dac tu alphe do parametru
         self.__theta_matrix -= 0.1 * self.__count_weights_gradient()
 
     @staticmethod
