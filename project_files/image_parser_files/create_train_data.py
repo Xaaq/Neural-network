@@ -2,6 +2,7 @@ import os
 from random import shuffle
 
 import cv2
+import numpy
 import numpy as np
 from tqdm import tqdm
 
@@ -18,4 +19,5 @@ def create_train_data(train_dir, img_size):
         img = cv2.resize(img, (img_size, img_size))
         training_data.append([np.array(img)])
         training_data_labels.append([label])
+    training_data_labels = numpy.array(training_data_labels)
     return training_data, training_data_labels
