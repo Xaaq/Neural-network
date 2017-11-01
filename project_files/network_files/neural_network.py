@@ -57,6 +57,7 @@ class NeuralNetwork:
             data_for_next_layer = layer.forward_propagation(data_for_next_layer)
 
         print(data_for_next_layer)
+        return self.__count_cost(data_for_next_layer, data_labels)
 
     @staticmethod
     def __normalize_data(data_to_normalize):
@@ -71,6 +72,21 @@ class NeuralNetwork:
         difference = max_number - min_number
         normalized_data = (data_to_normalize - min_number) / difference
         return normalized_data
+
+    def __count_cost(self, network_output_data, data_labels):
+        """
+        Counts cost of learned data.
+
+        :param network_output_data: predicted data outputted by neural network
+        :param data_labels: labels of data
+        :return: cost of learned data
+        """
+        data_count, _ = numpy.shape(network_output_data)
+
+        first_component = numpy.transpose(data_labels) * numpy.log(network_output_data)
+        second_component = (1 - numpy.transpose(data_labels)) * numpy.log(1 - network_output_data)
+        cost = - (first_component + second_component) / data_count
+        return cost
 
 
 class AbstractNeuralNetworkBuilder(ABC):
