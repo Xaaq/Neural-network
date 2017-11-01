@@ -65,6 +65,18 @@ class NeuralNetwork:
             cost = self.__count_cost(data_after_forward_pass, data_labels)
             print(cost)
 
+    def predict(self, input_data):
+        """
+        Predicts output classes of input data.
+
+        :param input_data: data to predict
+        :return: output classes for every date sample
+        """
+        normalized_data = self.__normalize_data(input_data)
+        output_data = self.__forward_propagation(normalized_data)
+        rounded_output_data = numpy.round(output_data)
+        return rounded_output_data
+
     @staticmethod
     def __normalize_data(data_to_normalize):
         """
