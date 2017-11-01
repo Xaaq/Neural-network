@@ -44,6 +44,7 @@ class NeuralNetwork:
         for layer in self.__layer_list:
             next_layer_dimensions = layer.initialize_layer(next_layer_dimensions)
 
+    # TODO: zobaczyc czy alphe dac jako arguent tej metody czy jako jakas zmienna tej klasy
     def teach_network(self, input_data, data_labels):
         """
         Teaches neural network on given data.
