@@ -130,16 +130,16 @@ class AbstractNeuralNetworkBuilder(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def set_layers(self):
+    def add_layers(self):
         """
-        Sets layers of neural network.
+        Add layers to neural network.
         """
         raise NotImplementedError
 
     @abstractmethod
     def initialize_layers(self):
         """
-        Initializes layers of neural network.
+        Initializes all layers added to neural network.
         """
         raise NotImplementedError
 
@@ -164,7 +164,7 @@ class NeuralNetworkBuilder(AbstractNeuralNetworkBuilder):
     def create_neural_network(self):
         self.__neural_network = NeuralNetwork()
 
-    def set_layers(self):
+    def add_layers(self):
         self.__neural_network.add_layer(FlatteningLayer())
         self.__neural_network.add_layer(FullyConnectedLayer(25))
         self.__neural_network.add_layer(FullyConnectedLayer(25))
@@ -200,6 +200,6 @@ class NeuralNetworkDirector:
         :rtype: NeuralNetwork
         """
         self.__builder.create_neural_network()
-        self.__builder.set_layers()
+        self.__builder.add_layers()
         self.__builder.initialize_layers()
         return self.__builder.get_result()
