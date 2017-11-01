@@ -52,9 +52,11 @@ class NeuralNetwork:
         :param data_labels: labels of input_data, format of this is vector of labels:\n
             `number of input images x 1`
         """
+        # TODO: dodac do docstring returna i dodac parametr z iloscia iteracji uczenia
         normalized_data = self.__normalize_data(input_data)
         data_after_forward_pass = self.__forward_propagation(normalized_data)
-        self.__backward_propagation(data_after_forward_pass)
+        subtracted_data = data_after_forward_pass - data_labels
+        self.__backward_propagation(subtracted_data)
 
         return self.__count_cost(data_after_forward_pass, data_labels)
 
@@ -86,13 +88,13 @@ class NeuralNetwork:
 
         return data_for_next_layer
 
-    def __backward_propagation(self, output_data):
+    def __backward_propagation(self, input_data):
         """
         Does backward propagation for every layer in this network based on given data.
 
-        :param output_data: data that are output of neural network used to make backward pass
+        :param input_data: data that are output of neural network used to make backward pass
         """
-        data_for_previous_layer = output_data
+        data_for_previous_layer = input_data
 
         for layer in self.__layer_list:
             data_for_previous_layer = layer.backward_propagation(data_for_previous_layer)
