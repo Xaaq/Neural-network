@@ -55,6 +55,9 @@ class FlatteningLayer(AbstractLayer):
     """
 
     def __init__(self):
+        """
+        Creates this layer with data set to None. To initialize this layer's data use `initialize_layer` method.
+        """
         self.__input_channel_count = None
         self.__input_image_width = None
         self.__input_image_height = None
