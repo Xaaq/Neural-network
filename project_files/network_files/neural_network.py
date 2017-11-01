@@ -85,7 +85,7 @@ class NeuralNetwork:
 
         first_component = numpy.dot(numpy.transpose(data_labels),
                                     numpy.log(network_output_data))
-        second_component = numpy.dot((1 - numpy.transpose(data_labels)),
+        second_component = numpy.dot(1 - numpy.transpose(data_labels),
                                      numpy.log(1 - network_output_data))
         cost = - (first_component + second_component) / data_count
         return cost
