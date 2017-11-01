@@ -115,7 +115,8 @@ class FullyConnectedLayer(AbstractLayer):
     def backward_propagation(self, input_data):
         data_after_gradient = SigmoidFunction.calculate_gradient(input_data)
         multiplied_data = self.__multiply_by_theta(data_after_gradient)
-        pass
+        data_with_removed_bias = self.__remove_bias(multiplied_data)
+        return data_with_removed_bias
 
     @staticmethod
     def __random_initialize_theta(input_neuron_count, output_neuron_count):
@@ -137,12 +138,22 @@ class FullyConnectedLayer(AbstractLayer):
         Adds bias to given data.
 
         :param input_data: data to which add bias to
-        :return: data wit added bias
+        :return: data with added bias
         """
         image_count, _ = numpy.shape(input_data)
         bias = numpy.ones((image_count, 1))
         data_with_bias = numpy.concatenate((bias, input_data), 1)
         return data_with_bias
+
+    @staticmethod
+    def __remove_bias(input_data):
+        """
+        Removes bias from given data.
+
+        :param input_data: data to remove bias from
+        :return: data with removed bias
+        """
+        return input_data[:, 1:]
 
     def __multiply_by_transposed_theta(self, input_data):
         """
