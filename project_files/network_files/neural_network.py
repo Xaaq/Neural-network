@@ -193,10 +193,11 @@ class NeuralNetworkBuilder(AbstractNeuralNetworkBuilder):
         self.__neural_network = NeuralNetwork()
 
     def add_layers(self):
-        self.__neural_network.add_layer(FlatteningLayer())
-        self.__neural_network.add_layer(FullyConnectedLayer(25))
-        self.__neural_network.add_layer(FullyConnectedLayer(25))
-        self.__neural_network.add_layer(FullyConnectedLayer(1))
+        self.__neural_network \
+            .add_layer(FlatteningLayer()) \
+            .add_layer(FullyConnectedLayer(25)) \
+            .add_layer(FullyConnectedLayer(25)) \
+            .add_layer(FullyConnectedLayer(1))
 
     def initialize_layers(self):
         input_data_dimensions = (1, 50, 50)
