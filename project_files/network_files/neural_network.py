@@ -79,6 +79,17 @@ class NeuralNetwork:
         rounded_output_data = numpy.round(output_data)
         return rounded_output_data
 
+    def compute_numerical_gradient(self, input_data, data_labels):
+        """
+        Computes gradient of weights in this network by counting it numerical way. This method is very slow and should
+        be used only to check if gradient counted by other methods is computed correctly.
+
+        :param input_data: data on which compute gradient
+        :param data_labels: labels of input data
+        :return: gradient of weights in this network
+        """
+        # TODO: dokonczyc
+
     @staticmethod
     def __normalize_data(data_to_normalize):
         """
