@@ -20,4 +20,5 @@ def create_train_data(train_dir, img_size):
         training_data.append([np.array(img)])
         training_data_labels.append([label])
     training_data_labels = numpy.array(training_data_labels)
+    # TODO: change this method to more class-like
     return training_data, training_data_labels

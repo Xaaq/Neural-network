@@ -2,6 +2,7 @@ def label_img(img):
     word_label = img.split('.')[-3]
     # conversion to one-hot array [cat,dog]
     #                            [much cat, no dog]
+    # TODO: change this method to more class-like
     if word_label == 'cat':
         return 1
     #                             [no cat, very doggo]
