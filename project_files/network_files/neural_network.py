@@ -72,7 +72,7 @@ class NeuralNetwork:
         Predicts output classes of input data.
 
         :param input_data: data to predict
-        :return: output classes for every date sample
+        :return: output classes for every data sample
         """
         normalized_data = self.__normalize_data(input_data)
         output_data = self.__forward_propagation(normalized_data)
@@ -140,7 +140,7 @@ class NeuralNetwork:
                                     numpy.log(network_output_data))
         second_component = numpy.dot(1 - numpy.transpose(data_labels),
                                      numpy.log(1 - network_output_data))
-        cost = - (first_component + second_component) / data_count
+        cost = -(first_component + second_component) / data_count
         # TODO: zobaczyc czy da sie cos zrobic z rym [0][0]
         return cost[0][0]
 
