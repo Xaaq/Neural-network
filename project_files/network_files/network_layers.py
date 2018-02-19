@@ -23,6 +23,7 @@ class AbstractLayer(ABC):
         :return: tuple of dimensions of single output image data coming from this layer
         :rtype: tuple of int
         """
+        # TODO: zrobic zeby nie trzeba bylo wywolywac tej metody, tylko zeby layery bylyinicjalizowane w konsruktorze
         raise NotImplementedError
 
     @abstractmethod
