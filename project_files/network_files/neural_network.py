@@ -205,6 +205,7 @@ class NeuralNetworkBuilder(AbstractNeuralNetworkBuilder):
 
     def create_neural_network(self):
         self.__neural_network = NeuralNetwork()
+    #     TODO: zobaczyc czy budowniczy nie powininen miec w konstruktorze tworzenia sieci
 
     def add_layers(self):
         self.__neural_network \

@@ -1,33 +1,20 @@
 import numpy
 
 from project_files.image_parser_files.create_train_data import create_train_data
-from project_files.network_files.neural_network import NeuralNetworkDirector, NeuralNetworkBuilder, NeuralNetwork
+from project_files.network_files.neural_network import NeuralNetworkDirector, NeuralNetworkBuilder
 
-# building neural network
-builder = NeuralNetworkBuilder()
-director = NeuralNetworkDirector(builder)
-parameters = NeuralNetwork.ParametersContainer(1)
-network = director.construct(parameters)
+train_data_x, train_data_y = create_train_data("images\\small_set", 50)
 
-# create data to train and test
-train_data_x, train_data_y = create_train_data("images\\train_set", 50)
-test_data_x, test_data_y = create_train_data("images\\test_set", 50)
+network_builder = NeuralNetworkBuilder()
+network_director = NeuralNetworkDirector(network_builder)
+neural_network = network_director.construct()
 
-# network learning system isn't working 100%
-network.learn_network(train_data_x, train_data_y)
+before = neural_network.predict(train_data_x)
+neural_network.teach_network(train_data_x, train_data_y)
+after = neural_network.predict(train_data_x)
 
-# propagate test and train data
-propagated_train_data = network.propagate_data_through_network(train_data_x)
-rounded_propagated_train_data = numpy.round(propagated_train_data)
-
-propagated_test_data = network.propagate_data_through_network(test_data_x)
-rounded_propagated_test_data = numpy.round(propagated_test_data)
-
-# count good guessed results of learning
-good_train_examples_count = numpy.sum((rounded_propagated_train_data == train_data_y) + 0)
-good_test_examples_count = numpy.sum((rounded_propagated_train_data == test_data_y) + 0)
-
-print("{} of {} examples from train set are guessed correctly by network."
-      .format(good_train_examples_count, len(train_data_x)))
-print("{} of {} examples from test set are guessed correctly by network."
-      .format(good_test_examples_count, len(test_data_x)))
+print(before)
+print(after)
+# print(train_data_y)
+# n = numpy.array([[[3, 4, 8], [3, 55, 8]], [[99, 3, 2], [322, 2, 22]]])
+# print(n)
