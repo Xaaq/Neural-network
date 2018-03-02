@@ -7,7 +7,7 @@ import numpy
 
 from project_files.network_files.network_layers import FlatteningLayer, FullyConnectedLayer
 
-# zrobic testy
+# TODO: zrobic testy
 # TODO: wypisac typy argumentow i typy zwracane wszystkich funkcji
 # TODO: sprawdzic w calym projekcie komentarze (szczegolnie pod katem tego czy jest w nich slowo "image", ew. zastapic "data sample"
 class NeuralNetwork:
