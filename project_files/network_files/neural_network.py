@@ -12,6 +12,8 @@ from project_files.network_files.network_layers import FlatteningLayer, FullyCon
 # TODO: przeskanowac wszystko pylintem
 # TODO: wypisac typy argumentow i typy zwracane wszystkich funkcji
 # TODO: sprawdzic w calym projekcie komentarze (szczegolnie pod katem tego czy jest w nich slowo "image", ew. zastapic "data sample"
+# TODO: zamienic fory na list comprehension
+# TODO: zmienic ustawienia pycharma zeby formatowalo pod pep8
 class NeuralNetwork:
     """
     Class used to do operations on neural network. It can do actions on it like learning and predicting learned classes.
