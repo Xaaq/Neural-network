@@ -7,6 +7,9 @@ import numpy
 
 from project_files.network_files.network_layers import FlatteningLayer, FullyConnectedLayer
 
+# TODO: zastosowac podobna notacje co nizej co do docstringow rzeczy ktore maja wzory
+# .. math ::
+#         E = \\sum_{j=0}^k |p(x_j) - y_j|^2
 # TODO: zrobic testy
 # TODO: jesli sie da to z klas wywalic inity i przerzucic zmienne inicjalizowane w nich do ciala klasy
 # TODO: przeskanowac wszystko pylintem
