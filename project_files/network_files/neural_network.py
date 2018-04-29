@@ -30,7 +30,7 @@ class NeuralNetwork:
         """
         Initializes empty layer list for this neural network.
         """
-        self.__layer_list = list()
+        self.__layer_list = []
 
     def add_layer(self, layer_to_add):
         """
