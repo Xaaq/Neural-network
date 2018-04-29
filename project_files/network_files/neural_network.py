@@ -16,6 +16,7 @@ from project_files.network_files.network_layers import FlatteningLayer, FullyCon
 # TODO: wypisac typy argumentow i typy zwracane wszystkich funkcji (w docstringach tez)
 # TODO: sprawdzic w calym projekcie komentarze (szczegolnie pod katem tego czy jest w nich slowo "image", ew. zastapic "data sample"
 # TODO: zamienic fory na list comprehension
+# TODO: dodac setery i getery za pomoca @property
 # TODO: zmienic ustawienia pycharma zeby formatowalo pod pep8
 # TODO: zamienic mnozenie macierzy na symbol "@" i zobaczyc czy jest on szybszy od mnozenia za pomoca metody "dot" (chyba tak sie nazywala)
 # TODO: zobaczyc czy da sie cos zrobic z jupyter notebook (w sensie czy pasowalby on tu do projektu)
