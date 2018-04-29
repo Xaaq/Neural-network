@@ -23,7 +23,7 @@ class AbstractLayer(ABC):
         :return: tuple of dimensions of single output image data coming from this layer
         :rtype: tuple of int
         """
-        # TODO: zrobic zeby nie trzeba bylo wywolywac tej metody, tylko zeby layery bylyinicjalizowane w konsruktorze
+        # TODO: zrobic zeby nie trzeba bylo wywolywac tej metody, tylko zeby layery bylyinicjalizowane w konsruktorze (chociaz zobaczyc czy to czegos nie zepsuje)
         raise NotImplementedError
 
     @abstractmethod
@@ -68,7 +68,7 @@ class FlatteningLayer(AbstractLayer):
         self.__input_image_width = None
         self.__input_image_height = None
         self.__output_image_neurons = None
-    # TODO: zrobic __output_image_neurons jako property klasy
+    # TODO: zrobic __output_image_neurons jako property klasy (chociaz zobaczyc czy to czegos nie zepsuje)
     def initialize_layer(self, input_data_dimensions):
         (self.__input_channel_count,
          self.__input_image_width,
