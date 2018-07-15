@@ -5,6 +5,7 @@ from abc import ABC, abstractmethod
 
 import numpy
 
+
 # TODO: sprawdzic czy te funkcje (i ogolnie wsyzstkie inne jakie zrobilem) moga przyjmowac wielowymiarowe wektory i dobrze je zwracaja
 class AbstractActivationFunction(ABC):
     """
