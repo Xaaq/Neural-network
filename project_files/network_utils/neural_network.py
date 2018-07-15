@@ -21,6 +21,7 @@ from project_files.network_utils.network_layers import FlatteningLayer, FullyCon
 # TODO: zamienic mnozenie macierzy na symbol "@" i zobaczyc czy jest on szybszy od mnozenia za pomoca metody "dot" (chyba tak sie nazywala)
 # TODO: zobaczyc czy da sie cos zrobic z jupyter notebook (w sensie czy pasowalby on tu do projektu)
 # TODO: dodac requirements.txt
+# TODO: zmienic wszystkie numpy. na np.
 class NeuralNetwork:
     """
     Class used to do operations on neural network. It can do actions on it like learning and predicting learned classes.
