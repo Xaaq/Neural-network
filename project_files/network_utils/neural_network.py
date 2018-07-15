@@ -62,10 +62,8 @@ class NeuralNetwork:
         """
         Teaches neural network on given data.
 
-        :param input_data: data on which network has to learn on, format of data is multi-dimensional matrix:\n
-            `number of input images x number of channels in image x width of single image x height of single image`
-        :param data_labels: labels of input data, format of this is vector of labels:\n
-            `number of input images x 1`
+        :param input_data: data on which network has to learn on
+        :param data_labels: labels of input data
         """
         # TODO: dodac do docstring returna (albo i nie) i dodac parametr z iloscia iteracji uczenia
         normalized_data = self.__normalize_data(input_data)

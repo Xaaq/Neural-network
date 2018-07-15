@@ -38,8 +38,7 @@ class AbstractActivationFunction(ABC):
 class ReluFunction(AbstractActivationFunction):
     """
     RELU function used in neural networks. It works as follows:
-        `if x < 0 then y = 0`
-
+        `if x < 0 then y = 0`\n
         `if x >= 0 then y = x`
     """
 
