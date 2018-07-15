@@ -37,13 +37,11 @@ class NeuralNetwork:
 
     def add_layer(self, layer_to_add):
         """
-        Adds layer to this network. This method returns this object so can be chained with itself.
+        Adds layer to this network.
 
         :param layer_to_add: layer to add to network
-        :return: self
         """
         self.__layer_list.append(layer_to_add)
-        return self
 
     def initialize_layers(self, input_data_dimensions):
         """
