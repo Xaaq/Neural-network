@@ -16,7 +16,8 @@ class AbstractLayer(ABC):
     @abstractmethod
     def initialize_layer(self, input_data_dimensions):
         """
-        Initializes this layer parameters based on data from previous layer.
+        Initializes this layer parameters based on data from previous layer. Also returns dimensions of data coming out
+        of this layer.
 
         :param input_data_dimensions: tuple of dimensions of single image data coming into this layer
         :type input_data_dimensions: tuple of int
