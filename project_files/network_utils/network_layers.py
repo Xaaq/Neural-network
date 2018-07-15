@@ -69,6 +69,7 @@ class FlatteningLayer(AbstractLayer):
         self.__input_image_width = None
         self.__input_image_height = None
         self.__output_image_neurons = None
+
     # TODO: zrobic __output_image_neurons jako property klasy (chociaz zobaczyc czy to czegos nie zepsuje)
     def initialize_layer(self, input_data_dimensions):
         (self.__input_channel_count,
@@ -78,7 +79,7 @@ class FlatteningLayer(AbstractLayer):
         self.__output_image_neurons = (self.__input_channel_count
                                        * self.__input_image_width
                                        * self.__input_image_height)
-        return self.__output_image_neurons
+        return self.__output_image_neurons,
 
     def forward_propagation(self, input_data):
         image_count, _, _, _ = numpy.shape(input_data)
@@ -96,11 +97,13 @@ class FlatteningLayer(AbstractLayer):
     def update_weights(self):
         pass
 
+
 # TODO: zrobic zeby mozna bylo w layerze uzyc dowolnej funkcji aktywacji, nie tylko sigmoid
 class FullyConnectedLayer(AbstractLayer):
     """
     Layer, in which every neuron from previous layer is connected to every neuron in next layer.
     """
+    __input_data_dimension_shape = 1
 
     # TODO: zobaczyc czy nie lepiej zrobić sub-layery jako osobne klasy
     def __init__(self, output_neuron_count):
@@ -115,8 +118,12 @@ class FullyConnectedLayer(AbstractLayer):
         self.__data_before_backward_multiplication = None
 
     def initialize_layer(self, input_data_dimensions):
+        if len(input_data_dimensions) != self.__input_data_dimension_shape:
+            raise ValueError("Provided data dimensions shape is wrong")
+        # TODO: zrobic zeby sprawdzanie rozmiaru podanych danych odbywalo sie w jakis lepszy sposob (moze AbstractLayer) i zastanowaic sie czy input data size powinno byc zmienna statyczna
+
         self.__theta_matrix = self.__random_initialize_theta(input_data_dimensions, self.__output_neuron_count)
-        return self.__output_neuron_count
+        return self.__output_neuron_count,
 
     def forward_propagation(self, input_data):
         data_with_bias = self.__add_bias(input_data)
@@ -148,6 +155,7 @@ class FullyConnectedLayer(AbstractLayer):
         :param output_neuron_count: number of output neurons
         :return: randomly initialized theta matrix
         """
+        input_neuron_count = input_neuron_count[0]
         theta = numpy.random.rand(output_neuron_count, input_neuron_count + 1)
         theta -= 0.5
         return theta
