@@ -112,6 +112,7 @@ class NeuralNetwork:
         :param data_to_normalize: data to process
         :return: normalized data
         """
+        # TODO: zrobic cos z tym bo to nie normalizuje w taki sposob jak napotkalo dane uczace, tylko zawsze na podstawie aktualnych danych
         max_number = numpy.max(data_to_normalize)
         min_number = numpy.min(data_to_normalize)
         difference = max_number - min_number
