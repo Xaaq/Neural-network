@@ -11,7 +11,7 @@ from project_files.network_utils.network_layers import FlatteningLayer, FullyCon
 # .. math ::
 #         E = \\sum_{j=0}^k |p(x_j) - y_j|^2
 # TODO: zrobic testy
-# TODO: jesli sie da to z klas wywalic inity i przerzucic zmienne inicjalizowane w nich do ciala klasy
+# TODO: jesli sie da to z klas wywalic inity i przerzucic zmienne inicjalizowane w nich do ciala klasy (OSTROŻNIE! to zmienne statyczne wtedy beda)
 # TODO: przeskanowac wszystko pylintem
 # TODO: wypisac typy argumentow i typy zwracane wszystkich funkcji (w docstringach tez)
 # TODO: sprawdzic w calym projekcie komentarze (szczegolnie pod katem tego czy jest w nich slowo "image", ew. zastapic "data sample"
