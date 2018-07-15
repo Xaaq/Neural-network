@@ -1,11 +1,11 @@
 """
 Module containing neural network class and things needed to create it - builder and director.
 """
-from abc import ABC, abstractmethod
 
 import numpy
 
-from project_files.network_utils.network_layers import FlatteningLayer, FullyConnectedLayer
+from project_files.network_utils.network_layers import AbstractLayer
+
 
 # TODO: zastosowac podobna notacje co nizej co do docstringow rzeczy ktore maja wzory
 # .. math ::
@@ -71,7 +71,7 @@ class NeuralNetwork:
         # TODO: dodac do docstring returna (albo i nie) i dodac parametr z iloscia iteracji uczenia
         normalized_data = self.__normalize_data(input_data)
 
-        for _ in range(50):
+        for _ in range(500):
             data_after_forward_pass = self.__forward_propagation(normalized_data)
             subtracted_data = data_after_forward_pass - data_labels
             self.__backward_propagation(subtracted_data)
@@ -168,7 +168,7 @@ class NeuralNetwork:
                                      numpy.log(1 - network_output_data))
         cost = -(first_component + second_component) / data_count
         # TODO: zobaczyc czy da sie cos zrobic z rym [0][0]
-        return cost[0][0]
+        return cost[0]
 
 
 class NeuralNetworkBuilder:
