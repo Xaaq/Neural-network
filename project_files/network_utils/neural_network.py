@@ -1,6 +1,7 @@
 """
 Module containing neural network class and things needed to create it - builder and director.
 """
+from typing import List
 
 import numpy
 
@@ -29,32 +30,11 @@ class NeuralNetwork:
     To create instance of this class use :class:`NeuralNetworkDirector`.
     """
 
-    def __init__(self):
+    def __init__(self, list_of_layers: List[AbstractLayer]):
         """
         Initializes empty layer list for this neural network.
         """
-        self.__layer_list = []
-
-    def add_layer(self, layer_to_add):
-        """
-        Adds layer to this network.
-
-        :param layer_to_add: layer to add to network
-        """
-        self.__layer_list.append(layer_to_add)
-
-    def initialize_layers(self, input_data_dimensions):
-        """
-        Initializes all layers in this network. This method should be called after all needed layers have been added to
-        the network.
-
-        :param input_data_dimensions: tuple of dimensions of single input data sample
-        :type input_data_dimensions: tuple of int
-        """
-        next_layer_dimensions = input_data_dimensions
-
-        for layer in self.__layer_list:
-            next_layer_dimensions = layer.initialize_layer(next_layer_dimensions)
+        self.__layer_list = list_of_layers
 
     # TODO: zrobic zeby nie trzeba bylo podawac labelek do uczenia w osobnych mini-tablicach
     # TODO: zobaczyc czy alphe dac jako arguent tej metody czy jako jakas zmienna tej klasy
@@ -177,7 +157,7 @@ class NeuralNetworkBuilder:
         """
         Initializes empty neural network.
         """
-        self.__neural_network = NeuralNetwork()
+        self.__layer_list = []
 
     def add_layer(self, layer_to_add: AbstractLayer) -> "NeuralNetworkBuilder":
         """
@@ -186,15 +166,25 @@ class NeuralNetworkBuilder:
         :param layer_to_add: layer to add to network
         :return: this builder instance, so this method can be chained
         """
-        self.__neural_network.add_layer(layer_to_add)
+        self.__layer_list.append(layer_to_add)
         return self
 
-    def build(self) -> NeuralNetwork:
+    def build(self, input_data_dimensions) -> NeuralNetwork:
         """
         Initializes and returns neural network with earlier provided layers.
 
         :return: built neural network
         """
-        input_data_dimensions = 6
-        self.__neural_network.initialize_layers(input_data_dimensions)
-        return self.__neural_network
+        self.__initialize_layers(input_data_dimensions)
+        return NeuralNetwork(self.__layer_list)
+
+    def __initialize_layers(self, input_data_dimensions):
+        """
+        Initializes layers of built network.
+
+        :param input_data_dimensions: dimensions of single input data sample
+        """
+        next_layer_dimensions = input_data_dimensions
+
+        for layer in self.__layer_list:
+            next_layer_dimensions = layer.initialize_layer(next_layer_dimensions)
