@@ -5,7 +5,7 @@ from abc import ABC, abstractmethod
 
 import numpy
 
-from project_files.network_files.network_layers import FlatteningLayer, FullyConnectedLayer
+from project_files.network_utils.network_layers import FlatteningLayer, FullyConnectedLayer
 
 # TODO: zastosowac podobna notacje co nizej co do docstringow rzeczy ktore maja wzory
 # .. math ::

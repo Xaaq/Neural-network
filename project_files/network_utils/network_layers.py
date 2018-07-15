@@ -5,7 +5,7 @@ from abc import ABC, abstractmethod
 
 import numpy
 
-from project_files.network_files.activation_functions import SigmoidFunction
+from project_files.network_utils.activation_functions import SigmoidFunction
 
 
 class AbstractLayer(ABC):
