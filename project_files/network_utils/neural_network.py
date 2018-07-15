@@ -171,91 +171,33 @@ class NeuralNetwork:
         return cost[0][0]
 
 
-class AbstractNeuralNetworkBuilder(ABC):
+class NeuralNetworkBuilder:
     """
-    Abstract builder used to build :class:`NeuralNetwork` class.
-    """
-
-    @abstractmethod
-    def create_neural_network(self):
-        """
-        Creates empty neural network.
-        """
-        raise NotImplementedError
-
-    @abstractmethod
-    def add_layers(self):
-        """
-        Add layers to neural network.
-        """
-        raise NotImplementedError
-
-    @abstractmethod
-    def initialize_layers(self):
-        """
-        Initializes all layers added to neural network.
-        """
-        raise NotImplementedError
-
-    @abstractmethod
-    def get_result(self):
-        """
-        Returns built neural network.
-
-        :return: built neural network
-        """
-        raise NotImplementedError
-
-
-class NeuralNetworkBuilder(AbstractNeuralNetworkBuilder):
-    """
-    Builder used to build neural network with given number of partially and fully connected layers.
+    Builder used to build neural network with given layers.
     """
 
     def __init__(self):
-        self.__neural_network = None
-
-    def create_neural_network(self):
+        """
+        Initializes empty neural network.
+        """
         self.__neural_network = NeuralNetwork()
-    #     TODO: zobaczyc czy budowniczy nie powininen miec w konstruktorze tworzenia sieci
 
-    def add_layers(self):
-        self.__neural_network \
-            .add_layer(FlatteningLayer()) \
-            .add_layer(FullyConnectedLayer(25)) \
-            .add_layer(FullyConnectedLayer(25)) \
-            .add_layer(FullyConnectedLayer(1))
+    def add_layer(self, layer_to_add: AbstractLayer) -> "NeuralNetworkBuilder":
+        """
+        Adds layer to neural network that's being built.
 
-    def initialize_layers(self):
-        input_data_dimensions = (1, 50, 50)
+        :param layer_to_add: layer to add to network
+        :return: this builder instance, so this method can be chained
+        """
+        self.__neural_network.add_layer(layer_to_add)
+        return self
+
+    def build(self) -> NeuralNetwork:
+        """
+        Initializes and returns neural network with earlier provided layers.
+
+        :return: built neural network
+        """
+        input_data_dimensions = 6
         self.__neural_network.initialize_layers(input_data_dimensions)
-
-    def get_result(self):
         return self.__neural_network
-
-
-class NeuralNetworkDirector:
-    """
-    Director used to create neural network. To use it, first it is needed to have neural network builder initialized.
-    """
-
-    def __init__(self, builder):
-        """
-        Initializes this director with given builder.
-
-        :param builder: builder used to build this class
-        :type builder: AbstractNeuralNetworkBuilder
-        """
-        self.__builder = builder
-
-    def construct(self):
-        """
-        Constructs neural network and returns it.
-
-        :return: constructed neural network
-        :rtype: NeuralNetwork
-        """
-        self.__builder.create_neural_network()
-        self.__builder.add_layers()
-        self.__builder.initialize_layers()
-        return self.__builder.get_result()
