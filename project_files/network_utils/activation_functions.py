@@ -3,7 +3,7 @@ Module containing activation functions used in neural networks.
 """
 from abc import ABC, abstractmethod
 
-import numpy
+import numpy as np
 
 
 # TODO: sprawdzic czy te funkcje (i ogolnie wsyzstkie inne jakie zrobilem) moga przyjmowac wielowymiarowe wektory i dobrze je zwracaja
@@ -61,7 +61,7 @@ class SigmoidFunction(AbstractActivationFunction):
 
     @staticmethod
     def calculate_result(input_data):
-        output_data = 1 / (1 + numpy.exp(-input_data))
+        output_data = 1 / (1 + np.exp(-input_data))
         return output_data
 
     @staticmethod

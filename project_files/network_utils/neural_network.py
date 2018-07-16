@@ -3,7 +3,7 @@ Module containing neural network class and things needed to create it - builder 
 """
 from typing import List
 
-import numpy
+import numpy as np
 
 from project_files.network_utils.network_layers import AbstractLayer
 
@@ -23,7 +23,6 @@ from project_files.network_utils.network_layers import AbstractLayer
 # TODO: zamienic mnozenie macierzy na symbol "@" i zobaczyc czy jest on szybszy od mnozenia za pomoca metody "dot" (chyba tak sie nazywala)
 # TODO: zobaczyc czy da sie cos zrobic z jupyter notebook (w sensie czy pasowalby on tu do projektu)
 # TODO: dodac requirements.txt
-# TODO: zmienic wszystkie numpy. na np.
 class NeuralNetwork:
     """
     Class used to do operations on neural network. It can do actions on it like learning and predicting learned classes.
@@ -67,7 +66,7 @@ class NeuralNetwork:
         """
         normalized_data = self.__normalize_data(input_data)
         output_data = self.__forward_propagation(normalized_data)
-        rounded_output_data = numpy.round(output_data)
+        rounded_output_data = np.round(output_data)
         return rounded_output_data
 
     def compute_numerical_gradient(self, input_data, data_labels):
@@ -90,8 +89,8 @@ class NeuralNetwork:
         :return: normalized data
         """
         # TODO: zrobic cos z tym (moze uzyc jakiejs funkcji z numpy zeby to zrobic) bo to nie normalizuje w taki sposob jak napotkalo dane uczace, tylko zawsze na podstawie aktualnych danych
-        max_number = numpy.max(data_to_normalize)
-        min_number = numpy.min(data_to_normalize)
+        max_number = np.max(data_to_normalize)
+        min_number = np.min(data_to_normalize)
         difference = max_number - min_number
         normalized_data = (data_to_normalize - min_number) / difference
         return normalized_data
@@ -137,12 +136,12 @@ class NeuralNetwork:
         :param data_labels: labels of data
         :return: cost of learned data
         """
-        data_count, _ = numpy.shape(network_output_data)
+        data_count, _ = np.shape(network_output_data)
 
-        first_component = numpy.dot(numpy.transpose(data_labels),
-                                    numpy.log(network_output_data))
-        second_component = numpy.dot(1 - numpy.transpose(data_labels),
-                                     numpy.log(1 - network_output_data))
+        first_component = np.dot(np.transpose(data_labels),
+                                 np.log(network_output_data))
+        second_component = np.dot(1 - np.transpose(data_labels),
+                                  np.log(1 - network_output_data))
         cost = -(first_component + second_component) / data_count
         # TODO: zobaczyc czy da sie cos zrobic z rym [0][0]
         return cost[0]

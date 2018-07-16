@@ -3,7 +3,7 @@ Module containing types of layers used in neural networks.
 """
 from abc import ABC, abstractmethod
 
-import numpy
+import numpy as np
 
 from project_files.network_utils.activation_functions import SigmoidFunction
 
@@ -82,16 +82,16 @@ class FlatteningLayer(AbstractLayer):
         return self.__output_image_neurons
 
     def forward_propagation(self, input_data):
-        image_count, *_ = numpy.shape(input_data)
-        flattened_data = numpy.reshape(input_data, (image_count, self.__output_image_neurons))
+        image_count, *_ = np.shape(input_data)
+        flattened_data = np.reshape(input_data, (image_count, self.__output_image_neurons))
         return flattened_data
 
     def backward_propagation(self, input_data):
-        image_count, _ = numpy.shape(input_data)
-        multidimensional_data = numpy.reshape(input_data, (image_count,
-                                                           self.__input_channel_count,
-                                                           self.__input_image_width,
-                                                           self.__input_image_height))
+        image_count, _ = np.shape(input_data)
+        multidimensional_data = np.reshape(input_data, (image_count,
+                                                        self.__input_channel_count,
+                                                        self.__input_image_width,
+                                                        self.__input_image_height))
         return multidimensional_data
 
     def update_weights(self):
@@ -157,7 +157,7 @@ class FullyConnectedLayer(AbstractLayer):
         :return: randomly initialized theta matrix
         """
         input_neuron_count = input_neuron_count
-        theta = numpy.random.rand(output_neuron_count, input_neuron_count + 1)
+        theta = np.random.rand(output_neuron_count, input_neuron_count + 1)
         theta -= 0.5
         return theta
 
@@ -169,9 +169,9 @@ class FullyConnectedLayer(AbstractLayer):
         :param input_data: data to which add bias to
         :return: data with added bias
         """
-        image_count, _ = numpy.shape(input_data)
-        bias = numpy.ones((image_count, 1))
-        data_with_bias = numpy.concatenate((bias, input_data), 1)
+        image_count, _ = np.shape(input_data)
+        bias = np.ones((image_count, 1))
+        data_with_bias = np.concatenate((bias, input_data), 1)
         return data_with_bias
 
     @staticmethod
@@ -191,8 +191,8 @@ class FullyConnectedLayer(AbstractLayer):
         :param input_data: data to multiply by transposed theta matrix
         :return: data multiplied by transposed theta matrix
         """
-        transposed_theta = numpy.transpose(self.__theta_matrix)
-        multiplied_data = numpy.dot(input_data, transposed_theta)
+        transposed_theta = np.transpose(self.__theta_matrix)
+        multiplied_data = np.dot(input_data, transposed_theta)
         return multiplied_data
 
     def __multiply_by_theta(self, input_data):
@@ -202,7 +202,7 @@ class FullyConnectedLayer(AbstractLayer):
         :param input_data: data to multiply by theta matrix
         :return: data multiplied by theta matrix
         """
-        multiplied_data = numpy.dot(input_data, self.__theta_matrix)
+        multiplied_data = np.dot(input_data, self.__theta_matrix)
         return multiplied_data
 
     def __count_weights_gradient(self):
@@ -212,8 +212,8 @@ class FullyConnectedLayer(AbstractLayer):
 
         :return: gradient of weights of this layer
         """
-        transposed_backward_data = numpy.transpose(self.__data_before_backward_multiplication)
-        weights_gradient = numpy.dot(transposed_backward_data, self.__data_before_forward_multiplication)
+        transposed_backward_data = np.transpose(self.__data_before_backward_multiplication)
+        weights_gradient = np.dot(transposed_backward_data, self.__data_before_forward_multiplication)
 
         self.__data_before_forward_multiplication = None
         self.__data_before_backward_multiplication = None
