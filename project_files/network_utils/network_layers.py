@@ -58,7 +58,8 @@ class FlatteningLayer(AbstractLayer):
     Layer that flattens data. Can be used to flatten data that are output of convolutional layers, so fully-connected
     layers are able to understand them.
     """
-    # TODO: zmienic "image" w nazwach zmiennnych i docstringow na bardziej ogolne i zrobic zeby dowolny rozmiar danych mogl byc tu splaszczony
+
+    # TODO: zmienic "image" w tej klasie w nazwach zmiennnych i docstringow na bardziej ogolne i zrobic zeby dowolny rozmiar danych mogl byc tu splaszczony
     def __init__(self):
         """
         Creates this layer.
@@ -85,7 +86,7 @@ class FlatteningLayer(AbstractLayer):
         return flattened_data
 
     def backward_propagation(self, input_data: np.ndarray) -> np.ndarray:
-        image_count, _ = np.shape(input_data)
+        image_count = np.shape(input_data)[0]
         multidimensional_data = np.reshape(input_data, (image_count,
                                                         self.__input_channel_count,
                                                         self.__input_image_width,
@@ -101,7 +102,7 @@ class FullyConnectedLayer(AbstractLayer):
     """
     Layer, in which every neuron from previous layer is connected to every neuron in next layer.
     """
-    __input_data_dimension_shape = 1
+    __input_data_shape_length = 1
 
     # TODO: zobaczyc czy nie lepiej zrobić sub-layery jako osobne klasy
     def __init__(self, output_neuron_count: int):
@@ -116,7 +117,7 @@ class FullyConnectedLayer(AbstractLayer):
         self.__data_before_backward_multiplication = None
 
     def initialize_layer(self, input_data_dimensions: tuple) -> tuple:
-        if len(input_data_dimensions) != self.__input_data_dimension_shape:
+        if len(input_data_dimensions) != self.__input_data_shape_length:
             raise ValueError("Provided data dimensions shape is wrong")
         # TODO: zrobic zeby sprawdzanie rozmiaru podanych danych odbywalo sie w jakis lepszy sposob (moze AbstractLayer) i zastanowaic sie czy input data size powinno byc zmienna statyczna
 
@@ -154,7 +155,6 @@ class FullyConnectedLayer(AbstractLayer):
         :param output_neuron_count: number of output neurons
         :return: randomly initialized theta matrix
         """
-        input_neuron_count = input_neuron_count
         theta = np.random.rand(output_neuron_count, input_neuron_count + 1)
         theta -= 0.5
         return theta
@@ -167,7 +167,7 @@ class FullyConnectedLayer(AbstractLayer):
         :param input_data: data to which add bias term to
         :return: data with added bias term
         """
-        data_samples_count, _ = np.shape(input_data)
+        data_samples_count = np.shape(input_data)[0]
         bias = np.ones((data_samples_count, 1))
         data_with_bias = np.concatenate((bias, input_data), 1)
         return data_with_bias

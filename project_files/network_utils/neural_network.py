@@ -15,7 +15,6 @@ from project_files.network_utils.network_layers import AbstractLayer
 # TODO: jesli sie da to z klas wywalic inity i przerzucic zmienne inicjalizowane w nich do ciala klasy (OSTROŻNIE! to zmienne statyczne wtedy beda)
 # TODO: przeskanowac wszystko pylintem
 # TODO: sprawdzic czy nie ma lepszego sposobu na budowanie sieci niz uzywanie metod z NeuralNetwork
-# TODO: sprawdzic w calym projekcie komentarze I ZMIENNE (szczegolnie pod katem tego czy jest w nich slowo "image", ew. zastapic "data sample"
 # TODO: zamienic fory na list comprehension
 # TODO: dodac setery i getery za pomoca @property
 # TODO: zmienic ustawienia pycharma zeby formatowalo pod pep8
@@ -90,8 +89,8 @@ class NeuralNetwork:
         # TODO: zrobic cos z tym (moze uzyc jakiejs funkcji z numpy zeby to zrobic) bo to nie normalizuje w taki sposob jak napotkalo dane uczace, tylko zawsze na podstawie aktualnych danych
         max_number = np.max(data_to_normalize)
         min_number = np.min(data_to_normalize)
-        difference = max_number - min_number
-        normalized_data = (data_to_normalize - min_number) / difference
+        amplitude = max_number - min_number
+        normalized_data = (data_to_normalize - min_number) / amplitude
         return normalized_data
 
     def __forward_propagation(self, input_data: np.ndarray) -> np.ndarray:
@@ -129,7 +128,7 @@ class NeuralNetwork:
     @staticmethod
     def __count_cost(network_output_data: np.ndarray, data_labels: np.ndarray) -> float:
         """
-        Counts cost of learned data according to pattern:\n
+        Counts cost of learned data according to formula:\n
         `cost = - (y log(p) + (1 - y) log(1 - p))`\n
         where:\n
         * p - predicted probability of label
@@ -139,13 +138,13 @@ class NeuralNetwork:
         :param data_labels: labels of data
         :return: cost of learned data
         """
-        data_count, _ = np.shape(network_output_data)
+        data_samples_count = np.shape(network_output_data)[0]
 
         first_component = np.dot(np.transpose(data_labels),
                                  np.log(network_output_data))
         second_component = np.dot(1 - np.transpose(data_labels),
                                   np.log(1 - network_output_data))
-        cost = -(first_component + second_component) / data_count
+        cost = -(first_component + second_component) / data_samples_count
         # TODO: zobaczyc czy da sie cos zrobic z rym [0][0]
         return cost[0][0]
 
