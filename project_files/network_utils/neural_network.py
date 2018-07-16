@@ -48,8 +48,8 @@ class NeuralNetwork:
 
         for _ in range(500):
             data_after_forward_pass = self.__forward_propagation(normalized_data)
-            subtracted_data = data_after_forward_pass - data_labels
-            self.__backward_propagation(subtracted_data)
+            error_vector = data_after_forward_pass - data_labels
+            self.__backward_propagation(error_vector)
             self.__update_weights()
 
             cost = self.__count_cost(data_after_forward_pass, data_labels)
