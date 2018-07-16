@@ -16,7 +16,7 @@ from project_files.network_utils.network_layers import AbstractLayer
 # TODO: przeskanowac wszystko pylintem
 # TODO: zrobic type hinty i wyrzucic je z docstringow
 # TODO: sprawdzic czy nie ma lepszego sposobu na budowanie sieci niz uzywanie metod z NeuralNetwork
-# TODO: sprawdzic w calym projekcie komentarze (szczegolnie pod katem tego czy jest w nich slowo "image", ew. zastapic "data sample"
+# TODO: sprawdzic w calym projekcie komentarze I ZMIENNE (szczegolnie pod katem tego czy jest w nich slowo "image", ew. zastapic "data sample"
 # TODO: zamienic fory na list comprehension
 # TODO: dodac setery i getery za pomoca @property
 # TODO: zmienic ustawienia pycharma zeby formatowalo pod pep8
