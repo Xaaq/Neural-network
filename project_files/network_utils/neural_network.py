@@ -1,5 +1,5 @@
 """
-Module containing neural network class and things needed to create it - builder and director.
+Module containing neural network class and builder needed to create it.
 """
 from typing import List
 
@@ -112,7 +112,7 @@ class NeuralNetwork:
         """
         Does backward propagation for every layer in this network based on given data.
 
-        :param input_data: data that are output of neural network used to make backward pass
+        :param input_data: data that are output of neural network, used to do backward pass
         """
         data_for_previous_layer = input_data
 
@@ -129,7 +129,11 @@ class NeuralNetwork:
     @staticmethod
     def __count_cost(network_output_data: np.ndarray, data_labels: np.ndarray) -> float:
         """
-        Counts cost of learned data.
+        Counts cost of learned data according to pattern:\n
+        `cost = - (y log(p) + (1 - y) log(1 - p))`\n
+        where:\n
+        * p - predicted probability of label
+        * y - true value of this label
 
         :param network_output_data: predicted data outputted by neural network
         :param data_labels: labels of data
@@ -159,7 +163,7 @@ class NeuralNetworkBuilder:
 
     def add_layer(self, layer_to_add: AbstractLayer) -> "NeuralNetworkBuilder":
         """
-        Adds layer to neural network that's being built.
+        Adds layer to neural network.
 
         :param layer_to_add: layer to add to network
         :return: this builder instance, so this method can be chained

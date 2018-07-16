@@ -16,8 +16,8 @@ class AbstractLayer(ABC):
     @abstractmethod
     def initialize_layer(self, input_data_dimensions: tuple) -> tuple:
         """
-        Initializes this layer parameters based on data from previous layer. Also returns dimensions of data coming out
-        of this layer.
+        Initializes this layer parameters based on provided data. Also returns dimensions of data coming out of this
+        layer.
 
         :param input_data_dimensions: tuple of dimensions of single image data coming into this layer
         :return: tuple of dimensions of single output image data coming from this layer
@@ -38,7 +38,7 @@ class AbstractLayer(ABC):
     @abstractmethod
     def backward_propagation(self, input_data: np.ndarray) -> np.ndarray:
         """
-        Does backward pass through this layer and return output.
+        Does backward pass through this layer and returns its output.
 
         :param input_data: data on which make backward pass
         :return: output of this layer
@@ -55,13 +55,13 @@ class AbstractLayer(ABC):
 
 class FlatteningLayer(AbstractLayer):
     """
-    Layer that flattens or de-flattens data. Used to flatten data that are output of convolutional layers, so
-    fully-connected layers are able to understand this.
+    Layer that flattens data. Can be used to flatten data that are output of convolutional layers, so fully-connected
+    layers are able to understand them.
     """
 
     def __init__(self):
         """
-        Creates this layer with data set to None.
+        Creates this layer.
         """
         self.__input_channel_count = None
         self.__input_image_width = None
@@ -162,10 +162,10 @@ class FullyConnectedLayer(AbstractLayer):
     @staticmethod
     def __add_bias(input_data: np.ndarray) -> np.ndarray:
         """
-        Adds bias to given data.
+        Adds bias term to given data.
 
-        :param input_data: data to which add bias to
-        :return: data with added bias
+        :param input_data: data to which add bias term to
+        :return: data with added bias term
         """
         image_count, _ = np.shape(input_data)
         bias = np.ones((image_count, 1))
@@ -175,10 +175,10 @@ class FullyConnectedLayer(AbstractLayer):
     @staticmethod
     def __remove_bias(input_data: np.ndarray) -> np.ndarray:
         """
-        Removes bias from given data.
+        Removes bias term from given data.
 
-        :param input_data: data to remove bias from
-        :return: data with removed bias
+        :param input_data: data to remove bias term from
+        :return: data with removed bias term
         """
         return input_data[:, 1:]
 

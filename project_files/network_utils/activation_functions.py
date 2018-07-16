@@ -16,7 +16,7 @@ class AbstractActivationFunction(ABC):
     @abstractmethod
     def calculate_result(input_data: np.ndarray) -> np.ndarray:
         """
-        Does calculations on input and returns result.
+        Does calculations on input data and returns result.
 
         :param input_data: input data to calculate function on
         :return: result of function
