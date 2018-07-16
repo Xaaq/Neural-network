@@ -82,7 +82,7 @@ class FlatteningLayer(AbstractLayer):
         return self.__output_image_neurons
 
     def forward_propagation(self, input_data):
-        image_count, _, _, _ = numpy.shape(input_data)
+        image_count, *_ = numpy.shape(input_data)
         flattened_data = numpy.reshape(input_data, (image_count, self.__output_image_neurons))
         return flattened_data
 
