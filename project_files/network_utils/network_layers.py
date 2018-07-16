@@ -58,7 +58,7 @@ class FlatteningLayer(AbstractLayer):
     Layer that flattens data. Can be used to flatten data that are output of convolutional layers, so fully-connected
     layers are able to understand them.
     """
-
+    # TODO: zmienic "image" w nazwach zmiennnych i docstringow na bardziej ogolne i zrobic zeby dowolny rozmiar danych mogl byc tu splaszczony
     def __init__(self):
         """
         Creates this layer.
