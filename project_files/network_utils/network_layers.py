@@ -19,8 +19,8 @@ class AbstractLayer(ABC):
         Initializes this layer parameters based on provided data. Also returns dimensions of data coming out of this
         layer.
 
-        :param input_data_dimensions: tuple of dimensions of single image data coming into this layer
-        :return: tuple of dimensions of single output image data coming from this layer
+        :param input_data_dimensions: tuple of dimensions of data sample coming into this layer
+        :return: tuple of dimensions of single data sample coming out of this layer
         """
         # TODO: zrobic zeby nie trzeba bylo wywolywac tej metody, tylko zeby layery bylyinicjalizowane w konsruktorze (chociaz zobaczyc czy to czegos nie zepsuje)
         raise NotImplementedError
@@ -167,8 +167,8 @@ class FullyConnectedLayer(AbstractLayer):
         :param input_data: data to which add bias term to
         :return: data with added bias term
         """
-        image_count, _ = np.shape(input_data)
-        bias = np.ones((image_count, 1))
+        data_samples_count, _ = np.shape(input_data)
+        bias = np.ones((data_samples_count, 1))
         data_with_bias = np.concatenate((bias, input_data), 1)
         return data_with_bias
 
