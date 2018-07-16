@@ -27,7 +27,7 @@ from project_files.network_utils.network_layers import AbstractLayer
 class NeuralNetwork:
     """
     Class used to do operations on neural network. It can do actions on it like learning and predicting learned classes.
-    To create instance of this class use :class:`NeuralNetworkDirector`.
+    To create instance of this class use :class:`NeuralNetworkBuilder`.
     """
 
     def __init__(self, list_of_layers: List[AbstractLayer]):
