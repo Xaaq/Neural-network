@@ -143,7 +143,7 @@ class NeuralNetwork:
                                   np.log(1 - network_output_data))
         cost = -(first_component + second_component) / data_count
         # TODO: zobaczyc czy da sie cos zrobic z rym [0][0]
-        return cost[0]
+        return cost[0][0]
 
 
 class NeuralNetworkBuilder:
