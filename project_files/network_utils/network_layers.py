@@ -14,21 +14,19 @@ class AbstractLayer(ABC):
     """
 
     @abstractmethod
-    def initialize_layer(self, input_data_dimensions):
+    def initialize_layer(self, input_data_dimensions: tuple) -> tuple:
         """
         Initializes this layer parameters based on data from previous layer. Also returns dimensions of data coming out
         of this layer.
 
         :param input_data_dimensions: tuple of dimensions of single image data coming into this layer
-        :type input_data_dimensions: tuple of int
         :return: tuple of dimensions of single output image data coming from this layer
-        :rtype: tuple of int
         """
         # TODO: zrobic zeby nie trzeba bylo wywolywac tej metody, tylko zeby layery bylyinicjalizowane w konsruktorze (chociaz zobaczyc czy to czegos nie zepsuje)
         raise NotImplementedError
 
     @abstractmethod
-    def forward_propagation(self, input_data):
+    def forward_propagation(self, input_data: np.ndarray) -> np.ndarray:
         """
         Does forward pass through this layer and returns its output.
 
@@ -38,7 +36,7 @@ class AbstractLayer(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def backward_propagation(self, input_data):
+    def backward_propagation(self, input_data: np.ndarray) -> np.ndarray:
         """
         Does backward pass through this layer and return output.
 
@@ -63,7 +61,7 @@ class FlatteningLayer(AbstractLayer):
 
     def __init__(self):
         """
-        Creates this layer with data set to None. To initialize this layer's data use `initialize_layer` method.
+        Creates this layer with data set to None.
         """
         self.__input_channel_count = None
         self.__input_image_width = None
@@ -71,7 +69,7 @@ class FlatteningLayer(AbstractLayer):
         self.__output_image_neurons = None
 
     # TODO: zrobic __output_image_neurons jako property klasy (chociaz zobaczyc czy to czegos nie zepsuje)
-    def initialize_layer(self, input_data_dimensions):
+    def initialize_layer(self, input_data_dimensions: tuple) -> tuple:
         (self.__input_channel_count,
          self.__input_image_width,
          self.__input_image_height) = input_data_dimensions
@@ -81,12 +79,12 @@ class FlatteningLayer(AbstractLayer):
                                        * self.__input_image_height,)
         return self.__output_image_neurons
 
-    def forward_propagation(self, input_data):
+    def forward_propagation(self, input_data: np.ndarray) -> np.ndarray:
         image_count, *_ = np.shape(input_data)
         flattened_data = np.reshape(input_data, (image_count, self.__output_image_neurons))
         return flattened_data
 
-    def backward_propagation(self, input_data):
+    def backward_propagation(self, input_data: np.ndarray) -> np.ndarray:
         image_count, _ = np.shape(input_data)
         multidimensional_data = np.reshape(input_data, (image_count,
                                                         self.__input_channel_count,
@@ -106,9 +104,9 @@ class FullyConnectedLayer(AbstractLayer):
     __input_data_dimension_shape = 1
 
     # TODO: zobaczyc czy nie lepiej zrobić sub-layery jako osobne klasy
-    def __init__(self, output_neuron_count):
+    def __init__(self, output_neuron_count: int):
         """
-        Sets the number of output neurons from this layer. To initialize theta value use `initialize_layer` method.
+        Sets the number of output neurons from this layer.
 
         :param output_neuron_count: number of output neurons from this layer
         """
@@ -117,7 +115,7 @@ class FullyConnectedLayer(AbstractLayer):
         self.__data_before_forward_multiplication = None
         self.__data_before_backward_multiplication = None
 
-    def initialize_layer(self, input_data_dimensions):
+    def initialize_layer(self, input_data_dimensions: tuple) -> tuple:
         if len(input_data_dimensions) != self.__input_data_dimension_shape:
             raise ValueError("Provided data dimensions shape is wrong")
         # TODO: zrobic zeby sprawdzanie rozmiaru podanych danych odbywalo sie w jakis lepszy sposob (moze AbstractLayer) i zastanowaic sie czy input data size powinno byc zmienna statyczna
@@ -126,7 +124,7 @@ class FullyConnectedLayer(AbstractLayer):
         self.__theta_matrix = self.__random_initialize_theta(input_neuron_count, self.__output_neuron_count)
         return self.__output_neuron_count,
 
-    def forward_propagation(self, input_data):
+    def forward_propagation(self, input_data: np.ndarray) -> np.ndarray:
         data_with_bias = self.__add_bias(input_data)
         multiplied_data = self.__multiply_by_transposed_theta(data_with_bias)
         activated_data = SigmoidFunction.calculate_result(multiplied_data)
@@ -134,7 +132,7 @@ class FullyConnectedLayer(AbstractLayer):
         self.__data_before_forward_multiplication = data_with_bias
         return activated_data
 
-    def backward_propagation(self, input_data):
+    def backward_propagation(self, input_data: np.ndarray) -> np.ndarray:
         data_after_gradient = input_data * SigmoidFunction.calculate_gradient(input_data)
         multiplied_data = self.__multiply_by_theta(data_after_gradient)
         data_with_removed_bias = self.__remove_bias(multiplied_data)
@@ -147,7 +145,7 @@ class FullyConnectedLayer(AbstractLayer):
         self.__theta_matrix -= 0.1 * self.__count_weights_gradient()
 
     @staticmethod
-    def __random_initialize_theta(input_neuron_count, output_neuron_count):
+    def __random_initialize_theta(input_neuron_count: int, output_neuron_count: int) -> np.ndarray:
         """
         Randomly initializes theta matrix based in number of input and output neurons. All values in matrix are
         initialized in range [-0.5, 0.5].
@@ -162,7 +160,7 @@ class FullyConnectedLayer(AbstractLayer):
         return theta
 
     @staticmethod
-    def __add_bias(input_data):
+    def __add_bias(input_data: np.ndarray) -> np.ndarray:
         """
         Adds bias to given data.
 
@@ -175,7 +173,7 @@ class FullyConnectedLayer(AbstractLayer):
         return data_with_bias
 
     @staticmethod
-    def __remove_bias(input_data):
+    def __remove_bias(input_data: np.ndarray) -> np.ndarray:
         """
         Removes bias from given data.
 
@@ -184,7 +182,7 @@ class FullyConnectedLayer(AbstractLayer):
         """
         return input_data[:, 1:]
 
-    def __multiply_by_transposed_theta(self, input_data):
+    def __multiply_by_transposed_theta(self, input_data: np.ndarray) -> np.ndarray:
         """
         Does multiplication of data by transposed theta matrix.
 
@@ -195,7 +193,7 @@ class FullyConnectedLayer(AbstractLayer):
         multiplied_data = np.dot(input_data, transposed_theta)
         return multiplied_data
 
-    def __multiply_by_theta(self, input_data):
+    def __multiply_by_theta(self, input_data: np.ndarray) -> np.ndarray:
         """
         Does multiplication of data by theta matrix.
 
@@ -205,7 +203,7 @@ class FullyConnectedLayer(AbstractLayer):
         multiplied_data = np.dot(input_data, self.__theta_matrix)
         return multiplied_data
 
-    def __count_weights_gradient(self):
+    def __count_weights_gradient(self) -> np.ndarray:
         """
         Counts and returns gradient of weights based on data saved during forward and backward propagation. After that
         cleans variables in which these data were contained.

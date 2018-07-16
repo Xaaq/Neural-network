@@ -14,7 +14,6 @@ from project_files.network_utils.network_layers import AbstractLayer
 # TODO: zrobic testy
 # TODO: jesli sie da to z klas wywalic inity i przerzucic zmienne inicjalizowane w nich do ciala klasy (OSTROŻNIE! to zmienne statyczne wtedy beda)
 # TODO: przeskanowac wszystko pylintem
-# TODO: zrobic type hinty i wyrzucic je z docstringow
 # TODO: sprawdzic czy nie ma lepszego sposobu na budowanie sieci niz uzywanie metod z NeuralNetwork
 # TODO: sprawdzic w calym projekcie komentarze I ZMIENNE (szczegolnie pod katem tego czy jest w nich slowo "image", ew. zastapic "data sample"
 # TODO: zamienic fory na list comprehension
@@ -37,7 +36,7 @@ class NeuralNetwork:
 
     # TODO: zrobic zeby nie trzeba bylo podawac labelek do uczenia w osobnych mini-tablicach
     # TODO: zobaczyc czy alphe dac jako arguent tej metody czy jako jakas zmienna tej klasy
-    def teach_network(self, input_data, data_labels):
+    def teach_network(self, input_data: np.ndarray, data_labels: np.ndarray):
         """
         Teaches neural network on given data.
 
@@ -57,7 +56,7 @@ class NeuralNetwork:
             # TODO: zrobic cos z tym printem (albo log albo nie wiem)
             print(cost)
 
-    def predict(self, input_data):
+    def predict(self, input_data: np.ndarray) -> np.ndarray:
         """
         Predicts output classes of input data.
 
@@ -69,7 +68,7 @@ class NeuralNetwork:
         rounded_output_data = np.round(output_data)
         return rounded_output_data
 
-    def compute_numerical_gradient(self, input_data, data_labels):
+    def compute_numerical_gradient(self, input_data: np.ndarray, data_labels: np.ndarray) -> np.ndarray:
         """
         Computes gradient of weights in this network by counting it numerical way. This method is very slow and should
         be used only to check if gradient counted by other methods is computed correctly.
@@ -81,7 +80,7 @@ class NeuralNetwork:
         # TODO: dokonczyc
 
     @staticmethod
-    def __normalize_data(data_to_normalize):
+    def __normalize_data(data_to_normalize: np.ndarray) -> np.ndarray:
         """
         Normalizes given matrix - transforms values in it to range [0, 1].
 
@@ -95,7 +94,7 @@ class NeuralNetwork:
         normalized_data = (data_to_normalize - min_number) / difference
         return normalized_data
 
-    def __forward_propagation(self, input_data):
+    def __forward_propagation(self, input_data: np.ndarray) -> np.ndarray:
         """
         Does forward propagation for every layer in this network based on given data.
 
@@ -109,7 +108,7 @@ class NeuralNetwork:
 
         return data_for_next_layer
 
-    def __backward_propagation(self, input_data):
+    def __backward_propagation(self, input_data: np.ndarray):
         """
         Does backward propagation for every layer in this network based on given data.
 
@@ -128,7 +127,7 @@ class NeuralNetwork:
             layer.update_weights()
 
     @staticmethod
-    def __count_cost(network_output_data, data_labels):
+    def __count_cost(network_output_data: np.ndarray, data_labels: np.ndarray) -> float:
         """
         Counts cost of learned data.
 
@@ -168,7 +167,7 @@ class NeuralNetworkBuilder:
         self.__layer_list.append(layer_to_add)
         return self
 
-    def build(self, input_data_dimensions) -> NeuralNetwork:
+    def build(self, input_data_dimensions: tuple) -> NeuralNetwork:
         """
         Initializes and returns neural network with earlier provided layers.
 
@@ -177,7 +176,7 @@ class NeuralNetworkBuilder:
         self.__initialize_layers(input_data_dimensions)
         return NeuralNetwork(self.__layer_list)
 
-    def __initialize_layers(self, input_data_dimensions):
+    def __initialize_layers(self, input_data_dimensions: tuple):
         """
         Initializes layers of built network.
 
