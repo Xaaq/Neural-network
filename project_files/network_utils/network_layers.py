@@ -78,8 +78,8 @@ class FlatteningLayer(AbstractLayer):
 
         self.__output_image_neurons = (self.__input_channel_count
                                        * self.__input_image_width
-                                       * self.__input_image_height)
-        return self.__output_image_neurons,
+                                       * self.__input_image_height,)
+        return self.__output_image_neurons
 
     def forward_propagation(self, input_data):
         image_count, _, _, _ = numpy.shape(input_data)
@@ -122,7 +122,8 @@ class FullyConnectedLayer(AbstractLayer):
             raise ValueError("Provided data dimensions shape is wrong")
         # TODO: zrobic zeby sprawdzanie rozmiaru podanych danych odbywalo sie w jakis lepszy sposob (moze AbstractLayer) i zastanowaic sie czy input data size powinno byc zmienna statyczna
 
-        self.__theta_matrix = self.__random_initialize_theta(input_data_dimensions, self.__output_neuron_count)
+        input_neuron_count = input_data_dimensions[0]
+        self.__theta_matrix = self.__random_initialize_theta(input_neuron_count, self.__output_neuron_count)
         return self.__output_neuron_count,
 
     def forward_propagation(self, input_data):
@@ -155,7 +156,7 @@ class FullyConnectedLayer(AbstractLayer):
         :param output_neuron_count: number of output neurons
         :return: randomly initialized theta matrix
         """
-        input_neuron_count = input_neuron_count[0]
+        input_neuron_count = input_neuron_count
         theta = numpy.random.rand(output_neuron_count, input_neuron_count + 1)
         theta -= 0.5
         return theta
