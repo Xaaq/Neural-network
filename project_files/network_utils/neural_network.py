@@ -9,7 +9,6 @@ from project_files.network_utils.network_layers import AbstractLayer
 
 
 # TODO: zrobic testy
-# TODO: jesli sie da to z klas wywalic inity i przerzucic zmienne inicjalizowane w nich do ciala klasy (OSTROŻNIE! to zmienne statyczne wtedy beda)
 # TODO: dodac setery i getery za pomoca @property
 # TODO: zamienic mnozenie macierzy na symbol "@" i zobaczyc czy jest on szybszy od mnozenia za pomoca metody "dot" (chyba tak sie nazywala)
 # TODO: zobaczyc czy da sie cos zrobic z jupyter notebook (w sensie czy pasowalby on tu do projektu)
