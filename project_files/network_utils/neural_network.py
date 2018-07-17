@@ -9,7 +9,6 @@ from project_files.network_utils.network_layers import AbstractLayer
 
 
 # TODO: zrobic testy
-# TODO: zobaczyc czy da sie cos zrobic z jupyter notebook (w sensie czy pasowalby on tu do projektu)
 class NeuralNetwork:
     """
     Class used to do operations on neural network. It can do actions on it like learning and predicting learned classes.
