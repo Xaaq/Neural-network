@@ -38,7 +38,8 @@ class AbstractActivationFunction(ABC):
 class ReluFunction(AbstractActivationFunction):
     """
     RELU function with following formula:
-        `if x < 0 then y = 0`\n
+        `if x < 0 then y = 0`
+
         `if x >= 0 then y = x`
     """
 
@@ -56,7 +57,7 @@ class ReluFunction(AbstractActivationFunction):
 class SigmoidFunction(AbstractActivationFunction):
     """
     Sigmoid function with following formula:
-        `y = 1 / (1 + e^(-x))`
+        :math:`y = 1 / (1 + e^{-x})`
     """
 
     @staticmethod

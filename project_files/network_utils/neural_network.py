@@ -8,13 +8,9 @@ import numpy as np
 from project_files.network_utils.network_layers import AbstractLayer
 
 
-# TODO: zastosowac podobna notacje co nizej co do docstringow rzeczy ktore maja wzory
-# .. math ::
-#         E = \\sum_{j=0}^k |p(x_j) - y_j|^2
 # TODO: zrobic testy
 # TODO: jesli sie da to z klas wywalic inity i przerzucic zmienne inicjalizowane w nich do ciala klasy (OSTROŻNIE! to zmienne statyczne wtedy beda)
 # TODO: przeskanowac wszystko pylintem
-# TODO: sprawdzic czy nie ma lepszego sposobu na budowanie sieci niz uzywanie metod z NeuralNetwork
 # TODO: zamienic fory na list comprehension
 # TODO: dodac setery i getery za pomoca @property
 # TODO: zmienic ustawienia pycharma zeby formatowalo pod pep8
@@ -128,11 +124,11 @@ class NeuralNetwork:
     @staticmethod
     def __count_cost(network_output_data: np.ndarray, data_labels: np.ndarray) -> float:
         """
-        Counts cost of learned data according to formula:\n
-        `cost = - (y log(p) + (1 - y) log(1 - p))`\n
-        where:\n
-        * p - predicted probability of label
-        * y - true value of this label
+        Counts cost of learned data according to formula:
+            :math:`cost = - (y log(p) + (1 - y) log(1 - p))`
+        where:
+            * p - predicted probability of label
+            * y - true value of label
 
         :param network_output_data: predicted data outputted by neural network
         :param data_labels: labels of data
