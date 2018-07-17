@@ -68,7 +68,6 @@ class FlatteningLayer(AbstractLayer):
         self.__input_image_width = None
         self.__input_image_height = None
 
-    # TODO: zrobic __output_image_neurons jako property klasy (chociaz zobaczyc czy to czegos nie zepsuje)
     def initialize_layer(self, input_data_dimensions: tuple) -> tuple:
         (self.__input_channel_count,
          self.__input_image_width,
