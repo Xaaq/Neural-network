@@ -190,7 +190,7 @@ class FullyConnectedLayer(AbstractLayer):
         :return: data multiplied by transposed theta matrix
         """
         transposed_theta = np.transpose(self.__theta_matrix)
-        multiplied_data = np.dot(input_data, transposed_theta)
+        multiplied_data = input_data @ transposed_theta
         return multiplied_data
 
     def __multiply_by_theta(self, input_data: np.ndarray) -> np.ndarray:
@@ -200,7 +200,7 @@ class FullyConnectedLayer(AbstractLayer):
         :param input_data: data to multiply by theta matrix
         :return: data multiplied by theta matrix
         """
-        multiplied_data = np.dot(input_data, self.__theta_matrix)
+        multiplied_data = input_data @ self.__theta_matrix
         return multiplied_data
 
     def __count_weights_gradient(self) -> np.ndarray:
@@ -211,7 +211,7 @@ class FullyConnectedLayer(AbstractLayer):
         :return: gradient of weights of this layer
         """
         transposed_backward_data = np.transpose(self.__data_before_backward_multiplication)
-        weights_gradient = np.dot(transposed_backward_data, self.__data_before_forward_multiplication)
+        weights_gradient = transposed_backward_data @ self.__data_before_forward_multiplication
 
         self.__data_before_forward_multiplication = None
         self.__data_before_backward_multiplication = None

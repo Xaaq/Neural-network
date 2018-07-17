@@ -10,7 +10,6 @@ from project_files.network_utils.network_layers import AbstractLayer
 
 # TODO: zrobic testy
 # TODO: dodac setery i getery za pomoca @property
-# TODO: zamienic mnozenie macierzy na symbol "@" i zobaczyc czy jest on szybszy od mnozenia za pomoca metody "dot" (chyba tak sie nazywala)
 # TODO: zobaczyc czy da sie cos zrobic z jupyter notebook (w sensie czy pasowalby on tu do projektu)
 class NeuralNetwork:
     """
@@ -131,10 +130,9 @@ class NeuralNetwork:
         """
         data_samples_count = np.shape(network_output_data)[0]
 
-        first_component = np.dot(np.transpose(data_labels),
-                                 np.log(network_output_data))
-        second_component = np.dot(1 - np.transpose(data_labels),
-                                  np.log(1 - network_output_data))
+        # TODO: sprawdzic czy tu na pewno jest normalny iloczyn macierzy czy ten drugi
+        first_component = np.transpose(data_labels) @ np.log(network_output_data)
+        second_component = (1 - np.transpose(data_labels)) @ np.log(1 - network_output_data)
         cost = -(first_component + second_component) / data_samples_count
         # TODO: zobaczyc czy da sie cos zrobic z rym [0][0]
         return cost[0][0]
