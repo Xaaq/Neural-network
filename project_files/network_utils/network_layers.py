@@ -74,7 +74,7 @@ class FlatteningLayer(AbstractLayer):
          self.__input_image_width,
          self.__input_image_height) = input_data_dimensions
 
-        return self.__output_image_neurons,
+        return (self.__output_image_neurons,)
 
     def forward_propagation(self, input_data: np.ndarray) -> np.ndarray:
         image_count = np.shape(input_data)[0]
@@ -125,7 +125,7 @@ class FullyConnectedLayer(AbstractLayer):
 
         input_neuron_count = input_data_dimensions[0]
         self.__theta_matrix = self.__random_initialize_theta(input_neuron_count, self.__output_neuron_count)
-        return self.__output_neuron_count,
+        return (self.__output_neuron_count,)
 
     def forward_propagation(self, input_data: np.ndarray) -> np.ndarray:
         data_with_bias = self.__add_bias(input_data)
