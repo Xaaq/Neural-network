@@ -67,7 +67,6 @@ class FlatteningLayer(AbstractLayer):
         self.__input_channel_count = None
         self.__input_image_width = None
         self.__input_image_height = None
-        self.__output_image_neurons = None
 
     # TODO: zrobic __output_image_neurons jako property klasy (chociaz zobaczyc czy to czegos nie zepsuje)
     def initialize_layer(self, input_data_dimensions: tuple) -> tuple:
@@ -75,10 +74,7 @@ class FlatteningLayer(AbstractLayer):
          self.__input_image_width,
          self.__input_image_height) = input_data_dimensions
 
-        self.__output_image_neurons = (self.__input_channel_count
-                                       * self.__input_image_width
-                                       * self.__input_image_height,)
-        return self.__output_image_neurons
+        return self.__output_image_neurons,
 
     def forward_propagation(self, input_data: np.ndarray) -> np.ndarray:
         image_count = np.shape(input_data)[0]
@@ -95,6 +91,12 @@ class FlatteningLayer(AbstractLayer):
 
     def update_weights(self):
         pass
+
+    @property
+    def __output_image_neurons(self):
+        return (self.__input_channel_count
+                * self.__input_image_width
+                * self.__input_image_height)
 
 
 # TODO: zrobic zeby mozna bylo w layerze uzyc dowolnej funkcji aktywacji, nie tylko sigmoid
