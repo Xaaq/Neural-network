@@ -8,7 +8,7 @@ import numpy as np
 from project_files.neural_network.network_layers import AbstractLayer, FullyConnectedLayer, ConvolutionalLayer
 from project_files.utils.neural_network_progress_bar import NeuralNetworkProgressBar
 
-
+# TODO: zaimplementowac rysowanie learning curves
 class NeuralNetwork:
     """
     Class used to do operations on neural network. It can do actions on it like learning and predicting learned classes.
