@@ -97,7 +97,6 @@ class FlatteningLayer(AbstractLayer):
         return output_neuron_count
 
 
-# TODO: zrobic zeby mozna bylo w layerze uzyc dowolnej funkcji aktywacji, nie tylko sigmoid
 class FullyConnectedLayer(AbstractLayer):
     """
     Layer, in which every neuron from previous layer is connected to every neuron in next layer.
