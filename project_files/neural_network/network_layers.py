@@ -46,9 +46,11 @@ class AbstractLayer(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def update_weights(self):
+    def update_weights(self, learning_rate: float):
         """
         Updates weights of layer based on data gathered from forward and back propagation passes.
+
+        :param learning_rate: value specifying how much to adjust weights in respect to gradient
         """
         raise NotImplementedError
 
@@ -79,7 +81,7 @@ class FlatteningLayer(AbstractLayer):
         multidimensional_data = np.reshape(input_data, (data_samples_count, *self.__input_data_dimensions))
         return multidimensional_data
 
-    def update_weights(self):
+    def update_weights(self, learning_rate: float):
         pass
 
     @property
@@ -142,9 +144,8 @@ class FullyConnectedLayer(AbstractLayer):
         self.__data_before_backward_multiplication = data_after_gradient
         return data_with_removed_bias
 
-    def update_weights(self):
-        # TODO: dac tu alphe do parametru
-        self.__theta_matrix -= 0.1 * self.__count_weights_gradient()
+    def update_weights(self, learning_rate: float):
+        self.__theta_matrix -= learning_rate * self.__count_weights_gradient()
 
     @staticmethod
     def __random_initialize_theta(input_neuron_count: int, output_neuron_count: int) -> np.ndarray:

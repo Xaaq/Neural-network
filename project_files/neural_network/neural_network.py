@@ -9,7 +9,6 @@ from project_files.neural_network.network_layers import AbstractLayer
 from project_files.utils.neural_network_progress_bar import NeuralNetworkProgressBar
 
 
-# TODO: zrobic testy
 class NeuralNetwork:
     """
     Class used to do operations on neural network. It can do actions on it like learning and predicting learned classes.
@@ -23,23 +22,24 @@ class NeuralNetwork:
         self.__layer_list = list_of_layers
 
     # TODO: zrobic zeby nie trzeba bylo podawac labelek do uczenia w osobnych mini-tablicach
-    # TODO: zobaczyc czy alphe dac jako arguent tej metody czy jako jakas zmienna tej klasy
-    def teach_network(self, input_data: np.ndarray, data_labels: np.ndarray):
+    def teach_network(self, input_data: np.ndarray, data_labels: np.ndarray, iteration_count: int,
+                      learning_rate: float = 1):
         """
         Teaches neural network on given data.
 
         :param input_data: data on which network has to learn on
         :param data_labels: labels of input data
+        :param iteration_count: how much learning iterations the network has to execute
+        :param learning_rate: value specifying how much to adjust weights in respect to gradient
         """
-        # TODO: dodac do docstring returna (albo i nie) i dodac parametr z iloscia iteracji uczenia
         normalized_data = self.__normalize_data(input_data)
-        progress_bar = NeuralNetworkProgressBar(500)
+        progress_bar = NeuralNetworkProgressBar(iteration_count)
 
         for _ in progress_bar:
             data_after_forward_pass = self.__forward_propagation(normalized_data)
             error_vector = data_after_forward_pass - data_labels
             self.__backward_propagation(error_vector)
-            self.__update_weights()
+            self.__update_weights(learning_rate)
 
             cost = self.__count_cost(data_after_forward_pass, data_labels)
             progress_bar.update_cost(cost)
@@ -107,12 +107,14 @@ class NeuralNetwork:
         for layer in reversed(self.__layer_list):
             data_for_previous_layer = layer.backward_propagation(data_for_previous_layer)
 
-    def __update_weights(self):
+    def __update_weights(self, learning_rate: float):
         """
         Updates weights in all layers in this network based on data from forward and backward propagation.
+
+        :param learning_rate: value specifying how much to adjust weights in respect to gradient
         """
         for layer in self.__layer_list:
-            layer.update_weights()
+            layer.update_weights(learning_rate)
 
     @staticmethod
     def __count_cost(network_output_data: np.ndarray, data_labels: np.ndarray) -> float:
