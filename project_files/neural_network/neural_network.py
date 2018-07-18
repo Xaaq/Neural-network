@@ -21,27 +21,28 @@ class NeuralNetwork:
         """
         self.__layer_list = list_of_layers
 
-    # TODO: zrobic zeby nie trzeba bylo podawac labelek do uczenia w osobnych mini-tablicach
     def teach_network(self, input_data: np.ndarray, data_labels: np.ndarray, iteration_count: int,
                       learning_rate: float = 1):
         """
         Teaches neural network on given data.
 
-        :param input_data: data on which network has to learn on
-        :param data_labels: labels of input data
+        :param input_data: matrix of data on which network has to learn on
+        :param data_labels: vector of labels of input data
         :param iteration_count: how much learning iterations the network has to execute
         :param learning_rate: value specifying how much to adjust weights in respect to gradient
+        :raises: :class:`TypeError` if last layer isn't :class:`FullyConnectedLayer`
         """
         normalized_data = self.__normalize_data(input_data)
+        label_matrix = self.__convert_label_vector_to_matrix(data_labels)
         progress_bar = NeuralNetworkProgressBar(iteration_count)
 
         for _ in progress_bar:
             data_after_forward_pass = self.__forward_propagation(normalized_data)
-            error_vector = data_after_forward_pass - data_labels
+            error_vector = data_after_forward_pass - label_matrix
             self.__backward_propagation(error_vector)
             self.__update_weights(learning_rate)
 
-            cost = self.__count_cost(data_after_forward_pass, data_labels)
+            cost = self.__count_cost(data_after_forward_pass, label_matrix)
             progress_bar.update_cost(cost)
 
     def predict(self, input_data: np.ndarray) -> np.ndarray:
@@ -66,6 +67,25 @@ class NeuralNetwork:
         :return: gradient of weights in this network
         """
         # TODO: dokonczyc
+
+    def __convert_label_vector_to_matrix(self, label_vector: np.ndarray) -> np.ndarray:
+        """
+        Converts vector of values (labels) to matrix representation, so it can be easily multiplied to other matrices
+        later.
+
+        :raises: :class:`TypeError` if last layer isn't :class:`FullyConnectedLayer`
+        :param label_vector: vector of labels
+        :return: matrix of labels
+        """
+        output_neuron_count = self.__get_network_output_neuron_count()
+        label_matrix = []
+
+        for label_value in label_vector:
+            row = np.zeros(output_neuron_count)
+            row[label_value] = 1
+            label_matrix.append(row)
+
+        return np.array(label_matrix)
 
     def __get_network_output_neuron_count(self) -> int:
         """
