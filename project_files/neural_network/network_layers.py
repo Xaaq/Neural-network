@@ -2,10 +2,11 @@
 Module containing types of layers used in neural networks.
 """
 from abc import ABC, abstractmethod
+from typing import Type
 
 import numpy as np
 
-from project_files.neural_network.activation_functions import SigmoidFunction
+from project_files.neural_network.activation_functions import SigmoidFunction, AbstractActivationFunction
 
 
 class AbstractLayer(ABC):
@@ -104,13 +105,15 @@ class FullyConnectedLayer(AbstractLayer):
     __input_data_shape_length = 1
 
     # TODO: zobaczyc czy nie lepiej zrobić sub-layery jako osobne klasy
-    def __init__(self, output_neuron_count: int):
+    def __init__(self, output_neuron_count: int,
+                 activation_function: Type[AbstractActivationFunction] = SigmoidFunction):
         """
         Sets the number of output neurons from this layer.
 
         :param output_neuron_count: number of output neurons from this layer
         """
         self.__output_neuron_count = output_neuron_count
+        self.__activation_function = activation_function
         self.__theta_matrix = None
         self.__data_before_forward_multiplication = None
         self.__data_before_backward_multiplication = None
@@ -127,13 +130,13 @@ class FullyConnectedLayer(AbstractLayer):
     def forward_propagation(self, input_data: np.ndarray) -> np.ndarray:
         data_with_bias = self.__add_bias(input_data)
         multiplied_data = self.__multiply_by_transposed_theta(data_with_bias)
-        activated_data = SigmoidFunction.calculate_result(multiplied_data)
+        activated_data = self.__activation_function.calculate_result(multiplied_data)
 
         self.__data_before_forward_multiplication = data_with_bias
         return activated_data
 
     def backward_propagation(self, input_data: np.ndarray) -> np.ndarray:
-        data_after_gradient = input_data * SigmoidFunction.calculate_gradient(input_data)
+        data_after_gradient = input_data * self.__activation_function.calculate_gradient(input_data)
         multiplied_data = self.__multiply_by_theta(data_after_gradient)
         data_with_removed_bias = self.__remove_bias(multiplied_data)
 
