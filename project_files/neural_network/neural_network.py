@@ -67,6 +67,20 @@ class NeuralNetwork:
         """
         # TODO: dokonczyc
 
+    def __get_network_output_neuron_count(self) -> int:
+        """
+        Gets number of neurons from last layer from this network.
+
+        :raises: :class:`TypeError` if last layer isn't :class:`FullyConnectedLayer`
+        :return: number of this network output neurons
+        """
+        last_layer = self.__layer_list[-1]
+
+        if not isinstance(last_layer, FullyConnectedLayer):
+            raise TypeError("Fully connected layer must be last layer")
+
+        return last_layer.output_neuron_count
+
     @staticmethod
     def __normalize_data(data_to_normalize: np.ndarray) -> np.ndarray:
         """
