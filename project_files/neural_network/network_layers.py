@@ -149,7 +149,7 @@ class FullyConnectedLayer(AbstractLayer):
         self.__theta_matrix -= learning_rate * self.__count_weights_gradient()
 
     @property
-    def output_neuron_count(self):
+    def output_neuron_count(self) -> int:
         """
         Returns number of output neurons from this layer.
 
