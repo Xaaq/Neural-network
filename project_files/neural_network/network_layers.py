@@ -126,8 +126,8 @@ class FullyConnectedLayer(AbstractLayer):
         # TODO: zrobic jakis docstring w ktorym bedzie opisane jakie exceptiony to raisuje
 
         input_neuron_count = input_data_dimensions[0]
-        self.__theta_matrix = self.__random_initialize_theta(input_neuron_count, self.__output_neuron_count)
-        return (self.__output_neuron_count,)
+        self.__theta_matrix = self.__random_initialize_theta(input_neuron_count, self.output_neuron_count)
+        return (self.output_neuron_count,)
 
     def forward_propagation(self, input_data: np.ndarray) -> np.ndarray:
         data_with_bias = self.__add_bias(input_data)
@@ -147,6 +147,15 @@ class FullyConnectedLayer(AbstractLayer):
 
     def update_weights(self, learning_rate: float):
         self.__theta_matrix -= learning_rate * self.__count_weights_gradient()
+
+    @property
+    def output_neuron_count(self):
+        """
+        Returns number of output neurons from this layer.
+
+        :return: output neurons from this layer
+        """
+        return self.__output_neuron_count
 
     @staticmethod
     def __random_initialize_theta(input_neuron_count: int, output_neuron_count: int) -> np.ndarray:
