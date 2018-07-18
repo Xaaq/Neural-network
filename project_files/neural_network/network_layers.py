@@ -123,6 +123,7 @@ class FullyConnectedLayer(AbstractLayer):
         if len(input_data_dimensions) != self.__input_data_shape_length:
             raise ValueError("Provided data dimensions shape is wrong")
         # TODO: zrobic zeby sprawdzanie rozmiaru podanych danych odbywalo sie w jakis lepszy sposob (moze AbstractLayer) i zastanowaic sie czy input data size powinno byc zmienna statyczna
+        # TODO: zrobic jakis docstring w ktorym bedzie opisane jakie exceptiony to raisuje
 
         input_neuron_count = input_data_dimensions[0]
         self.__theta_matrix = self.__random_initialize_theta(input_neuron_count, self.__output_neuron_count)
