@@ -95,7 +95,7 @@ class NeuralNetwork:
         :return: number of this network output neurons
         """
         last_layer = self.__layer_list[-1]
-
+        # TODO: rozwazyc usuniecie stad sprawdzenia czyto FCLayer
         if not isinstance(last_layer, FullyConnectedLayer):
             raise TypeError("Fully connected layer must be last layer")
 
