@@ -1,11 +1,14 @@
 """
 Module containing neural network class and builder needed to create it.
 """
+import sys
+from time import sleep
 from typing import List
 
 import numpy as np
+from tqdm import tqdm
 
-from project_files.network_utils.network_layers import AbstractLayer
+from project_files.neural_network.network_layers import AbstractLayer
 
 
 # TODO: zrobic testy
@@ -32,8 +35,12 @@ class NeuralNetwork:
         """
         # TODO: dodac do docstring returna (albo i nie) i dodac parametr z iloscia iteracji uczenia
         normalized_data = self.__normalize_data(input_data)
-
-        for _ in range(500):
+        a = tqdm(range(5000),
+                 ncols=70,
+                 file=sys.stdout,
+                 bar_format="Learning progress: [{bar}] remaining time: {remaining}s")
+        # TODO: zrobic moze jakis wrapper na ten pasek postepu czy cos
+        for _ in a:
             data_after_forward_pass = self.__forward_propagation(normalized_data)
             error_vector = data_after_forward_pass - data_labels
             self.__backward_propagation(error_vector)
@@ -41,7 +48,11 @@ class NeuralNetwork:
 
             cost = self.__count_cost(data_after_forward_pass, data_labels)
             # TODO: zrobic cos z tym printem (albo log albo nie wiem)
-            print(cost)
+
+            # print(cost)
+
+        a.close()
+        # sleep(0.1)
 
     def predict(self, input_data: np.ndarray) -> np.ndarray:
         """
