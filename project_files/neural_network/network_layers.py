@@ -22,7 +22,6 @@ class AbstractLayer(ABC):
         :param input_data_dimensions: tuple of dimensions of data sample coming into this layer
         :return: tuple of dimensions of single data sample coming out of this layer
         """
-        # TODO: zrobic zeby nie trzeba bylo wywolywac tej metody, tylko zeby layery bylyinicjalizowane w konsruktorze (chociaz zobaczyc czy to czegos nie zepsuje)
         raise NotImplementedError
 
     @abstractmethod
@@ -59,43 +58,42 @@ class FlatteningLayer(AbstractLayer):
     layers are able to understand them.
     """
 
-    # TODO: zmienic "image" w tej klasie w nazwach zmiennnych i docstringow na bardziej ogolne i zrobic zeby dowolny rozmiar danych mogl byc tu splaszczony
     def __init__(self):
         """
         Creates this layer.
         """
-        self.__input_channel_count = None
-        self.__input_image_width = None
-        self.__input_image_height = None
+        self.__input_data_dimensions = None
 
     def initialize_layer(self, input_data_dimensions: tuple) -> tuple:
-        (self.__input_channel_count,
-         self.__input_image_width,
-         self.__input_image_height) = input_data_dimensions
-
-        return (self.__output_image_neurons,)
+        self.__input_data_dimensions = input_data_dimensions
+        return (self.__output_neuron_count,)
 
     def forward_propagation(self, input_data: np.ndarray) -> np.ndarray:
-        image_count = np.shape(input_data)[0]
-        flattened_data = np.reshape(input_data, (image_count, self.__output_image_neurons))
+        data_samples_count = np.shape(input_data)[0]
+        flattened_data = np.reshape(input_data, (data_samples_count, self.__output_neuron_count))
         return flattened_data
 
     def backward_propagation(self, input_data: np.ndarray) -> np.ndarray:
-        image_count = np.shape(input_data)[0]
-        multidimensional_data = np.reshape(input_data, (image_count,
-                                                        self.__input_channel_count,
-                                                        self.__input_image_width,
-                                                        self.__input_image_height))
+        data_samples_count = np.shape(input_data)[0]
+        multidimensional_data = np.reshape(input_data, (data_samples_count, *self.__input_data_dimensions))
         return multidimensional_data
 
     def update_weights(self):
         pass
 
     @property
-    def __output_image_neurons(self):
-        return (self.__input_channel_count
-                * self.__input_image_width
-                * self.__input_image_height)
+    def __output_neuron_count(self) -> int:
+        """
+        Counts output neuron count of this layer based on number of input data dimensions.
+
+        :return: number of neurons coming out of this layer
+        """
+        output_neuron_count = 1
+
+        for dimension in self.__input_data_dimensions:
+            output_neuron_count *= dimension
+
+        return output_neuron_count
 
 
 # TODO: zrobic zeby mozna bylo w layerze uzyc dowolnej funkcji aktywacji, nie tylko sigmoid
