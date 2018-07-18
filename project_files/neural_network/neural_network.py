@@ -50,12 +50,12 @@ class NeuralNetwork:
         Predicts output classes of input data.
 
         :param input_data: data to predict
-        :return: output classes for every data sample
+        :return: vector of output classes for every data sample
         """
         normalized_data = self.__normalize_data(input_data)
         output_data = self.__forward_propagation(normalized_data)
-        rounded_output_data = np.round(output_data)
-        return rounded_output_data
+        output_class_vector = np.argmax(output_data, axis=1)
+        return output_class_vector
 
     def compute_numerical_gradient(self, input_data: np.ndarray, data_labels: np.ndarray) -> np.ndarray:
         """
