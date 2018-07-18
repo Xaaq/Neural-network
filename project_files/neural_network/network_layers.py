@@ -219,3 +219,17 @@ class FullyConnectedLayer(AbstractLayer):
         self.__data_before_backward_multiplication = None
 
         return weights_gradient
+
+
+class ConvolutionalLayer(AbstractLayer):
+    def initialize_layer(self, input_data_dimensions: tuple) -> tuple:
+        pass
+
+    def forward_propagation(self, input_data: np.ndarray) -> np.ndarray:
+        pass
+
+    def backward_propagation(self, input_data: np.ndarray) -> np.ndarray:
+        pass
+
+    def update_weights(self, learning_rate: float):
+        pass
