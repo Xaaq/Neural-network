@@ -2,6 +2,7 @@
 Module containing types of layers used in neural networks.
 """
 from abc import ABC, abstractmethod
+from time import sleep
 from typing import Type
 
 import numpy as np
@@ -9,6 +10,7 @@ import numpy as np
 from project_files.neural_network.activation_functions import SigmoidFunction, AbstractActivationFunction
 
 
+# TODO: zaimplementowac tangens hiperboliczny i leaky RELU
 class AbstractLayer(ABC):
     """
     Abstract base class for all types of layers in neural network.
@@ -107,7 +109,7 @@ class FullyConnectedLayer(AbstractLayer):
 
     # TODO: zobaczyc czy nie lepiej zrobić sub-layery jako osobne klasy
     def __init__(self, output_neuron_count: int,
-                 activation_function: Type[AbstractActivationFunction] = SigmoidFunction):
+                 activation_function: Type[AbstractActivationFunction] = SigmoidFunction, is_last_layer = False):
         """
         Sets the number of output neurons from this layer.
 
@@ -116,8 +118,9 @@ class FullyConnectedLayer(AbstractLayer):
         self.__output_neuron_count = output_neuron_count
         self.__activation_function = activation_function
         self.__theta_matrix = None
-        self.__data_before_forward_multiplication = None
+        self.__data_before_forward_activation = None
         self.__data_before_backward_multiplication = None
+        self.__is_last_layer = is_last_layer
 
     def initialize_layer(self, input_data_dimensions: tuple) -> tuple:
         if len(input_data_dimensions) != self.__input_data_shape_length:
@@ -130,23 +133,38 @@ class FullyConnectedLayer(AbstractLayer):
         return (self.output_neuron_count,)
 
     def forward_propagation(self, input_data: np.ndarray) -> np.ndarray:
+        # print(input_data)
         data_with_bias = self.__add_bias(input_data)
         multiplied_data = self.__multiply_by_transposed_theta(data_with_bias)
         activated_data = self.__activation_function.calculate_result(multiplied_data)
 
-        self.__data_before_forward_multiplication = data_with_bias
+        self.__data_after_forward_bias = data_with_bias
+        self.__data_before_forward_activation = multiplied_data
         return activated_data
 
     def backward_propagation(self, input_data: np.ndarray) -> np.ndarray:
-        data_after_gradient = input_data * self.__activation_function.calculate_gradient(input_data)
-        multiplied_data = self.__multiply_by_theta(data_after_gradient)
-        data_with_removed_bias = self.__remove_bias(multiplied_data)
+        # print(self.output_neuron_count)
+        # print(np.shape(input_data))
+        # print(np.shape(self.__data_before_forward_activation))
 
-        self.__data_before_backward_multiplication = data_after_gradient
+        if self.__is_last_layer:
+            data_after_gradient = input_data
+        else:
+            data_after_gradient = input_data * self.__activation_function.calculate_gradient(self.__data_before_forward_activation)
+
+        # data_after_gradient = input_data * self.__activation_function.calculate_gradient(self.__data_before_forward_activation)
+        self.__delta_term = data_after_gradient
+        multiplied_data = self.__multiply_by_theta(input_data)
+        data_with_removed_bias = self.__remove_bias(multiplied_data)
+        # print(np.shape(data_with_removed_bias))
+        # data_after_gradient = data_with_removed_bias * self.__activation_function.calculate_gradient(self.__data_before_forward_activation)
+
+        # self.__data_before_backward_multiplication = data_after_gradient
         return data_with_removed_bias
 
     def update_weights(self, learning_rate: float):
-        self.__theta_matrix -= learning_rate * self.__count_weights_gradient()
+        a = self.__count_weights_gradient()
+        self.__theta_matrix -= learning_rate *a
 
     @property
     def output_neuron_count(self) -> int:
@@ -222,10 +240,15 @@ class FullyConnectedLayer(AbstractLayer):
 
         :return: gradient of weights of this layer
         """
-        transposed_backward_data = np.transpose(self.__data_before_backward_multiplication)
-        weights_gradient = transposed_backward_data @ self.__data_before_forward_multiplication
-
-        self.__data_before_forward_multiplication = None
+        transposed_backward_data = np.transpose(self.__delta_term)
+        # __data_before_backward_multiplication
+        # print(np.shape(transposed_backward_data))
+        number_of_examples = np.shape(self.__data_after_forward_bias)[0]
+        weights_gradient = transposed_backward_data @ self.__data_after_forward_bias
+        weights_gradient /= number_of_examples
+        # print(weights_gradient)
+        # print(np.shape(weights_gradient))
+        self.__data_before_forward_activation = None
         self.__data_before_backward_multiplication = None
 
         return weights_gradient
