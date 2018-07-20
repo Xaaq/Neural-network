@@ -172,6 +172,7 @@ class NeuralNetwork:
         first_component = np.transpose(data_labels) @ np.log(network_output_data)
         second_component = (1 - np.transpose(data_labels)) @ np.log(1 - network_output_data)
         cost = -(first_component + second_component) / data_samples_count
+        # TODO: cost jest zepsuty bo zwraca macierz zamiast wartosci
         # TODO: zobaczyc czy da sie cos zrobic z rym [0][0]
         return cost[0][0]
 
