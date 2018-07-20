@@ -9,6 +9,8 @@ import numpy as np
 from project_files.neural_network.activation_functions import SigmoidFunction, AbstractActivationFunction
 
 
+# TODO: zaimplementowac interfejs mowiacy ze layer moze byc ostatnim layerem sieci (i uzyc sprawdzenia dziedziczenia po tym interfejsie w builderze)
+# TODO: zaimplementowac tangens hiperboliczny i leaky RELU
 class AbstractLayer(ABC):
     """
     Abstract base class for all types of layers in neural network.
