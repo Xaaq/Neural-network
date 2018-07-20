@@ -10,8 +10,8 @@ class NeuralNetworkProgressBar(tqdm):
     """
     This is wrapper class for tqdm progress bar that is used to indicate progress of neural network learning.
     """
-    __column_width = 80
-    __bar_format = "Learning progress: [{bar}]     Remaining time: {remaining}s     Cost: {desc}"
+    __column_width = 90
+    __bar_format = "Learning progress: [{bar}]     Remaining time: {remaining}s     Learning error: {desc}"
 
     def __init__(self, iteration_count: int):
         """
