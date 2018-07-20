@@ -184,7 +184,7 @@ class NeuralNetworkBuilder:
 
     def __init__(self):
         """
-        Initializes empty neural network.
+        Initializes empty list of layers.
         """
         self.__layer_list = []
 
