@@ -98,6 +98,7 @@ class NeuralNetwork:
         """
         last_layer = self.__layer_list[-1]
         # TODO: rozwazyc usuniecie stad sprawdzenia czyto FCLayer
+        # TODO: rozwazyc zamienienie tego typu ifow na asserty
         if not isinstance(last_layer, FullyConnectedLayer):
             raise TypeError("Fully connected layer must be last layer")
 
