@@ -115,6 +115,7 @@ class FullyConnectedLayer(AbstractLayer):
 
         :param output_neuron_count: number of output neurons from this layer
         """
+        # TODO: zrobic zeby is_last_layer nie bylo w konstruktorze tylko gdzies indziej (zoabczyc czy to nie duplikuje innych TODO)
         self.__output_neuron_count = output_neuron_count
         self.__activation_function = activation_function
         self.__theta_matrix = None
@@ -139,6 +140,7 @@ class FullyConnectedLayer(AbstractLayer):
         self.__data_before_forward_multiplication = data_with_bias
         return activated_data
 
+    # TODO: zrobic jakis lepszy mechanizm na to nizej niz if
     def backward_propagation(self, input_data: np.ndarray) -> np.ndarray:
         data_after_gradient = input_data * self.__activation_function.calculate_gradient(input_data)
         multiplied_data = self.__multiply_by_theta(data_after_gradient)
@@ -196,6 +198,7 @@ class FullyConnectedLayer(AbstractLayer):
         """
         return input_data[:, 1:]
 
+    # TODO: usunac ta metode bo jest zbedna
     def __multiply_by_transposed_theta(self, input_data: np.ndarray) -> np.ndarray:
         """
         Does multiplication of data by transposed theta matrix.
@@ -207,6 +210,7 @@ class FullyConnectedLayer(AbstractLayer):
         multiplied_data = input_data @ transposed_theta
         return multiplied_data
 
+    # TODO: usunac ta metode bo jest zbedna
     def __multiply_by_theta(self, input_data: np.ndarray) -> np.ndarray:
         """
         Does multiplication of data by theta matrix.

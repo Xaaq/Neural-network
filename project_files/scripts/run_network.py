@@ -1,4 +1,6 @@
 import numpy as np
+# TODO: przeczytac http://neuralnetworksanddeeplearning.com/chap5.html o problemach deep network
+# TODO: rozwiazacproblem z dzieleniem przez zero gdy: odpale ten plik / odpale najprostsze dane z funkcja relu
 
 from project_files.neural_network.activation_functions import SigmoidFunction
 from project_files.neural_network.network_layers import FullyConnectedLayer

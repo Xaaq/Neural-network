@@ -68,7 +68,7 @@ class NeuralNetwork:
         :param data_labels: labels of input data
         :return: gradient of weights in this network
         """
-        # TODO: dokonczyc
+        # TODO: zrobic to liczenie gradientu numerycznie i sprawdzic czy na pewno w ostatnim layerze ma NIE BYC dzielenia przez gradient
 
     def __convert_label_vector_to_matrix(self, label_vector: np.ndarray) -> np.ndarray:
         """
