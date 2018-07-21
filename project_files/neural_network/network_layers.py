@@ -101,6 +101,7 @@ class FlatteningLayer(AbstractLayer):
         return output_neuron_count
 
 
+# TODO: posprzatac ta cala klase
 class FullyConnectedLayer(AbstractLayer):
     """
     Layer, in which every neuron from previous layer is connected to every neuron in next layer.
