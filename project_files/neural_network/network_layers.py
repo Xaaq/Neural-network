@@ -9,8 +9,6 @@ import numpy as np
 from project_files.neural_network.activation_functions import SigmoidFunction, AbstractActivationFunction
 
 
-# TODO: zaimplementowac interfejs mowiacy ze layer moze byc ostatnim layerem sieci (i uzyc sprawdzenia dziedziczenia po tym interfejsie w builderze)
-# TODO: zaimplementowac tangens hiperboliczny i leaky RELU
 class AbstractLayer(ABC):
     """
     Abstract base class for all types of layers in neural network.
@@ -101,14 +99,12 @@ class FlatteningLayer(AbstractLayer):
         return output_neuron_count
 
 
-# TODO: posprzatac ta cala klase
 class FullyConnectedLayer(AbstractLayer):
     """
     Layer, in which every neuron from previous layer is connected to every neuron in next layer.
     """
     __input_data_shape_length = 1
 
-    # TODO: zobaczyc czy nie lepiej zrobić sub-layery jako osobne klasy
     def __init__(self, output_neuron_count: int,
                  activation_function: Type[AbstractActivationFunction] = SigmoidFunction, is_last_layer=False):
         """
@@ -116,7 +112,6 @@ class FullyConnectedLayer(AbstractLayer):
 
         :param output_neuron_count: number of output neurons from this layer
         """
-        # TODO: zrobic zeby is_last_layer nie bylo w konstruktorze tylko gdzies indziej (zoabczyc czy to nie duplikuje innych TODO)
         self.__output_neuron_count = output_neuron_count
         self.__activation_function = activation_function
         self.__theta_matrix = None
@@ -127,8 +122,6 @@ class FullyConnectedLayer(AbstractLayer):
     def initialize_layer(self, input_data_dimensions: tuple) -> tuple:
         if len(input_data_dimensions) != self.__input_data_shape_length:
             raise ValueError("Provided data dimensions shape is wrong")
-        # TODO: zrobic zeby sprawdzanie rozmiaru podanych danych odbywalo sie w jakis lepszy sposob (moze AbstractLayer) i zastanowaic sie czy input data size powinno byc zmienna statyczna
-        # TODO: zrobic jakis docstring w ktorym bedzie opisane jakie exceptiony to raisuje
 
         input_neuron_count = input_data_dimensions[0]
         self.__theta_matrix = self.__random_initialize_theta(input_neuron_count, self.output_neuron_count)
@@ -143,7 +136,6 @@ class FullyConnectedLayer(AbstractLayer):
         self.__data_before_forward_activation = multiplied_data
         return activated_data
 
-    # TODO: zrobic jakis lepszy mechanizm na to nizej niz if
     def backward_propagation(self, input_data: np.ndarray) -> np.ndarray:
         if self.__is_last_layer:
             data_after_gradient = input_data
@@ -206,7 +198,6 @@ class FullyConnectedLayer(AbstractLayer):
         """
         return input_data[:, 1:]
 
-    # TODO: usunac ta metode bo jest zbedna
     def __multiply_by_transposed_theta(self, input_data: np.ndarray) -> np.ndarray:
         """
         Does multiplication of data by transposed theta matrix.
@@ -218,7 +209,6 @@ class FullyConnectedLayer(AbstractLayer):
         multiplied_data = input_data @ transposed_theta
         return multiplied_data
 
-    # TODO: usunac ta metode bo jest zbedna
     def __multiply_by_theta(self, input_data: np.ndarray) -> np.ndarray:
         """
         Does multiplication of data by theta matrix.

@@ -33,7 +33,7 @@ class AbstractActivationFunction(ABC):
         """
         raise NotImplementedError
 
-# TODO: sprawdzic czemu RELu nie dziala
+
 class ReluFunction(AbstractActivationFunction):
     """
     RELU function with following formula:

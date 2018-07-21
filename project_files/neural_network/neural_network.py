@@ -9,8 +9,6 @@ from project_files.neural_network.network_layers import AbstractLayer, FullyConn
 from project_files.utils.neural_network_progress_bar import NeuralNetworkProgressBar
 
 
-# TODO: zrobic batch gradient optimalization
-# TODO: zaimplementowac rysowanie learning curves
 class NeuralNetwork:
     """
     Class used to do operations on neural network. It can do actions on it like learning and predicting learned classes.
@@ -68,7 +66,7 @@ class NeuralNetwork:
         :param data_labels: labels of input data
         :return: gradient of weights in this network
         """
-        # TODO: zrobic to liczenie gradientu numerycznie i sprawdzic czy na pewno w ostatnim layerze ma NIE BYC dzielenia przez gradient
+        pass
 
     def __convert_label_vector_to_matrix(self, label_vector: np.ndarray) -> np.ndarray:
         """
@@ -97,8 +95,7 @@ class NeuralNetwork:
         :return: number of this network output neurons
         """
         last_layer = self.__layer_list[-1]
-        # TODO: rozwazyc usuniecie stad sprawdzenia czyto FCLayer
-        # TODO: rozwazyc zamienienie tego typu ifow na asserty
+
         if not isinstance(last_layer, FullyConnectedLayer):
             raise TypeError("Fully connected layer must be last layer")
 
@@ -112,7 +109,6 @@ class NeuralNetwork:
         :param data_to_normalize: data to process
         :return: normalized data
         """
-        # TODO: zrobic cos z tym (moze uzyc jakiejs funkcji z numpy zeby to zrobic) bo to nie normalizuje w taki sposob jak napotkalo dane uczace, tylko zawsze na podstawie aktualnych danych
         max_number = np.max(data_to_normalize)
         min_number = np.min(data_to_normalize)
         amplitude = max_number - min_number
@@ -168,12 +164,10 @@ class NeuralNetwork:
         """
         data_samples_count = np.shape(network_output_data)[0]
 
-        # TODO: sprawdzic czy tu na pewno jest normalny iloczyn macierzy czy ten drugi
         first_component = np.transpose(data_labels) @ np.log(network_output_data)
         second_component = (1 - np.transpose(data_labels)) @ np.log(1 - network_output_data)
         cost = -(first_component + second_component) / data_samples_count
-        # TODO: cost jest zepsuty bo zwraca macierz zamiast wartosci
-        # TODO: zobaczyc czy da sie cos zrobic z rym [0][0]
+
         return cost[0][0]
 
 
