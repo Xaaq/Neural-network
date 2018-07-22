@@ -153,7 +153,7 @@ class NeuralNetwork:
     def __count_cost(network_output_data: np.ndarray, data_labels: np.ndarray) -> float:
         """
         Counts cost of learned data according to formula:
-            :math:`cost = - (y log(p) + (1 - y) log(1 - p))`
+            :math:`cost = -(y log(p) + (1 - y) log(1 - p))`
         where:
             * p - predicted probability of label
             * y - true value of label
@@ -163,12 +163,22 @@ class NeuralNetwork:
         :return: cost of learned data
         """
         data_samples_count = np.shape(network_output_data)[0]
+        logarithmic_network_output_data = np.transpose(np.log(network_output_data))
+        inverse_logarithmic_network_output_data = np.transpose(np.log(1 - network_output_data))
+        cost_sum = 0
 
-        first_component = np.transpose(data_labels) @ np.log(network_output_data)
-        second_component = (1 - np.transpose(data_labels)) @ np.log(1 - network_output_data)
-        cost = -(first_component + second_component) / data_samples_count
+        for index in range(data_samples_count):
+            data_label_sample = data_labels[index, :]
+            logarithmic_network_output_data_sample = logarithmic_network_output_data[:, index]
+            inverse_logarithmic_network_output_data_sample = inverse_logarithmic_network_output_data[:, index]
 
-        return cost[0][0]
+            first_component = data_label_sample @ logarithmic_network_output_data_sample
+            second_component = (1 - data_label_sample) @ inverse_logarithmic_network_output_data_sample
+            cost = -(first_component + second_component)
+            cost_sum += cost
+
+        cost_sum /= data_samples_count
+        return cost_sum
 
 
 class NeuralNetworkBuilder:
