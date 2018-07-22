@@ -144,7 +144,7 @@ class FullyConnectedLayer(AbstractLayer):
                 self.__data_before_forward_activation)
 
         self.__delta_term = data_after_gradient
-        multiplied_data = self.__multiply_by_theta(input_data)
+        multiplied_data = self.__multiply_by_theta(data_after_gradient)
         data_with_removed_bias = self.__remove_bias(multiplied_data)
         return data_with_removed_bias
 
