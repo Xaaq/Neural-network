@@ -149,8 +149,7 @@ class FullyConnectedLayer(AbstractLayer):
         return data_with_removed_bias
 
     def update_weights(self, learning_rate: float):
-        a = self.__count_weights_gradient()
-        self.__theta_matrix -= learning_rate * a
+        self.__theta_matrix -= learning_rate * self.__count_weights_gradient()
 
     @property
     def output_neuron_count(self) -> int:
