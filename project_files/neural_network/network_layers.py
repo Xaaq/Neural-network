@@ -220,8 +220,7 @@ class FullyConnectedLayer(AbstractLayer):
 
     def __count_weights_gradient(self) -> np.ndarray:
         """
-        Counts and returns gradient of weights based on data saved during forward and backward propagation. After that
-        cleans variables in which these data were contained.
+        Counts and returns gradient of weights based on data saved during forward and backward propagation.
 
         :return: gradient of weights of this layer
         """
@@ -229,9 +228,6 @@ class FullyConnectedLayer(AbstractLayer):
         number_of_examples = np.shape(self.__data_after_forward_bias)[0]
         weights_gradient = transposed_backward_data @ self.__data_after_forward_bias
         weights_gradient /= number_of_examples
-
-        self.__data_before_forward_activation = None
-        self.__data_before_backward_multiplication = None
 
         return weights_gradient
 
