@@ -22,9 +22,9 @@ class AbstractActivationFunction(ABC):
         """
         raise NotImplementedError
 
-    @staticmethod
+    @classmethod
     @abstractmethod
-    def calculate_gradient(input_data: np.ndarray) -> np.ndarray:
+    def calculate_gradient(cls, input_data: np.ndarray) -> np.ndarray:
         """
         Calculates gradient of function on input and returns result.
 
@@ -47,8 +47,8 @@ class ReluFunction(AbstractActivationFunction):
         output_data = (input_data > 0) * input_data
         return output_data
 
-    @staticmethod
-    def calculate_gradient(input_data: np.ndarray) -> np.ndarray:
+    @classmethod
+    def calculate_gradient(cls, input_data: np.ndarray) -> np.ndarray:
         output_data = (input_data > 0)
         return output_data
 
@@ -64,8 +64,8 @@ class SigmoidFunction(AbstractActivationFunction):
         output_data = 1 / (1 + np.exp(-input_data))
         return output_data
 
-    @staticmethod
-    def calculate_gradient(input_data: np.ndarray) -> np.ndarray:
-        function_value = SigmoidFunction.calculate_result(input_data)
+    @classmethod
+    def calculate_gradient(cls, input_data: np.ndarray) -> np.ndarray:
+        function_value = cls.calculate_result(input_data)
         output_data = function_value * (1 - function_value)
         return output_data
