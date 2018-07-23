@@ -1,19 +1,19 @@
 """
-Module containing cost functions used in neural networks.
+Module containing error functions used in neural networks.
 """
 from abc import abstractmethod
 
 import numpy as np
 
 
-class AbstractCostFunction:
+class AbstractErrorFunction:
     """
-    Base class for types of cost functions.
+    Base class for types of error functions.
     """
 
     @staticmethod
     @abstractmethod
-    def count_cost(predicted_label_probabilities: np.ndarray, actual_labels: np.ndarray) -> float:
+    def count_error(predicted_label_probabilities: np.ndarray, actual_labels: np.ndarray) -> float:
         """
         Counts error of provided data.
 
@@ -24,22 +24,22 @@ class AbstractCostFunction:
         raise NotImplementedError
 
 
-class CrossEntropyCostFunction(AbstractCostFunction):
+class CrossEntropyErrorFunction(AbstractErrorFunction):
     """
-    Class that's implementing following cost function:
-        :math:`cost = -(y log(p) + (1 - y) log(1 - p))`
+    Class that's implementing following error function:
+        :math:`error = -(y log(p) + (1 - y) log(1 - p))`
     where:
         * p - predicted probability of label
         * y - true value of label
     """
 
     @staticmethod
-    def count_cost(predicted_label_probabilities: np.ndarray, actual_labels: np.ndarray) -> float:
+    def count_error(predicted_label_probabilities: np.ndarray, actual_labels: np.ndarray) -> float:
         data_samples_count = np.shape(predicted_label_probabilities)[0]
         logarithmic_network_output_data = np.transpose(np.log(predicted_label_probabilities))
         inverse_logarithmic_network_output_data = np.transpose(np.log(1 - predicted_label_probabilities))
-        cost_sum = 0
-
+        error_sum = 0
+        # TODO: rozbic to na metody
         for index in range(data_samples_count):
             data_label_sample = actual_labels[index, :]
             logarithmic_network_output_data_sample = logarithmic_network_output_data[:, index]
@@ -47,8 +47,8 @@ class CrossEntropyCostFunction(AbstractCostFunction):
 
             first_component = data_label_sample @ logarithmic_network_output_data_sample
             second_component = (1 - data_label_sample) @ inverse_logarithmic_network_output_data_sample
-            cost = -(first_component + second_component)
-            cost_sum += cost
+            error = -(first_component + second_component)
+            error_sum += error
 
-        cost_sum /= data_samples_count
-        return cost_sum
+        error_sum /= data_samples_count
+        return error_sum

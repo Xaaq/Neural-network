@@ -5,7 +5,7 @@ from typing import List, Type
 
 import numpy as np
 
-from project_files.neural_network.cost_functions import CrossEntropyCostFunction, AbstractCostFunction
+from project_files.neural_network.error_functions import CrossEntropyErrorFunction, AbstractErrorFunction
 from project_files.neural_network.network_layers import AbstractLayer, FullyConnectedLayer, ConvolutionalLayer
 from project_files.utils.neural_network_progress_bar import NeuralNetworkProgressBar
 
@@ -16,15 +16,15 @@ class NeuralNetwork:
     To create instance of this class use :class:`NeuralNetworkBuilder`.
     """
 
-    def __init__(self, list_of_layers: List[AbstractLayer], cost_function: Type[AbstractCostFunction]):
+    def __init__(self, list_of_layers: List[AbstractLayer], error_function: Type[AbstractErrorFunction]):
         """
         Initializes empty layer list for this neural network.
 
         :param list_of_layers: list of layers used by this network
-        :param cost_function: cost function used by this network
+        :param error_function: error function used by this network
         """
         self.__layer_list = list_of_layers
-        self.__cost_function = cost_function
+        self.__error_function = error_function
 
     def teach_network(self, input_data: np.ndarray, data_labels: np.ndarray, iteration_count: int,
                       learning_rate: float = 1):
@@ -47,8 +47,8 @@ class NeuralNetwork:
             self.__backward_propagation(error_vector)
             self.__update_weights(learning_rate)
 
-            cost = self.__cost_function.count_cost(data_after_forward_pass, label_matrix)
-            progress_bar.update_cost(cost)
+            error = self.__error_function.count_error(data_after_forward_pass, label_matrix)
+            progress_bar.update_error(error)
 
     def predict(self, input_data: np.ndarray) -> np.ndarray:
         """
@@ -165,7 +165,7 @@ class NeuralNetworkBuilder:
         Initializes parameters used to build neural network.
         """
         self.__layer_list = []
-        self.__cost_function = CrossEntropyCostFunction
+        self.__error_function = CrossEntropyErrorFunction
 
     def set_layers(self, layers_to_set: List[AbstractLayer]) -> "NeuralNetworkBuilder":
         """
@@ -177,14 +177,14 @@ class NeuralNetworkBuilder:
         self.__layer_list = layers_to_set
         return self
 
-    def set_cost_function(self, cost_function: Type[AbstractCostFunction]) -> "NeuralNetworkBuilder":
+    def set_error_function(self, error_function: Type[AbstractErrorFunction]) -> "NeuralNetworkBuilder":
         """
-        Sets cost function used in neural network.
+        Sets error function used in neural network.
 
-        :param cost_function: cost function to use
+        :param error_function: error function to use
         :return: this builder instance
         """
-        self.__cost_function = cost_function
+        self.__error_function = error_function
         return self
 
     def build(self, input_data_dimensions: tuple) -> NeuralNetwork:
@@ -197,7 +197,7 @@ class NeuralNetworkBuilder:
         self.__validate_layers_order()
         self.__initialize_layers(input_data_dimensions)
 
-        created_network = NeuralNetwork(self.__layer_list, self.__cost_function)
+        created_network = NeuralNetwork(self.__layer_list, self.__error_function)
         return created_network
 
     def __validate_layers_order(self):
