@@ -2,6 +2,7 @@
 Module containing error functions used in neural networks.
 """
 from abc import abstractmethod
+from typing import Tuple
 
 import numpy as np
 
@@ -11,13 +12,13 @@ class AbstractErrorFunction:
     Base class for types of error functions.
     """
 
-    @staticmethod
+    @classmethod
     @abstractmethod
-    def count_error(predicted_label_probabilities: np.ndarray, actual_labels: np.ndarray) -> float:
+    def count_error(cls, label_probabilities: np.ndarray, actual_labels: np.ndarray) -> float:
         """
         Counts error of provided data.
 
-        :param predicted_label_probabilities: predicted data labels probabilities
+        :param label_probabilities: predicted data labels probabilities
         :param actual_labels: actual data labels
         :return: error of learned data
         """
@@ -33,22 +34,58 @@ class CrossEntropyErrorFunction(AbstractErrorFunction):
         * y - true value of label
     """
 
+    @classmethod
+    def count_error(cls, label_probabilities: np.ndarray, actual_labels: np.ndarray) -> float:
+        log_label_probabilities, inv_log_label_probabilities = cls.__prepare_logarithmized_data(label_probabilities)
+        mean_error = cls.__count_mean_error(actual_labels, log_label_probabilities, inv_log_label_probabilities)
+        return mean_error
+
     @staticmethod
-    def count_error(predicted_label_probabilities: np.ndarray, actual_labels: np.ndarray) -> float:
-        data_samples_count = np.shape(predicted_label_probabilities)[0]
-        logarithmic_network_output_data = np.transpose(np.log(predicted_label_probabilities))
-        inverse_logarithmic_network_output_data = np.transpose(np.log(1 - predicted_label_probabilities))
+    def __prepare_logarithmized_data(data_to_logarithmize: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+        """
+        Computes `log(x)` and `(1 - log(x))` functions on given data and outputs them separately.
+
+        :param data_to_logarithmize: data to logarithmize
+        :return: `log(x)` data, `(1 - log(x))` data
+        """
+        logarithmized_data = np.log(data_to_logarithmize)
+        inverse_logarithmized_data = np.log(1 - data_to_logarithmize)
+        return logarithmized_data, inverse_logarithmized_data
+
+    @classmethod
+    def __count_mean_error(cls, actual_labels: np.ndarray, log_label_probabilities: np.ndarray,
+                           inv_log_label_probabilities: np.ndarray) -> float:
+        """
+        Counts mean error between earlier prepared logarithmized label probabilities and actual labels.
+
+        :param actual_labels: true data labels
+        :param log_label_probabilities: label probabilities with `log(x)` function used on them
+        :param inv_log_label_probabilities: label probabilities with `(1 - log(x))` function used on them
+        :return: mean error over all samples
+        """
         error_sum = 0
-        # TODO: rozbic to na metody
-        for index in range(data_samples_count):
-            data_label_sample = actual_labels[index, :]
-            logarithmic_network_output_data_sample = logarithmic_network_output_data[:, index]
-            inverse_logarithmic_network_output_data_sample = inverse_logarithmic_network_output_data[:, index]
 
-            first_component = data_label_sample @ logarithmic_network_output_data_sample
-            second_component = (1 - data_label_sample) @ inverse_logarithmic_network_output_data_sample
-            error = -(first_component + second_component)
-            error_sum += error
+        for single_label, single_log_probability, single_inv_log_probability \
+                in zip(actual_labels, log_label_probabilities, inv_log_label_probabilities):
+            error_sum += cls.__count_single_data_sample_error(single_label, single_log_probability,
+                                                              single_inv_log_probability)
 
-        error_sum /= data_samples_count
-        return error_sum
+        data_samples_count = np.shape(actual_labels)[0]
+        average_error = error_sum / data_samples_count
+        return average_error
+
+    @staticmethod
+    def __count_single_data_sample_error(actual_label: np.ndarray, log_label_probability: np.ndarray,
+                                         inv_log_label_probability: np.ndarray) -> float:
+        """
+        Counts error between earlier prepared logarithmized label probability and actual label.
+
+        :param actual_label: true data label
+        :param log_label_probability: label probability with `log(x)` function used on it
+        :param inv_log_label_probability: label probability with `(1 - log(x))` function used on it
+        :return: error of single data sample
+        """
+        first_component = actual_label @ np.transpose(log_label_probability)
+        second_component = (1 - actual_label) @ np.transpose(inv_log_label_probability)
+        error = -(first_component + second_component)
+        return error
