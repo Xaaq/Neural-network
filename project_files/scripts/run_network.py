@@ -30,10 +30,10 @@ test_data_y = mnist.test_labels()
 shape = train_data_x[0].shape
 
 neural_network = (NeuralNetworkBuilder()
-                  .add_layer(FlatteningLayer())
-                  .add_layer(FullyConnectedLayer(50, SigmoidFunction))
-                  .add_layer(FullyConnectedLayer(50, SigmoidFunction))
-                  .add_layer(FullyConnectedLayer(10, SigmoidFunction, True))
+                  .set_layers([FlatteningLayer(),
+                               FullyConnectedLayer(50, SigmoidFunction),
+                               FullyConnectedLayer(50, SigmoidFunction),
+                               FullyConnectedLayer(10, SigmoidFunction, True)])
                   .build(shape))
 
 neural_network.teach_network(train_data_x, train_data_y, 50, learning_rate=1)

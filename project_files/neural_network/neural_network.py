@@ -192,14 +192,14 @@ class NeuralNetworkBuilder:
         """
         self.__layer_list = []
 
-    def add_layer(self, layer_to_add: AbstractLayer) -> "NeuralNetworkBuilder":
+    def set_layers(self, layers_to_set: List[AbstractLayer]) -> "NeuralNetworkBuilder":
         """
-        Adds layer to neural network.
+        Sets network layers to given ones.
 
-        :param layer_to_add: layer to add to network
-        :return: this builder instance, so this method can be chained
+        :param layers_to_set: layer to set for network
+        :return: this builder instance
         """
-        self.__layer_list.append(layer_to_add)
+        self.__layer_list = layers_to_set
         return self
 
     def build(self, input_data_dimensions: tuple) -> NeuralNetwork:
