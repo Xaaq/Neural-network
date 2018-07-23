@@ -5,7 +5,6 @@ from project_files.neural_network.activation_functions import SigmoidFunction
 from project_files.neural_network.network_layers import FullyConnectedLayer, FlatteningLayer
 from project_files.neural_network.neural_network import NeuralNetworkBuilder
 
-np.seterr(all='raise')
 train_data_x = mnist.train_images()
 train_data_y = mnist.train_labels()
 
