@@ -1,10 +1,11 @@
 """
 Module containing neural network class and builder needed to create it.
 """
-from typing import List
+from typing import List, Type
 
 import numpy as np
 
+from project_files.neural_network.error_functions import CrossEntropyErrorFunction, AbstractErrorFunction
 from project_files.neural_network.network_layers import AbstractLayer, FullyConnectedLayer, ConvolutionalLayer
 from project_files.utils.neural_network_progress_bar import NeuralNetworkProgressBar
 
@@ -15,11 +16,15 @@ class NeuralNetwork:
     To create instance of this class use :class:`NeuralNetworkBuilder`.
     """
 
-    def __init__(self, list_of_layers: List[AbstractLayer]):
+    def __init__(self, list_of_layers: List[AbstractLayer], error_function: Type[AbstractErrorFunction]):
         """
         Initializes empty layer list for this neural network.
+
+        :param list_of_layers: list of layers used by this network
+        :param error_function: error function used by this network
         """
         self.__layer_list = list_of_layers
+        self.__error_function = error_function
 
     def teach_network(self, input_data: np.ndarray, data_labels: np.ndarray, iteration_count: int,
                       learning_rate: float = 1):
@@ -42,8 +47,8 @@ class NeuralNetwork:
             self.__backward_propagation(error_vector)
             self.__update_weights(learning_rate)
 
-            cost = self.__count_cost(data_after_forward_pass, label_matrix)
-            progress_bar.update_cost(cost)
+            error = self.__error_function.count_error(data_after_forward_pass, label_matrix)
+            progress_bar.update_error(error)
 
     def predict(self, input_data: np.ndarray) -> np.ndarray:
         """
@@ -149,27 +154,6 @@ class NeuralNetwork:
         for layer in self.__layer_list:
             layer.update_weights(learning_rate)
 
-    @staticmethod
-    def __count_cost(network_output_data: np.ndarray, data_labels: np.ndarray) -> float:
-        """
-        Counts cost of learned data according to formula:
-            :math:`cost = - (y log(p) + (1 - y) log(1 - p))`
-        where:
-            * p - predicted probability of label
-            * y - true value of label
-
-        :param network_output_data: predicted data outputted by neural network
-        :param data_labels: labels of data
-        :return: cost of learned data
-        """
-        data_samples_count = np.shape(network_output_data)[0]
-
-        first_component = np.transpose(data_labels) @ np.log(network_output_data)
-        second_component = (1 - np.transpose(data_labels)) @ np.log(1 - network_output_data)
-        cost = -(first_component + second_component) / data_samples_count
-
-        return cost[0][0]
-
 
 class NeuralNetworkBuilder:
     """
@@ -178,18 +162,29 @@ class NeuralNetworkBuilder:
 
     def __init__(self):
         """
-        Initializes empty list of layers.
+        Initializes parameters used to build neural network.
         """
         self.__layer_list = []
+        self.__error_function = CrossEntropyErrorFunction
 
-    def add_layer(self, layer_to_add: AbstractLayer) -> "NeuralNetworkBuilder":
+    def set_layers(self, list_of_layers_to_set: List[AbstractLayer]) -> "NeuralNetworkBuilder":
         """
-        Adds layer to neural network.
+        Sets network layers to given ones.
 
-        :param layer_to_add: layer to add to network
-        :return: this builder instance, so this method can be chained
+        :param list_of_layers_to_set: list of layers to set for network
+        :return: this builder instance
         """
-        self.__layer_list.append(layer_to_add)
+        self.__layer_list = list_of_layers_to_set
+        return self
+
+    def set_error_function(self, error_function: Type[AbstractErrorFunction]) -> "NeuralNetworkBuilder":
+        """
+        Sets error function used in neural network.
+
+        :param error_function: error function to use
+        :return: this builder instance
+        """
+        self.__error_function = error_function
         return self
 
     def build(self, input_data_dimensions: tuple) -> NeuralNetwork:
@@ -201,7 +196,9 @@ class NeuralNetworkBuilder:
         """
         self.__validate_layers_order()
         self.__initialize_layers(input_data_dimensions)
-        return NeuralNetwork(self.__layer_list)
+
+        created_network = NeuralNetwork(self.__layer_list, self.__error_function)
+        return created_network
 
     def __validate_layers_order(self):
         """

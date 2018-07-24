@@ -24,12 +24,12 @@ class NeuralNetworkProgressBar(tqdm):
                          ncols=self.__column_width,
                          bar_format=self.__bar_format)
 
-    def update_cost(self, cost: float):
+    def update_error(self, error: float):
         """
-        Updates cost function value in this progress bar description.
+        Updates error function value in this progress bar description.
 
-        :param cost: cost function value
+        :param error: error function value
         """
-        formatted_cost = "{0:.4f}".format(cost)
-        self.set_description_str(formatted_cost)
-        self.ncols = self.__column_width + len(formatted_cost)
+        formatted_error = "{0:.4f}".format(error)
+        self.set_description_str(formatted_error)
+        self.ncols = self.__column_width + len(formatted_error)

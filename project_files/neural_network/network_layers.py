@@ -144,13 +144,12 @@ class FullyConnectedLayer(AbstractLayer):
                 self.__data_before_forward_activation)
 
         self.__delta_term = data_after_gradient
-        multiplied_data = self.__multiply_by_theta(input_data)
+        multiplied_data = self.__multiply_by_theta(data_after_gradient)
         data_with_removed_bias = self.__remove_bias(multiplied_data)
         return data_with_removed_bias
 
     def update_weights(self, learning_rate: float):
-        a = self.__count_weights_gradient()
-        self.__theta_matrix -= learning_rate * a
+        self.__theta_matrix -= learning_rate * self.__count_weights_gradient()
 
     @property
     def output_neuron_count(self) -> int:
@@ -171,8 +170,7 @@ class FullyConnectedLayer(AbstractLayer):
         :param output_neuron_count: number of output neurons
         :return: randomly initialized theta matrix
         """
-        theta = np.random.rand(output_neuron_count, input_neuron_count + 1)
-        theta -= 0.5
+        theta = np.random.rand(output_neuron_count, input_neuron_count + 1) - 0.5
         return theta
 
     @staticmethod
@@ -221,8 +219,7 @@ class FullyConnectedLayer(AbstractLayer):
 
     def __count_weights_gradient(self) -> np.ndarray:
         """
-        Counts and returns gradient of weights based on data saved during forward and backward propagation. After that
-        cleans variables in which these data were contained.
+        Counts and returns gradient of weights based on data saved during forward and backward propagation.
 
         :return: gradient of weights of this layer
         """
@@ -230,9 +227,6 @@ class FullyConnectedLayer(AbstractLayer):
         number_of_examples = np.shape(self.__data_after_forward_bias)[0]
         weights_gradient = transposed_backward_data @ self.__data_after_forward_bias
         weights_gradient /= number_of_examples
-
-        self.__data_before_forward_activation = None
-        self.__data_before_backward_multiplication = None
 
         return weights_gradient
 
