@@ -26,7 +26,7 @@ class AbstractErrorFunction:
 
 class CrossEntropyErrorFunction(AbstractErrorFunction):
     """
-    Class that's implementing following error function:
+    Class that implements following error function:
         :math:`error = -(y log(p) + (1 - y) log(1 - p))`
     where:
         * p - predicted probability of label

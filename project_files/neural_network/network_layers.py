@@ -170,8 +170,7 @@ class FullyConnectedLayer(AbstractLayer):
         :param output_neuron_count: number of output neurons
         :return: randomly initialized theta matrix
         """
-        theta = np.random.rand(output_neuron_count, input_neuron_count + 1)
-        theta -= 0.5
+        theta = np.random.rand(output_neuron_count, input_neuron_count + 1) - 0.5
         return theta
 
     @staticmethod

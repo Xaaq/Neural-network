@@ -167,14 +167,14 @@ class NeuralNetworkBuilder:
         self.__layer_list = []
         self.__error_function = CrossEntropyErrorFunction
 
-    def set_layers(self, layers_to_set: List[AbstractLayer]) -> "NeuralNetworkBuilder":
+    def set_layers(self, list_of_layers_to_set: List[AbstractLayer]) -> "NeuralNetworkBuilder":
         """
         Sets network layers to given ones.
 
-        :param layers_to_set: layer to set for network
+        :param list_of_layers_to_set: list of layers to set for network
         :return: this builder instance
         """
-        self.__layer_list = layers_to_set
+        self.__layer_list = list_of_layers_to_set
         return self
 
     def set_error_function(self, error_function: Type[AbstractErrorFunction]) -> "NeuralNetworkBuilder":
