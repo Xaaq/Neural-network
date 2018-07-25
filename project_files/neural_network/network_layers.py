@@ -114,7 +114,7 @@ class FullyConnectedLayer(AbstractLayer):
         """
         self.__output_neuron_count = output_neuron_count
         self.__activation_function = activation_function
-        self.__theta_matrix = None
+        self.__weight_matrix = None
         self.__data_before_forward_activation = None
         self.__data_before_backward_multiplication = None
         self.__is_last_layer = is_last_layer
@@ -124,12 +124,13 @@ class FullyConnectedLayer(AbstractLayer):
             raise ValueError("Provided data dimensions shape is wrong")
 
         input_neuron_count = input_data_dimensions[0]
-        self.__theta_matrix = self.__random_initialize_theta(input_neuron_count, self.output_neuron_count)
+        self.__weight_matrix = self.__generate_random_weight_matrix(input_neuron_count, self.output_neuron_count)
+        self.weight_matrix_copy = self.__weight_matrix.copy()
         return (self.output_neuron_count,)
 
     def forward_propagation(self, input_data: np.ndarray) -> np.ndarray:
         data_with_bias = self.__add_bias(input_data)
-        multiplied_data = self.__multiply_by_transposed_theta(data_with_bias)
+        multiplied_data = self.__multiply_by_transposed_weights(data_with_bias)
         activated_data = self.__activation_function.calculate_result(multiplied_data)
 
         self.__data_after_forward_bias = data_with_bias
@@ -144,12 +145,12 @@ class FullyConnectedLayer(AbstractLayer):
                 self.__data_before_forward_activation)
 
         self.__delta_term = data_after_gradient
-        multiplied_data = self.__multiply_by_theta(data_after_gradient)
+        multiplied_data = self.__multiply_by_weights(data_after_gradient)
         data_with_removed_bias = self.__remove_bias(multiplied_data)
         return data_with_removed_bias
 
     def update_weights(self, learning_rate: float):
-        self.__theta_matrix -= learning_rate * self.__count_weights_gradient()
+        self.__weight_matrix -= learning_rate * self.__count_weights_gradient()
 
     @property
     def output_neuron_count(self) -> int:
@@ -161,17 +162,17 @@ class FullyConnectedLayer(AbstractLayer):
         return self.__output_neuron_count
 
     @staticmethod
-    def __random_initialize_theta(input_neuron_count: int, output_neuron_count: int) -> np.ndarray:
+    def __generate_random_weight_matrix(input_neuron_count: int, output_neuron_count: int) -> np.ndarray:
         """
-        Randomly initializes theta matrix based in number of input and output neurons. All values in matrix are
+        Randomly initializes weight matrix based in number of input and output neurons. All values in matrix are
         initialized in range [-0.5, 0.5].
 
         :param input_neuron_count: number of input neurons
         :param output_neuron_count: number of output neurons
-        :return: randomly initialized theta matrix
+        :return: randomly initialized weight matrix
         """
-        theta = np.random.rand(output_neuron_count, input_neuron_count + 1) - 0.5
-        return theta
+        weights = np.random.rand(output_neuron_count, input_neuron_count + 1) - 0.5
+        return weights
 
     @staticmethod
     def __add_bias(input_data: np.ndarray) -> np.ndarray:
@@ -196,25 +197,25 @@ class FullyConnectedLayer(AbstractLayer):
         """
         return input_data[:, 1:]
 
-    def __multiply_by_transposed_theta(self, input_data: np.ndarray) -> np.ndarray:
+    def __multiply_by_transposed_weights(self, input_data: np.ndarray) -> np.ndarray:
         """
-        Does multiplication of data by transposed theta matrix.
+        Does multiplication of data by transposed weight matrix.
 
-        :param input_data: data to multiply by transposed theta matrix
-        :return: data multiplied by transposed theta matrix
+        :param input_data: data to multiply by transposed weight matrix
+        :return: data multiplied by transposed weight matrix
         """
-        transposed_theta = np.transpose(self.__theta_matrix)
-        multiplied_data = input_data @ transposed_theta
+        transposed_weights = np.transpose(self.__weight_matrix)
+        multiplied_data = input_data @ transposed_weights
         return multiplied_data
 
-    def __multiply_by_theta(self, input_data: np.ndarray) -> np.ndarray:
+    def __multiply_by_weights(self, input_data: np.ndarray) -> np.ndarray:
         """
-        Does multiplication of data by theta matrix.
+        Does multiplication of data by weight matrix.
 
-        :param input_data: data to multiply by theta matrix
-        :return: data multiplied by theta matrix
+        :param input_data: data to multiply by weight matrix
+        :return: data multiplied by weight matrix
         """
-        multiplied_data = input_data @ self.__theta_matrix
+        multiplied_data = input_data @ self.__weight_matrix
         return multiplied_data
 
     def __count_weights_gradient(self) -> np.ndarray:
