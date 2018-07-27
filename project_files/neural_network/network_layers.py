@@ -82,7 +82,7 @@ class FlatteningLayer(AbstractLayer):
         return multidimensional_data
 
     def update_weights(self, learning_rate: float):
-        pass
+        return
 
     @property
     def __output_neuron_count(self) -> int:
