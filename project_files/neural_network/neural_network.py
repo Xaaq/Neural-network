@@ -6,7 +6,7 @@ from typing import List, Type
 import numpy as np
 
 from project_files.neural_network.error_functions import CrossEntropyErrorFunction, AbstractErrorFunction
-from project_files.neural_network.network_layers import AbstractLayer, FullyConnectedLayer, ConvolutionalLayer
+from project_files.neural_network.network_layers import AbstractLayer, FullyConnectedLayer
 from project_files.utils.neural_network_progress_bar import NeuralNetworkProgressBar
 
 
@@ -192,26 +192,11 @@ class NeuralNetworkBuilder:
         Initializes and returns neural network with earlier provided layers.
 
         :return: built neural network
-        :raises TypeError: when layers are in wrong order
         """
-        self.__validate_layers_order()
         self.__initialize_layers(input_data_dimensions)
 
         created_network = NeuralNetwork(self.__layer_list, self.__error_function)
         return created_network
-
-    def __validate_layers_order(self):
-        """
-        Validates if layers are in proper order.
-
-        :raises TypeError: when layers are in wrong order
-        """
-        if not isinstance(self.__layer_list[-1], FullyConnectedLayer):
-            raise TypeError("Fully connected layer must be last layer")
-
-        for previous_layer, next_layer in zip(self.__layer_list[:-1], self.__layer_list[1:]):
-            if not isinstance(previous_layer, ConvolutionalLayer) and isinstance(next_layer, ConvolutionalLayer):
-                raise TypeError("Layer that's preceding ConvolutionalLayer must be another ConvolutionalLayer")
 
     def __initialize_layers(self, input_data_dimensions: tuple):
         """
