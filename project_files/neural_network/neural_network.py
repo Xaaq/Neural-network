@@ -35,7 +35,7 @@ class NeuralNetwork:
         :param data_labels: vector of labels of input data
         :param iteration_count: how much learning iterations the network has to execute
         :param learning_rate: value specifying how much to adjust weights in respect to gradient
-        :raises: :class:`TypeError` if last layer isn't :class:`FullyConnectedLayer`
+        :raises TypeError: if last layer isn't designed to be last one
         """
         normalized_data = self.__normalize_data(input_data)
         label_matrix = self.__convert_label_vector_to_matrix(data_labels)
@@ -78,9 +78,9 @@ class NeuralNetwork:
         Converts vector of values (labels) to matrix representation, so it can be easily multiplied to other matrices
         later.
 
-        :raises: :class:`TypeError` if last layer isn't :class:`FullyConnectedLayer`
         :param label_vector: vector of labels
         :return: matrix of labels
+        :raises TypeError: if last layer isn't designed to be last one
         """
         output_neuron_count = self.__get_network_output_neuron_count()
         label_matrix = []
@@ -96,8 +96,8 @@ class NeuralNetwork:
         """
         Gets number of neurons from last layer from this network.
 
-        :raises: :class:`TypeError` if last layer isn't :class:`FullyConnectedLayer`
         :return: number of this network output neurons
+        :raises TypeError: if last layer isn't designed to be last one
         """
         last_layer = self.__layer_list[-1]
 
@@ -191,8 +191,8 @@ class NeuralNetworkBuilder:
         """
         Initializes and returns neural network with earlier provided layers.
 
-        :raises: :class:`TypeError` when layers are in wrong order
         :return: built neural network
+        :raises TypeError: when layers are in wrong order
         """
         self.__validate_layers_order()
         self.__initialize_layers(input_data_dimensions)
@@ -204,7 +204,7 @@ class NeuralNetworkBuilder:
         """
         Validates if layers are in proper order.
 
-        :raises: :class:`TypeError` when layers are in wrong order
+        :raises TypeError: when layers are in wrong order
         """
         if not isinstance(self.__layer_list[-1], FullyConnectedLayer):
             raise TypeError("Fully connected layer must be last layer")
