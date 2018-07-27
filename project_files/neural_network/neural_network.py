@@ -102,7 +102,7 @@ class NeuralNetwork:
         last_layer = self.__layer_list[-1]
 
         if not isinstance(last_layer, FullyConnectedLayer):
-            raise TypeError("Fully connected layer must be last layer")
+            raise TypeError("Last layer isn't designed to be last one")
 
         return last_layer.output_neuron_count
 
