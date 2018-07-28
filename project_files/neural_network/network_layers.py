@@ -233,6 +233,11 @@ class FullyConnectedLayer(AbstractLayer):
 
 
 class ConvolutionalLayer(AbstractLayer):
+    """
+    Layer which does convolution on provided data samples. It works similarly to fully connected layer, but it connects
+    only chosen neurons from previous to next layer.
+    """
+
     def initialize_layer(self, input_data_dimensions: tuple) -> tuple:
         pass
 
