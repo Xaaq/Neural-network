@@ -4,7 +4,7 @@ Module containing memento classes.
 import numpy as np
 
 
-class WeightsMemento:
+class WeightMemento:
     """
     Memento used to remember weights values in single neural network layer.
     """
@@ -15,7 +15,7 @@ class WeightsMemento:
 
         :param weights: weights to memorize
         """
-        self.__weights = weights
+        self.__weights = weights.copy()
 
     def get_weights(self) -> np.ndarray:
         """
@@ -23,4 +23,4 @@ class WeightsMemento:
 
         :return: memorized weights
         """
-        return self.__weights
+        return self.__weights.copy()
