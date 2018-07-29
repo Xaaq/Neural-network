@@ -7,6 +7,7 @@ from typing import Type
 import numpy as np
 
 from project_files.neural_network.activation_functions import SigmoidFunction, AbstractActivationFunction
+from project_files.utils.memento import WeightsMemento
 
 
 class AbstractLayer(ABC):
@@ -52,6 +53,17 @@ class AbstractLayer(ABC):
 
         :param learning_rate: value specifying how much to adjust weights in respect to gradient
         """
+        raise NotImplementedError
+
+
+class AbstractNumericallyComputableLayer(AbstractLayer):
+
+    @abstractmethod
+    def save_weights_state(self) -> WeightsMemento:
+        raise NotImplementedError
+
+    @abstractmethod
+    def restore_weights_state(self, weights_memento: WeightsMemento):
         raise NotImplementedError
 
 
