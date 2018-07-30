@@ -176,18 +176,9 @@ class FullyConnectedLayer(AbstractLayer):
         """
         return self.__output_neuron_count
 
-    @staticmethod
-    def __generate_random_weight_matrix(input_neuron_count: int, output_neuron_count: int) -> np.ndarray:
-        """
-        Randomly initializes weight matrix based on number of input and output neurons. All values in matrix are
-        initialized in range [-0.5, 0.5].
-
-        :param input_neuron_count: number of input neurons
-        :param output_neuron_count: number of output neurons
-        :return: randomly initialized weight matrix
-        """
-        weights = np.random.rand(output_neuron_count, input_neuron_count + 1) - 0.5
-        return weights
+    @property
+    def weights(self) -> WeightData:
+        return self.__weights
 
     @staticmethod
     def __add_bias(input_data: np.ndarray) -> np.ndarray:
