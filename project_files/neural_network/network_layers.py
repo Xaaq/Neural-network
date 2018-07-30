@@ -7,8 +7,7 @@ from typing import Type
 import numpy as np
 
 from project_files.neural_network.activation_functions import SigmoidFunction, AbstractActivationFunction
-from project_files.utils.memento import WeightMemento
-from project_files.utils.weight_data import WeightData, GradientCalculator
+from project_files.utils.weight_utils import WeightData, GradientCalculator, WeightMemento
 
 
 class AbstractLayer(ABC):

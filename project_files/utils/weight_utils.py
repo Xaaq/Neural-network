@@ -1,10 +1,31 @@
 """
-Module containing weight data container used in neural network layers.
+Module containing weight data container and memento class to temporary save weights.
 """
 import numpy as np
 
 from project_files.utils.gradient_calculator import GradientCalculator
-from project_files.utils.memento import WeightMemento
+
+
+class WeightMemento:
+    """
+    Memento used to remember neural network layer's weights.
+    """
+
+    def __init__(self, weights: np.ndarray):
+        """
+        Memorizes provided weights.
+
+        :param weights: weights to memorize
+        """
+        self.__weights = weights.copy()
+
+    def get_weights(self) -> np.ndarray:
+        """
+        Returns earlier memorized weights.
+
+        :return: memorized weights
+        """
+        return self.__weights.copy()
 
 
 class WeightData:
