@@ -1,5 +1,5 @@
 """
-Module containing weight data container and memento class to temporary save weights.
+Module containing utilities related to neural network layer's weights.
 """
 import numpy as np
 
