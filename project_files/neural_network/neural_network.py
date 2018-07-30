@@ -81,31 +81,31 @@ class NeuralNetwork:
             if not isinstance(layer, FullyConnectedLayer):
                 # TODO: obmyslic jak robic ten check (czy jakas inna klase abstrakcyjna, ktora mowi ze tej klasy thete mozna brac)
                 continue
-            shape = np.shape(layer.weight_matrix_copy)
+            shape = np.shape(layer.weight_data.weights)
             macierz = np.zeros(shape)
-            for weights_row in range(shape[0]):
-                for weights_column in range(shape[1]):
-                    layer._FullyConnectedLayer__weight_matrix = layer.weight_matrix_copy.copy()
-                    layer._FullyConnectedLayer__weight_matrix[weights_row, weights_column] += epsilon
+            weight_memento = layer.weight_data.save_weights()
+            for weight_row in range(shape[0]):
+                for weight_column in range(shape[1]):
+                    layer.weight_data.weights[weight_row, weight_column] += epsilon
 
                     data_after_forward_pass = self.__forward_propagation(normalized_data)
                     error1 = self.__error_function.count_error(data_after_forward_pass, label_matrix)
+                    layer.weight_data.restore_weights(weight_memento)
 
-                    layer._FullyConnectedLayer__weight_matrix = layer.weight_matrix_copy.copy()
-                    layer._FullyConnectedLayer__weight_matrix[weights_row, weights_column] -= epsilon
+                    layer.weight_data.weights[weight_row, weight_column] -= epsilon
 
                     data_after_forward_pass = self.__forward_propagation(normalized_data)
                     error2 = self.__error_function.count_error(data_after_forward_pass, label_matrix)
+                    layer.weight_data.restore_weights(weight_memento)
 
-                    macierz[weights_row, weights_column] = (error1 - error2) / (2 * epsilon)
+                    macierz[weight_row, weight_column] = (error1 - error2) / (2 * epsilon)
             nadmacierz.append(macierz)
 
-            layer._FullyConnectedLayer__weight_matrix = layer.weight_matrix_copy.copy()
             data_after_forward_pass = self.__forward_propagation(normalized_data)
             error_vector = data_after_forward_pass - label_matrix
             self.__backward_propagation(error_vector)
-            nadmacierz2.append(layer._FullyConnectedLayer__count_weights_gradient())
-            # a = layer._FullyConnectedLayer__count_weights_gradient()
+            nadmacierz2.append(layer._FullyConnectedLayer__gradient_helper_data.count_weight_gradient())
+            # a = layer._FullyConnectedLayer__count_weight_gradient()
             # print(a - macierz)
             # print(nadmacierz2[len(nadmacierz2) - 1] - nadmacierz[len(nadmacierz2) - 1])
             # print("==============================================================")
@@ -117,7 +117,7 @@ class NeuralNetwork:
         #     data_after_forward_pass = self.__forward_propagation(normalized_data)
         #     error_vector = data_after_forward_pass - label_matrix
         #     self.__backward_propagation(error_vector)
-        #     nadmacierz2.append(layer._FullyConnectedLayer__count_weights_gradient())
+        #     nadmacierz2.append(layer._FullyConnectedLayer__count_weight_gradient())
         #  TODO: jesli ten for przetrwa to zmienic i na inna zmienna
         for i in range(len(nadmacierz)):
             print(nadmacierz2[i] - nadmacierz[i])
