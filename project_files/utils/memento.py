@@ -6,7 +6,7 @@ import numpy as np
 
 class WeightMemento:
     """
-    Memento used to remember weights values in single neural network layer.
+    Memento used to remember neural network layer's weights.
     """
 
     def __init__(self, weights: np.ndarray):
