@@ -7,7 +7,7 @@ from typing import Type
 import numpy as np
 
 from project_files.neural_network.activation_functions import SigmoidFunction, AbstractActivationFunction
-from project_files.utils.weight_utils import WeightData, GradientCalculator, WeightMemento
+from project_files.utils.weight_utils import WeightData, GradientCalculator
 
 
 class AbstractLayer(ABC):
@@ -56,15 +56,9 @@ class AbstractLayer(ABC):
         raise NotImplementedError
 
 
+# TODO: wymyslec jakis lepszy sposob niz dziedziczenie z abstract layer
 class AbstractNumericallyComputableLayer(AbstractLayer):
-
-    @abstractmethod
-    def save_weights_state(self) -> WeightMemento:
-        raise NotImplementedError
-
-    @abstractmethod
-    def restore_weights_state(self, weights_memento: WeightMemento):
-        raise NotImplementedError
+    pass
 
 
 class FlatteningLayer(AbstractLayer):
