@@ -124,6 +124,8 @@ class FullyConnectedLayer(AbstractLayer):
         Sets the number of output neurons from this layer.
 
         :param output_neuron_count: number of output neurons from this layer
+        :param activation_function: type of activation function that will be used in this layer
+        :param is_last_layer: flag indicating if this is last layer of network
         """
         self.__output_neuron_count = output_neuron_count
         self.__activation_function = activation_function
