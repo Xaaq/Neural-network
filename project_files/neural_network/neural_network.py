@@ -104,7 +104,7 @@ class NeuralNetwork:
             data_after_forward_pass = self.__forward_propagation(normalized_data)
             error_vector = data_after_forward_pass - label_matrix
             self.__backward_propagation(error_vector)
-            nadmacierz2.append(layer._FullyConnectedLayer__gradient_helper_data.count_weight_gradient())
+            nadmacierz2.append(layer._FullyConnectedLayer__gradient_calculator.count_weight_gradient())
             # a = layer._FullyConnectedLayer__count_weight_gradient()
             # print(a - macierz)
             # print(nadmacierz2[len(nadmacierz2) - 1] - nadmacierz[len(nadmacierz2) - 1])

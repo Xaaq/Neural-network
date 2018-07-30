@@ -7,8 +7,8 @@ from typing import Type
 import numpy as np
 
 from project_files.neural_network.activation_functions import SigmoidFunction, AbstractActivationFunction
-from project_files.utils.data_containers import WeightData, GradientHelperData
 from project_files.utils.memento import WeightMemento
+from project_files.utils.weight_data import WeightData, GradientCalculator
 
 
 class AbstractLayer(ABC):
@@ -130,7 +130,7 @@ class FullyConnectedLayer(AbstractLayer):
         self.__output_neuron_count = output_neuron_count
         self.__activation_function = activation_function
         self.__is_last_layer = is_last_layer
-        self.__gradient_helper_data = GradientHelperData()
+        self.__gradient_calculator = GradientCalculator()
         self.__weight_data: WeightData = None
         self.__data_before_forward_activation: np.ndarray = None
 
@@ -147,7 +147,7 @@ class FullyConnectedLayer(AbstractLayer):
         multiplied_data = self.__multiply_by_transposed_weights(data_with_bias)
         activated_data = self.__activation_function.calculate_result(multiplied_data)
 
-        self.__gradient_helper_data.before_forward_multiplication = data_with_bias
+        self.__gradient_calculator.before_forward_multiplication = data_with_bias
         self.__data_before_forward_activation = multiplied_data
         return activated_data
 
@@ -158,13 +158,13 @@ class FullyConnectedLayer(AbstractLayer):
             data_after_gradient = input_data * self.__activation_function.calculate_gradient(
                 self.__data_before_forward_activation)
 
-        self.__gradient_helper_data.before_backward_multiplication = data_after_gradient
+        self.__gradient_calculator.before_backward_multiplication = data_after_gradient
         multiplied_data = self.__multiply_by_weights(data_after_gradient)
         data_with_removed_bias = self.__remove_bias(multiplied_data)
         return data_with_removed_bias
 
     def update_weights(self, learning_rate: float):
-        self.weight_data.update_weights(learning_rate, self.__gradient_helper_data)
+        self.weight_data.update_weights(learning_rate, self.__gradient_calculator)
 
     @property
     def output_neuron_count(self) -> int:
