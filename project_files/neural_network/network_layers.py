@@ -129,18 +129,17 @@ class FullyConnectedLayer(AbstractLayer):
         """
         self.__output_neuron_count = output_neuron_count
         self.__activation_function = activation_function
-        self.__weight_matrix = None
-        self.__data_before_forward_activation = None
-        self.__data_before_backward_multiplication = None
         self.__is_last_layer = is_last_layer
+        self.__gradient_helper_data = GradientHelperData()
+        self.__weight_data: WeightData = None
+        self.__data_before_forward_activation: np.ndarray = None
 
     def initialize_layer(self, input_data_dimensions: tuple) -> tuple:
         if len(input_data_dimensions) != self.__input_data_shape_length:
             raise ValueError("Provided data dimensions shape is wrong")
 
         input_neuron_count = input_data_dimensions[0]
-        self.__weight_matrix = self.__generate_random_weight_matrix(input_neuron_count, self.output_neuron_count)
-        self.weight_matrix_copy = self.__weight_matrix.copy()
+        self.__weight_data = WeightData((self.output_neuron_count, input_neuron_count + 1))
         return (self.output_neuron_count,)
 
     def forward_propagation(self, input_data: np.ndarray) -> np.ndarray:
@@ -148,7 +147,7 @@ class FullyConnectedLayer(AbstractLayer):
         multiplied_data = self.__multiply_by_transposed_weights(data_with_bias)
         activated_data = self.__activation_function.calculate_result(multiplied_data)
 
-        self.__data_after_forward_bias = data_with_bias
+        self.__gradient_helper_data.before_forward_multiplication = data_with_bias
         self.__data_before_forward_activation = multiplied_data
         return activated_data
 
@@ -159,13 +158,13 @@ class FullyConnectedLayer(AbstractLayer):
             data_after_gradient = input_data * self.__activation_function.calculate_gradient(
                 self.__data_before_forward_activation)
 
-        self.__delta_term = data_after_gradient
+        self.__gradient_helper_data.before_backward_multiplication = data_after_gradient
         multiplied_data = self.__multiply_by_weights(data_after_gradient)
         data_with_removed_bias = self.__remove_bias(multiplied_data)
         return data_with_removed_bias
 
     def update_weights(self, learning_rate: float):
-        self.__weight_matrix -= learning_rate * self.__count_weights_gradient()
+        self.weight_data.update_weights(learning_rate, self.__gradient_helper_data)
 
     @property
     def output_neuron_count(self) -> int:
@@ -177,8 +176,13 @@ class FullyConnectedLayer(AbstractLayer):
         return self.__output_neuron_count
 
     @property
-    def weights(self) -> WeightData:
-        return self.__weights
+    def weight_data(self) -> WeightData:
+        """
+        Getter for this layer's weight data.
+
+        :return: this layer's weight data
+        """
+        return self.__weight_data
 
     @staticmethod
     def __add_bias(input_data: np.ndarray) -> np.ndarray:
@@ -210,7 +214,7 @@ class FullyConnectedLayer(AbstractLayer):
         :param input_data: data to multiply by transposed weight matrix
         :return: data multiplied by transposed weight matrix
         """
-        transposed_weights = np.transpose(self.__weight_matrix)
+        transposed_weights = np.transpose(self.weight_data.weights)
         multiplied_data = input_data @ transposed_weights
         return multiplied_data
 
@@ -221,21 +225,8 @@ class FullyConnectedLayer(AbstractLayer):
         :param input_data: data to multiply by weight matrix
         :return: data multiplied by weight matrix
         """
-        multiplied_data = input_data @ self.__weight_matrix
+        multiplied_data = input_data @ self.weight_data.weights
         return multiplied_data
-
-    def __count_weights_gradient(self) -> np.ndarray:
-        """
-        Counts and returns gradient of weights based on data saved during forward and backward propagation.
-
-        :return: gradient of weights of this layer
-        """
-        transposed_backward_data = np.transpose(self.__delta_term)
-        number_of_examples = np.shape(self.__data_after_forward_bias)[0]
-        weights_gradient = transposed_backward_data @ self.__data_after_forward_bias
-        weights_gradient /= number_of_examples
-
-        return weights_gradient
 
 
 class ConvolutionalLayer(AbstractLayer):
