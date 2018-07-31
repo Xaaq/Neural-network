@@ -7,6 +7,7 @@ import numpy as np
 
 from project_files.neural_network.error_functions import CrossEntropyErrorFunction, AbstractErrorFunction
 from project_files.neural_network.network_layers import AbstractLayer, FullyConnectedLayer
+from project_files.utils.data_processor import DataProcessor
 from project_files.utils.neural_network_progress_bar import NeuralNetworkProgressBar
 
 
@@ -25,6 +26,7 @@ class NeuralNetwork:
         """
         self.__layer_list = list_of_layers
         self.__error_function = error_function
+        self.__data_processor = DataProcessor()
 
     def teach_network(self, input_data: np.ndarray, data_labels: np.ndarray, iteration_count: int,
                       learning_rate: float = 1):
@@ -35,10 +37,10 @@ class NeuralNetwork:
         :param data_labels: vector of labels of input data
         :param iteration_count: how much learning iterations the network has to execute
         :param learning_rate: value specifying how much to adjust weights in respect to gradient
-        :raises TypeError: if last layer isn't designed to be last one
         """
-        normalized_data = self.__normalize_data(input_data)
-        label_matrix = self.__convert_label_vector_to_matrix(data_labels)
+        normalized_data = self.__data_processor.normalize_data(input_data)
+        label_matrix = self.__data_processor.convert_label_vector_to_matrix(data_labels,
+                                                                            self.__get_network_output_neuron_count())
         progress_bar = NeuralNetworkProgressBar(iteration_count)
 
         for _ in progress_bar:
@@ -57,29 +59,10 @@ class NeuralNetwork:
         :param input_data: data to predict
         :return: vector of output classes for every data sample
         """
-        normalized_data = self.__normalize_data(input_data)
+        normalized_data = self.__data_processor.normalize_data(input_data)
         output_data = self.__forward_propagation(normalized_data)
-        output_class_vector = np.argmax(output_data, axis=1)
+        output_class_vector = self.__data_processor.convert_label_matrix_to_vector(output_data)
         return output_class_vector
-
-    def __convert_label_vector_to_matrix(self, label_vector: np.ndarray) -> np.ndarray:
-        """
-        Converts vector of values (labels) to matrix representation, so it can be easily multiplied to other matrices
-        later.
-
-        :param label_vector: vector of labels
-        :return: matrix of labels
-        :raises TypeError: if last layer isn't designed to be last one
-        """
-        output_neuron_count = self.__get_network_output_neuron_count()
-        label_matrix = []
-
-        for label_value in label_vector:
-            row = np.zeros(output_neuron_count)
-            row[label_value] = 1
-            label_matrix.append(row)
-
-        return np.array(label_matrix)
 
     def __get_network_output_neuron_count(self) -> int:
         """
@@ -94,20 +77,6 @@ class NeuralNetwork:
             raise TypeError("Last layer isn't designed to be last one")
 
         return last_layer.output_neuron_count
-
-    @staticmethod
-    def __normalize_data(data_to_normalize: np.ndarray) -> np.ndarray:
-        """
-        Normalizes given matrix - transforms values in it to range [0, 1].
-
-        :param data_to_normalize: data to process
-        :return: normalized data
-        """
-        max_number = np.max(data_to_normalize)
-        min_number = np.min(data_to_normalize)
-        amplitude = max_number - min_number
-        normalized_data = (data_to_normalize - min_number) / amplitude
-        return normalized_data
 
     def __forward_propagation(self, input_data: np.ndarray) -> np.ndarray:
         """

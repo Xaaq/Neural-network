@@ -21,8 +21,9 @@ class NumericalGradientCalculator:
         :param data_labels: labels of input data
         :return: gradient of weights in this network
         """
-        normalized_data = self.__neural_network._NeuralNetwork__normalize_data(input_data)
-        label_matrix = self.__neural_network._NeuralNetwork__convert_label_vector_to_matrix(data_labels)
+        normalized_data = self.__neural_network._NeuralNetwork__data_processor.normalize_data(input_data)
+        label_matrix = self.__neural_network._NeuralNetwork__data_processor.convert_label_vector_to_matrix(data_labels,
+                                                                                                           self.__neural_network._NeuralNetwork__get_network_output_neuron_count())
         np.set_printoptions(linewidth=400)
         epsilon = 0.001
         nadmacierz = []
