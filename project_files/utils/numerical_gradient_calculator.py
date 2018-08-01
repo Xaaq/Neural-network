@@ -11,11 +11,18 @@ from project_files.utils.data_processor import DataProcessor
 
 
 class NumericalGradientCalculator:
-    def __init__(self, neural_network_engine: NeuralNetworkEngine, error_function: AbstractErrorFunction):
+    def __init__(self, neural_network_engine: NeuralNetworkEngine, error_function: AbstractErrorFunction,
+                 data_processor: DataProcessor):
+        """
+        Initializes this gradient calculator values.
+
+        :param neural_network_engine: network engine to use
+        :param error_function: error function to use
+        :param data_processor: data processor to use
+        """
         self.__neural_network_engine = neural_network_engine
         self.__error_function = error_function
-        self.__data_processor = DataProcessor()
-        # TODO: pomyslec jak ta lkasa moglaby okrzystac z neural network albo z tego engine'a, bo na razie to nie dziala
+        self.__data_processor = data_processor
 
     def compute_numerical_gradient(self, input_data: np.ndarray, data_labels: np.ndarray):
         """
