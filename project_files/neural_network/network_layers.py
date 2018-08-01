@@ -2,11 +2,10 @@
 Module containing types of layers used in neural networks.
 """
 from abc import ABC, abstractmethod
-from typing import Type
 
 import numpy as np
 
-from project_files.neural_network.activation_functions import SigmoidFunction, AbstractActivationFunction
+from project_files.neural_network.activation_functions import AbstractActivationFunction
 from project_files.utils.weight_utils import WeightData, GradientCalculator
 
 
@@ -112,12 +111,12 @@ class FullyConnectedLayer(AbstractLayer):
     __input_data_shape_length = 1
 
     def __init__(self, output_neuron_count: int,
-                 activation_function: Type[AbstractActivationFunction] = SigmoidFunction, is_last_layer=False):
+                 activation_function: AbstractActivationFunction, is_last_layer=False):
         """
         Sets the number of output neurons from this layer.
 
         :param output_neuron_count: number of output neurons from this layer
-        :param activation_function: type of activation function that will be used in this layer
+        :param activation_function: activation function that will be used in this layer
         :param is_last_layer: flag indicating if this is last layer of network
         """
         self.__output_neuron_count = output_neuron_count
