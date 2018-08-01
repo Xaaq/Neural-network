@@ -176,6 +176,15 @@ class FullyConnectedLayer(AbstractLayer):
         """
         return self.__weight_data
 
+    @property
+    def gradient_calculator(self) -> GradientCalculator:
+        """
+        Getter for this layer's gradient calculator.
+
+        :return: this layer's gradient calculator
+        """
+        return self.__gradient_calculator
+
     @staticmethod
     def __add_bias(input_data: np.ndarray) -> np.ndarray:
         """

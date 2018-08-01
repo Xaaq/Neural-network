@@ -34,8 +34,8 @@ class NumericalGradientCalculator:
         :return: gradient of weights in this network
         """
         normalized_data = self.__data_processor.normalize_data(input_data)
-        label_matrix = self.__data_processor.convert_label_vector_to_matrix(data_labels,
-                                                                            self.__neural_network_engine.get_network_output_neuron_count())
+        network_output_neuron_count = self.__neural_network_engine.get_network_output_neuron_count()
+        label_matrix = self.__data_processor.convert_label_vector_to_matrix(data_labels, network_output_neuron_count)
         np.set_printoptions(linewidth=400)
         epsilon = 0.001
         nadmacierz = []
@@ -67,7 +67,7 @@ class NumericalGradientCalculator:
             data_after_forward_pass = self.__neural_network_engine.forward_propagation(normalized_data)
             error_vector = data_after_forward_pass - label_matrix
             self.__neural_network_engine.backward_propagation(error_vector)
-            nadmacierz2.append(layer._FullyConnectedLayer__gradient_calculator.count_weight_gradient())
+            nadmacierz2.append(layer.gradient_calculator.count_weight_gradient())
             # a = layer._FullyConnectedLayer__count_weight_gradient()
             # print(a - macierz)
             # print(nadmacierz2[len(nadmacierz2) - 1] - nadmacierz[len(nadmacierz2) - 1])
