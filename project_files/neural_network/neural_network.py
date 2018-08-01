@@ -132,6 +132,18 @@ class NeuralNetwork:
         output_class_vector = self.__data_processor.convert_label_matrix_to_vector(output_data)
         return output_class_vector
 
+    def create_numerical_gradient_calculator(self) -> NumericalGradientCalculator:
+        """
+        Creates and returns calculator that allows to numerically calculate this network gradient. This calculator is a
+        lot slower than gradient computing that is made during network learning. Therefore it can be used to make sure
+        that this network works properly.
+
+        :return: created numerical gradient calculator
+        """
+        numerical_gradient_calculator = NumericalGradientCalculator(self.__network_engine, self.__error_function,
+                                                                    self.__data_processor)
+        return numerical_gradient_calculator
+
 
 class NeuralNetworkBuilder:
     """
