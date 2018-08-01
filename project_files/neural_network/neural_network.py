@@ -1,7 +1,7 @@
 """
 Module containing neural network class and builder needed to create it.
 """
-from typing import List, Type
+from typing import List
 
 import numpy as np
 
@@ -83,16 +83,18 @@ class NeuralNetwork:
     To create instance of this class use :class:`NeuralNetworkBuilder`.
     """
 
-    def __init__(self, network_engine: NeuralNetworkEngine, error_function: Type[AbstractErrorFunction]):
+    def __init__(self, network_engine: NeuralNetworkEngine, error_function: AbstractErrorFunction,
+                 data_processor: DataProcessor):
         """
         Initializes empty layer list for this neural network.
 
         :param network_engine: engine of this neural network
         :param error_function: error function used by this network
+        :param data_processor: processor of data
         """
         self.__network_engine = network_engine
         self.__error_function = error_function
-        self.__data_processor = DataProcessor()
+        self.__data_processor = data_processor
 
     def teach_network(self, input_data: np.ndarray, data_labels: np.ndarray, iteration_count: int,
                       learning_rate: float = 1):
@@ -141,7 +143,8 @@ class NeuralNetworkBuilder:
         Initializes parameters used to build neural network.
         """
         self.__layer_list = []
-        self.__error_function = CrossEntropyErrorFunction
+        self.__error_function = CrossEntropyErrorFunction()
+        self.__data_processor = DataProcessor()
 
     def set_layers(self, list_of_layers_to_set: List[AbstractLayer]) -> "NeuralNetworkBuilder":
         """
@@ -153,7 +156,7 @@ class NeuralNetworkBuilder:
         self.__layer_list = list_of_layers_to_set
         return self
 
-    def set_error_function(self, error_function: Type[AbstractErrorFunction]) -> "NeuralNetworkBuilder":
+    def set_error_function(self, error_function: AbstractErrorFunction) -> "NeuralNetworkBuilder":
         """
         Sets error function used in neural network.
 
@@ -161,6 +164,16 @@ class NeuralNetworkBuilder:
         :return: this builder instance
         """
         self.__error_function = error_function
+        return self
+
+    def set_data_processor(self, data_processor: DataProcessor) -> "NeuralNetworkBuilder":
+        """
+        Sets data processor of network.
+
+        :param data_processor: data processor to use
+        :return: this builder instance
+        """
+        self.__data_processor = data_processor
         return self
 
     def build(self, input_data_dimensions: tuple) -> NeuralNetwork:
@@ -172,7 +185,7 @@ class NeuralNetworkBuilder:
         self.__initialize_layers(input_data_dimensions)
 
         network_engine = NeuralNetworkEngine(self.__layer_list)
-        neural_network = NeuralNetwork(network_engine, self.__error_function)
+        neural_network = NeuralNetwork(network_engine, self.__error_function, self.__data_processor)
         return neural_network
 
     # TODO: zrobic drugiego buildera (albo cos takiego) zeby mozna bylo budowac tez numerical gradient calculator
