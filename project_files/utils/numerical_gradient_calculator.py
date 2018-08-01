@@ -4,13 +4,18 @@ weights.
 """
 import numpy as np
 
+from project_files.neural_network.error_functions import AbstractErrorFunction
 from project_files.neural_network.network_layers import FullyConnectedLayer
-from project_files.neural_network.neural_network import NeuralNetwork
+from project_files.neural_network.neural_network import NeuralNetworkEngine
+from project_files.utils.data_processor import DataProcessor
 
 
 class NumericalGradientCalculator:
-    def __init__(self, neural_network: NeuralNetwork):
-        self.__neural_network = neural_network
+    def __init__(self, neural_network_engine: NeuralNetworkEngine, error_function: AbstractErrorFunction):
+        self.__neural_network_engine = neural_network_engine
+        self.__error_function = error_function
+        self.__data_processor = DataProcessor()
+        # TODO: pomyslec jak ta lkasa moglaby okrzystac z neural network albo z tego engine'a, bo na razie to nie dziala
 
     def compute_numerical_gradient(self, input_data: np.ndarray, data_labels: np.ndarray):
         """
@@ -21,14 +26,14 @@ class NumericalGradientCalculator:
         :param data_labels: labels of input data
         :return: gradient of weights in this network
         """
-        normalized_data = self.__neural_network._NeuralNetwork__data_processor.normalize_data(input_data)
-        label_matrix = self.__neural_network._NeuralNetwork__data_processor.convert_label_vector_to_matrix(data_labels,
-                                                                                                           self.__neural_network._NeuralNetwork__get_network_output_neuron_count())
+        normalized_data = self.__data_processor.normalize_data(input_data)
+        label_matrix = self.__data_processor.convert_label_vector_to_matrix(data_labels,
+                                                                            self.__neural_network_engine.get_network_output_neuron_count())
         np.set_printoptions(linewidth=400)
         epsilon = 0.001
         nadmacierz = []
         nadmacierz2 = []
-        for layer in self.__neural_network._NeuralNetwork__layer_list:
+        for layer in self.__neural_network_engine.layer_list:
             if not isinstance(layer, FullyConnectedLayer):
                 # TODO: obmyslic jak robic ten check (czy jakas inna klase abstrakcyjna, ktora mowi ze tej klasy thete mozna brac)
                 continue
@@ -39,24 +44,22 @@ class NumericalGradientCalculator:
                 for weight_column in range(shape[1]):
                     layer.weight_data.weights[weight_row, weight_column] += epsilon
 
-                    data_after_forward_pass = self.__neural_network._NeuralNetwork__forward_propagation(normalized_data)
-                    error1 = self.__neural_network._NeuralNetwork__error_function.count_error(data_after_forward_pass,
-                                                                                              label_matrix)
+                    data_after_forward_pass = self.__neural_network_engine.forward_propagation(normalized_data)
+                    error1 = self.__error_function.count_error(data_after_forward_pass, label_matrix)
                     layer.weight_data.restore_weights(weight_memento)
 
                     layer.weight_data.weights[weight_row, weight_column] -= epsilon
 
-                    data_after_forward_pass = self.__neural_network._NeuralNetwork__forward_propagation(normalized_data)
-                    error2 = self.__neural_network._NeuralNetwork__error_function.count_error(data_after_forward_pass,
-                                                                                              label_matrix)
+                    data_after_forward_pass = self.__neural_network_engine.forward_propagation(normalized_data)
+                    error2 = self.__error_function.count_error(data_after_forward_pass, label_matrix)
                     layer.weight_data.restore_weights(weight_memento)
 
                     macierz[weight_row, weight_column] = (error1 - error2) / (2 * epsilon)
             nadmacierz.append(macierz)
 
-            data_after_forward_pass = self.__neural_network._NeuralNetwork__forward_propagation(normalized_data)
+            data_after_forward_pass = self.__neural_network_engine.forward_propagation(normalized_data)
             error_vector = data_after_forward_pass - label_matrix
-            self.__neural_network._NeuralNetwork__backward_propagation(error_vector)
+            self.__neural_network_engine.backward_propagation(error_vector)
             nadmacierz2.append(layer._FullyConnectedLayer__gradient_calculator.count_weight_gradient())
             # a = layer._FullyConnectedLayer__count_weight_gradient()
             # print(a - macierz)
