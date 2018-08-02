@@ -28,7 +28,7 @@ class NetworkGradientComparator:
         self.__error_function = error_function
         self.__data_processor = data_processor
 
-    def compare_average_layer_gradient(self, input_data: np.ndarray, label_vector: np.ndarray) -> List[int]:
+    def get_average_layer_gradient_list(self, input_data: np.ndarray, label_vector: np.ndarray) -> List[int]:
         numerical_gradient_list = self.compute_numerical_gradient(input_data, label_vector)
         propagation_gradient_list = self.compute_propagation_gradient(input_data, label_vector)
         gradient_list = []
