@@ -9,8 +9,8 @@ from project_files.neural_network.error_functions import CrossEntropyErrorFuncti
 from project_files.neural_network.network_layers import AbstractLayer
 from project_files.neural_network.neural_network_engine import NeuralNetworkEngine
 from project_files.utils.data_processor import DataProcessor
+from project_files.utils.network_gradient_comparator import NetworkGradientComparator
 from project_files.utils.neural_network_progress_bar import NeuralNetworkProgressBar
-from project_files.utils.numerical_gradient_calculator import NumericalGradientCalculator
 
 
 class NeuralNetwork:
@@ -22,7 +22,7 @@ class NeuralNetwork:
     def __init__(self, network_engine: NeuralNetworkEngine, error_function: AbstractErrorFunction,
                  data_processor: DataProcessor):
         """
-        Initializes empty layer list for this neural network.
+        Initializes this neural network components.
 
         :param network_engine: engine of this neural network
         :param error_function: error function used by this network
@@ -32,19 +32,19 @@ class NeuralNetwork:
         self.__error_function = error_function
         self.__data_processor = data_processor
 
-    def teach_network(self, input_data: np.ndarray, data_labels: np.ndarray, iteration_count: int,
+    def teach_network(self, input_data: np.ndarray, label_vector: np.ndarray, iteration_count: int,
                       learning_rate: float = 1):
         """
         Teaches neural network on given data.
 
         :param input_data: matrix of data on which network has to learn on
-        :param data_labels: vector of labels of input data
+        :param label_vector: vector of labels of input data
         :param iteration_count: how much learning iterations the network has to execute
         :param learning_rate: value specifying how much to adjust weights in respect to gradient
         """
-        normalized_data = self.__data_processor.normalize_data(input_data)
-        label_matrix = self.__data_processor.convert_label_vector_to_matrix(
-            data_labels, self.__network_engine.get_network_output_neuron_count())
+        label_count = self.__network_engine.get_network_output_neuron_count()
+        normalized_data, label_matrix = self.__data_processor.preprocess_data(input_data, label_vector, label_count)
+
         progress_bar = NeuralNetworkProgressBar(iteration_count)
 
         for _ in progress_bar:
