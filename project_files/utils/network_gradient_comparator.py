@@ -1,10 +1,10 @@
 """
-Module containing numerical gradient calculator that allows to numerically compute gradient of neural network layers'
-weights.
+Module containing numerical gradient comparator that allows to numerically compute gradient of neural network layers'
+weights and compare results with gradient computed by propagation.
 """
 import itertools
 from math import log10
-from typing import Optional, List
+from typing import List
 
 import numpy as np
 
@@ -15,6 +15,11 @@ from project_files.utils.data_processor import DataProcessor
 
 
 class NetworkGradientComparator:
+    """
+    Class that has functionality of computing gradient numerically and by propagation. Its main usage is to compare
+    these gradients to check how big is difference between them.
+    """
+
     def __init__(self, network_engine: NeuralNetworkEngine, error_function: AbstractErrorFunction,
                  data_processor: DataProcessor):
         """
@@ -29,6 +34,14 @@ class NetworkGradientComparator:
         self.__data_processor = data_processor
 
     def get_average_layer_gradient_list(self, input_data: np.ndarray, label_vector: np.ndarray) -> List[int]:
+        """
+        Computes gradient of network in two ways: numerically and by propagation. Then computes average difference of
+        gradients computed in both ways and returns list of order of magnitude for every layer.
+
+        :param input_data: input data on which to compute gradients
+        :param label_vector: vector of labels for every data sample
+        :return: list of every layer order of magnitude
+        """
         numerical_gradient_list = self.compute_numerical_gradient(input_data, label_vector)
         propagation_gradient_list = self.compute_propagation_gradient(input_data, label_vector)
         gradient_list = []
@@ -43,7 +56,15 @@ class NetworkGradientComparator:
 
         return gradient_list
 
-    def compute_propagation_gradient(self, input_data: np.ndarray, label_vector: np.ndarray):
+    def compute_propagation_gradient(self, input_data: np.ndarray, label_vector: np.ndarray) -> List[np.ndarray]:
+        """
+        Computes and returns gradient of weights in network based on provided data using forward and backward
+        propagation.
+
+        :param input_data: data on which compute gradient
+        :param label_vector: vector of data labels
+        :return: gradient of weights in this network
+        """
         label_count = self.__network_engine.get_network_output_neuron_count()
         normalized_data, label_matrix = self.__data_processor.preprocess_data(input_data, label_vector, label_count)
         gradient_list = []
@@ -60,10 +81,10 @@ class NetworkGradientComparator:
 
         return gradient_list
 
-    def compute_numerical_gradient(self, input_data: np.ndarray, label_vector: np.ndarray):
+    def compute_numerical_gradient(self, input_data: np.ndarray, label_vector: np.ndarray) -> List[np.ndarray]:
         """
-        Preprocesses input data and computes gradient of weights in network based on these data in numerical way. This
-        method is very slow and should be used only to check if gradient counted by other methods is computed correctly.
+        Computes and returns gradient of weights in network based on provided data in numerical way. This method is very
+        slow and should be used only to check if gradient counted by other methods is computed correctly.
 
         :param input_data: data on which compute gradient
         :param label_vector: vector of data labels
@@ -84,20 +105,38 @@ class NetworkGradientComparator:
         return gradient_list
 
     def __compute_single_layer_gradient(self, layer: AbstractLayer, input_data: np.ndarray,
-                                        data_labels: np.ndarray) -> Optional[np.ndarray]:
+                                        data_labels: np.ndarray) -> np.ndarray:
+        """
+        Numerically computes gradient of all weights in single layer.
+
+        :param layer: layer for which compute weights
+        :param input_data: data on which to compute gradient
+        :param data_labels: matrix of data labels
+        :return: gradient of all weights in provided layer
+        """
         epsilon = 1e-3
         weight_shape = np.shape(layer.weight_data.weights)
         gradient_matrix = np.zeros(weight_shape)
 
         for row_and_column in itertools.product(*[range(dimension) for dimension in weight_shape]):
-            error1 = self.__compute_single_weight_gradient(layer, input_data, data_labels, row_and_column, epsilon)
-            error2 = self.__compute_single_weight_gradient(layer, input_data, data_labels, row_and_column, -epsilon)
+            error1 = self.__compute_single_weight_gradient(layer, row_and_column, input_data, data_labels, epsilon)
+            error2 = self.__compute_single_weight_gradient(layer, row_and_column, input_data, data_labels, -epsilon)
             gradient_matrix[row_and_column] = (error1 - error2) / (2 * epsilon)
 
         return gradient_matrix
 
-    def __compute_single_weight_gradient(self, layer: AbstractLayer, input_data: np.ndarray, data_labels: np.ndarray,
-                                         row_and_column: tuple, epsilon: float) -> float:
+    def __compute_single_weight_gradient(self, layer: AbstractLayer, row_and_column: tuple, input_data: np.ndarray,
+                                         data_labels: np.ndarray, epsilon: float) -> float:
+        """
+        Numerically computes gradient of single weight in provided layer.
+
+        :param layer: layer for which compute weight
+        :param row_and_column: tuple of row and column of weight for which compute gradient
+        :param input_data: data on which to compute gradient
+        :param data_labels: matrix of data labels
+        :param epsilon: epsilon term indicating how much to add to weight before cost computing function on it
+        :return: gradient of single weight
+        """
         weight_memento = layer.weight_data.save_weights()
 
         layer.weight_data.weights[row_and_column] += epsilon
