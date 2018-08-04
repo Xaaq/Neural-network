@@ -2,7 +2,8 @@ from typing import List
 
 import numpy as np
 
-from project_files.neural_network.network_layers import AbstractLayer, FullyConnectedLayer, WeightsHavingLayer
+from project_files.neural_network.network_layers import AbstractLayer, FullyConnectedLayer, WeightsHavingLayer, \
+    LastLayerLike
 
 
 class NeuralNetworkEngine:
@@ -27,7 +28,7 @@ class NeuralNetworkEngine:
         """
         last_layer = self.__layer_list[-1]
 
-        if not isinstance(last_layer, FullyConnectedLayer):
+        if not isinstance(last_layer, LastLayerLike):
             raise TypeError("Last layer isn't designed to be last one")
 
         return last_layer.output_neuron_count

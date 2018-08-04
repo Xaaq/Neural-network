@@ -11,7 +11,7 @@ from project_files.utils.weight_utils import WeightData, GradientCalculator
 
 class AbstractLayer(ABC):
     """
-    Abstract base class for all types of layers in neural network.
+    Base interface for all types of layers in neural network.
     """
 
     @abstractmethod
@@ -45,20 +45,10 @@ class AbstractLayer(ABC):
         """
         raise NotImplementedError
 
-    @property
-    @abstractmethod
-    def output_neuron_count(self) -> int:
-        """
-        Returns number of output neurons from this layer.
-
-        :return: output neurons from this layer
-        """
-        raise NotImplementedError
-
 
 class WeightsHavingLayer(AbstractLayer):
     """
-    Abstract base class for layers that have weights.
+    Interface for layers that have weights.
     """
 
     @abstractmethod
@@ -91,7 +81,23 @@ class WeightsHavingLayer(AbstractLayer):
         raise NotImplementedError
 
 
-class FlatteningLayer(AbstractLayer):
+class LastLayerLike(AbstractLayer):
+    """
+    Interface specifying that layer has possibility of being last layer of neural network.
+    """
+
+    @property
+    @abstractmethod
+    def output_neuron_count(self) -> int:
+        """
+        Returns number of output neurons from this layer.
+
+        :return: output neurons from this layer
+        """
+        raise NotImplementedError
+
+
+class FlatteningLayer(LastLayerLike):
     """
     Layer that flattens data. Can be used to flatten data that are output of convolutional layers, so fully-connected
     layers are able to understand them.
@@ -127,7 +133,7 @@ class FlatteningLayer(AbstractLayer):
         return output_neuron_count
 
 
-class FullyConnectedLayer(WeightsHavingLayer):
+class FullyConnectedLayer(WeightsHavingLayer, LastLayerLike):
     """
     Layer, in which every neuron from previous layer is connected to every neuron in next layer.
     """
@@ -262,8 +268,4 @@ class ConvolutionalLayer(WeightsHavingLayer):
 
     @property
     def gradient_calculator(self) -> GradientCalculator:
-        pass
-
-    @property
-    def output_neuron_count(self) -> int:
         pass
