@@ -22,6 +22,7 @@ class AbstractLayer(ABC):
 
         :param input_data_dimensions: tuple of dimensions of data sample coming into this layer
         :return: tuple of dimensions of single data sample coming out of this layer
+        :raises ValueError: if provided data dimensions can't be handled by this layer
         """
         raise NotImplementedError
 
