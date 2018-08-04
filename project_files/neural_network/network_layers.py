@@ -45,15 +45,6 @@ class AbstractLayer(ABC):
         """
         raise NotImplementedError
 
-    @abstractmethod
-    def update_weights(self, learning_rate: float):
-        """
-        Updates weights of layer based on data gathered from forward and back propagation passes.
-
-        :param learning_rate: value specifying how much to adjust weights in respect to gradient
-        """
-        raise NotImplementedError
-
     @property
     @abstractmethod
     def output_neuron_count(self) -> int:
@@ -65,9 +56,39 @@ class AbstractLayer(ABC):
         raise NotImplementedError
 
 
-# TODO: wymyslec jakis lepszy sposob niz dziedziczenie z abstract layer
-class AbstractNumericallyComputableLayer(AbstractLayer):
-    pass
+class WeightsHavingLayer(AbstractLayer):
+    """
+    Abstract base class for layers that have weights.
+    """
+
+    @abstractmethod
+    def update_weights(self, learning_rate: float):
+        """
+        Updates weights of layer based on data gathered from forward and back propagation passes.
+
+        :param learning_rate: value specifying how much to adjust weights in respect to gradient
+        """
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def weight_data(self) -> WeightData:
+        """
+        Getter for this layer's weight data.
+
+        :return: this layer's weight data
+        """
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def gradient_calculator(self) -> GradientCalculator:
+        """
+        Getter for this layer's gradient calculator.
+
+        :return: this layer's gradient calculator
+        """
+        raise NotImplementedError
 
 
 class FlatteningLayer(AbstractLayer):
@@ -109,7 +130,7 @@ class FlatteningLayer(AbstractLayer):
         return output_neuron_count
 
 
-class FullyConnectedLayer(AbstractLayer):
+class FullyConnectedLayer(WeightsHavingLayer):
     """
     Layer, in which every neuron from previous layer is connected to every neuron in next layer.
     """
@@ -169,20 +190,10 @@ class FullyConnectedLayer(AbstractLayer):
 
     @property
     def weight_data(self) -> WeightData:
-        """
-        Getter for this layer's weight data.
-
-        :return: this layer's weight data
-        """
         return self.__weight_data
 
     @property
     def gradient_calculator(self) -> GradientCalculator:
-        """
-        Getter for this layer's gradient calculator.
-
-        :return: this layer's gradient calculator
-        """
         return self.__gradient_calculator
 
     @staticmethod
