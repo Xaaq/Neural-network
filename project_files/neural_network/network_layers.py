@@ -2,11 +2,11 @@
 Module containing types of layers used in neural networks.
 """
 from abc import ABC, abstractmethod
-from typing import Type
 
 import numpy as np
 
-from project_files.neural_network.activation_functions import SigmoidFunction, AbstractActivationFunction
+from project_files.neural_network.activation_functions import AbstractActivationFunction
+from project_files.utils.weight_utils import WeightData, GradientCalculator
 
 
 class AbstractLayer(ABC):
@@ -45,12 +45,48 @@ class AbstractLayer(ABC):
         """
         raise NotImplementedError
 
+    @property
+    @abstractmethod
+    def output_neuron_count(self) -> int:
+        """
+        Returns number of output neurons from this layer.
+
+        :return: output neurons from this layer
+        """
+        raise NotImplementedError
+
+
+class WeightsHavingLayer(AbstractLayer):
+    """
+    Abstract base class for layers that have weights.
+    """
+
     @abstractmethod
     def update_weights(self, learning_rate: float):
         """
         Updates weights of layer based on data gathered from forward and back propagation passes.
 
         :param learning_rate: value specifying how much to adjust weights in respect to gradient
+        """
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def weight_data(self) -> WeightData:
+        """
+        Getter for this layer's weight data.
+
+        :return: this layer's weight data
+        """
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def gradient_calculator(self) -> GradientCalculator:
+        """
+        Getter for this layer's gradient calculator.
+
+        :return: this layer's gradient calculator
         """
         raise NotImplementedError
 
@@ -69,11 +105,11 @@ class FlatteningLayer(AbstractLayer):
 
     def initialize_layer(self, input_data_dimensions: tuple) -> tuple:
         self.__input_data_dimensions = input_data_dimensions
-        return (self.__output_neuron_count,)
+        return (self.output_neuron_count,)
 
     def forward_propagation(self, input_data: np.ndarray) -> np.ndarray:
         data_samples_count = np.shape(input_data)[0]
-        flattened_data = np.reshape(input_data, (data_samples_count, self.__output_neuron_count))
+        flattened_data = np.reshape(input_data, (data_samples_count, self.output_neuron_count))
         return flattened_data
 
     def backward_propagation(self, input_data: np.ndarray) -> np.ndarray:
@@ -81,16 +117,8 @@ class FlatteningLayer(AbstractLayer):
         multidimensional_data = np.reshape(input_data, (data_samples_count, *self.__input_data_dimensions))
         return multidimensional_data
 
-    def update_weights(self, learning_rate: float):
-        pass
-
     @property
-    def __output_neuron_count(self) -> int:
-        """
-        Counts output neuron count of this layer based on number of input data dimensions.
-
-        :return: number of neurons coming out of this layer
-        """
+    def output_neuron_count(self) -> int:
         output_neuron_count = 1
 
         for dimension in self.__input_data_dimensions:
@@ -99,40 +127,42 @@ class FlatteningLayer(AbstractLayer):
         return output_neuron_count
 
 
-class FullyConnectedLayer(AbstractLayer):
+class FullyConnectedLayer(WeightsHavingLayer):
     """
     Layer, in which every neuron from previous layer is connected to every neuron in next layer.
     """
     __input_data_shape_length = 1
 
     def __init__(self, output_neuron_count: int,
-                 activation_function: Type[AbstractActivationFunction] = SigmoidFunction, is_last_layer=False):
+                 activation_function: AbstractActivationFunction, is_last_layer=False):
         """
         Sets the number of output neurons from this layer.
 
         :param output_neuron_count: number of output neurons from this layer
+        :param activation_function: activation function that will be used in this layer
+        :param is_last_layer: flag indicating if this is last layer of network
         """
         self.__output_neuron_count = output_neuron_count
         self.__activation_function = activation_function
-        self.__theta_matrix = None
-        self.__data_before_forward_activation = None
-        self.__data_before_backward_multiplication = None
         self.__is_last_layer = is_last_layer
+        self.__gradient_calculator = GradientCalculator()
+        self.__weight_data: WeightData = None
+        self.__data_before_forward_activation: np.ndarray = None
 
     def initialize_layer(self, input_data_dimensions: tuple) -> tuple:
         if len(input_data_dimensions) != self.__input_data_shape_length:
             raise ValueError("Provided data dimensions shape is wrong")
 
         input_neuron_count = input_data_dimensions[0]
-        self.__theta_matrix = self.__random_initialize_theta(input_neuron_count, self.output_neuron_count)
+        self.__weight_data = WeightData((self.output_neuron_count, input_neuron_count + 1))
         return (self.output_neuron_count,)
 
     def forward_propagation(self, input_data: np.ndarray) -> np.ndarray:
         data_with_bias = self.__add_bias(input_data)
-        multiplied_data = self.__multiply_by_transposed_theta(data_with_bias)
+        multiplied_data = self.__multiply_by_transposed_weights(data_with_bias)
         activated_data = self.__activation_function.calculate_result(multiplied_data)
 
-        self.__data_after_forward_bias = data_with_bias
+        self.__gradient_calculator.before_forward_multiplication = data_with_bias
         self.__data_before_forward_activation = multiplied_data
         return activated_data
 
@@ -143,35 +173,25 @@ class FullyConnectedLayer(AbstractLayer):
             data_after_gradient = input_data * self.__activation_function.calculate_gradient(
                 self.__data_before_forward_activation)
 
-        self.__delta_term = data_after_gradient
-        multiplied_data = self.__multiply_by_theta(data_after_gradient)
+        self.__gradient_calculator.before_backward_multiplication = data_after_gradient
+        multiplied_data = self.__multiply_by_weights(data_after_gradient)
         data_with_removed_bias = self.__remove_bias(multiplied_data)
         return data_with_removed_bias
 
     def update_weights(self, learning_rate: float):
-        self.__theta_matrix -= learning_rate * self.__count_weights_gradient()
+        self.weight_data.update_weights(learning_rate, self.__gradient_calculator)
 
     @property
     def output_neuron_count(self) -> int:
-        """
-        Returns number of output neurons from this layer.
-
-        :return: output neurons from this layer
-        """
         return self.__output_neuron_count
 
-    @staticmethod
-    def __random_initialize_theta(input_neuron_count: int, output_neuron_count: int) -> np.ndarray:
-        """
-        Randomly initializes theta matrix based in number of input and output neurons. All values in matrix are
-        initialized in range [-0.5, 0.5].
+    @property
+    def weight_data(self) -> WeightData:
+        return self.__weight_data
 
-        :param input_neuron_count: number of input neurons
-        :param output_neuron_count: number of output neurons
-        :return: randomly initialized theta matrix
-        """
-        theta = np.random.rand(output_neuron_count, input_neuron_count + 1) - 0.5
-        return theta
+    @property
+    def gradient_calculator(self) -> GradientCalculator:
+        return self.__gradient_calculator
 
     @staticmethod
     def __add_bias(input_data: np.ndarray) -> np.ndarray:
@@ -196,42 +216,34 @@ class FullyConnectedLayer(AbstractLayer):
         """
         return input_data[:, 1:]
 
-    def __multiply_by_transposed_theta(self, input_data: np.ndarray) -> np.ndarray:
+    def __multiply_by_transposed_weights(self, input_data: np.ndarray) -> np.ndarray:
         """
-        Does multiplication of data by transposed theta matrix.
+        Does multiplication of data by transposed weight matrix.
 
-        :param input_data: data to multiply by transposed theta matrix
-        :return: data multiplied by transposed theta matrix
+        :param input_data: data to multiply by transposed weight matrix
+        :return: data multiplied by transposed weight matrix
         """
-        transposed_theta = np.transpose(self.__theta_matrix)
-        multiplied_data = input_data @ transposed_theta
+        transposed_weights = np.transpose(self.weight_data.weights)
+        multiplied_data = input_data @ transposed_weights
         return multiplied_data
 
-    def __multiply_by_theta(self, input_data: np.ndarray) -> np.ndarray:
+    def __multiply_by_weights(self, input_data: np.ndarray) -> np.ndarray:
         """
-        Does multiplication of data by theta matrix.
+        Does multiplication of data by weight matrix.
 
-        :param input_data: data to multiply by theta matrix
-        :return: data multiplied by theta matrix
+        :param input_data: data to multiply by weight matrix
+        :return: data multiplied by weight matrix
         """
-        multiplied_data = input_data @ self.__theta_matrix
+        multiplied_data = input_data @ self.weight_data.weights
         return multiplied_data
 
-    def __count_weights_gradient(self) -> np.ndarray:
-        """
-        Counts and returns gradient of weights based on data saved during forward and backward propagation.
 
-        :return: gradient of weights of this layer
-        """
-        transposed_backward_data = np.transpose(self.__delta_term)
-        number_of_examples = np.shape(self.__data_after_forward_bias)[0]
-        weights_gradient = transposed_backward_data @ self.__data_after_forward_bias
-        weights_gradient /= number_of_examples
+class ConvolutionalLayer(WeightsHavingLayer):
+    """
+    Layer which does convolution on provided data samples. It works similarly to fully connected layer, but it connects
+    only chosen neurons from previous to next layer.
+    """
 
-        return weights_gradient
-
-
-class ConvolutionalLayer(AbstractLayer):
     def initialize_layer(self, input_data_dimensions: tuple) -> tuple:
         pass
 
@@ -242,4 +254,16 @@ class ConvolutionalLayer(AbstractLayer):
         pass
 
     def update_weights(self, learning_rate: float):
+        pass
+
+    @property
+    def weight_data(self) -> WeightData:
+        pass
+
+    @property
+    def gradient_calculator(self) -> GradientCalculator:
+        pass
+
+    @property
+    def output_neuron_count(self) -> int:
         pass

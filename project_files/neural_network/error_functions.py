@@ -1,12 +1,12 @@
 """
 Module containing error functions used in neural networks.
 """
-from abc import abstractmethod
+from abc import abstractmethod, ABC
 
 import numpy as np
 
 
-class AbstractErrorFunction:
+class AbstractErrorFunction(ABC):
     """
     Base class for types of error functions.
     """
