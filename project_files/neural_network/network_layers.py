@@ -105,20 +105,17 @@ class FlatteningLayer(AbstractLayer):
 
     def initialize_layer(self, input_data_dimensions: tuple) -> tuple:
         self.__input_data_dimensions = input_data_dimensions
-        return (self.__output_neuron_count,)
+        return (self.output_neuron_count,)
 
     def forward_propagation(self, input_data: np.ndarray) -> np.ndarray:
         data_samples_count = np.shape(input_data)[0]
-        flattened_data = np.reshape(input_data, (data_samples_count, self.__output_neuron_count))
+        flattened_data = np.reshape(input_data, (data_samples_count, self.output_neuron_count))
         return flattened_data
 
     def backward_propagation(self, input_data: np.ndarray) -> np.ndarray:
         data_samples_count = np.shape(input_data)[0]
         multidimensional_data = np.reshape(input_data, (data_samples_count, *self.__input_data_dimensions))
         return multidimensional_data
-
-    def update_weights(self, learning_rate: float):
-        pass
 
     @property
     def output_neuron_count(self) -> int:
