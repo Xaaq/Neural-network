@@ -238,7 +238,7 @@ class FullyConnectedLayer(WeightsHavingLayer):
         return multiplied_data
 
 
-class ConvolutionalLayer(AbstractLayer):
+class ConvolutionalLayer(WeightsHavingLayer):
     """
     Layer which does convolution on provided data samples. It works similarly to fully connected layer, but it connects
     only chosen neurons from previous to next layer.
@@ -254,4 +254,16 @@ class ConvolutionalLayer(AbstractLayer):
         pass
 
     def update_weights(self, learning_rate: float):
+        pass
+
+    @property
+    def weight_data(self) -> WeightData:
+        pass
+
+    @property
+    def gradient_calculator(self) -> GradientCalculator:
+        pass
+
+    @property
+    def output_neuron_count(self) -> int:
         pass
