@@ -29,7 +29,7 @@ class NeuralNetworkEngine:
         last_layer = self.__layer_list[-1]
 
         if not isinstance(last_layer, LastLayerLike):
-            raise TypeError("Last layer isn't designed to be last one")
+            raise TypeError("Last layer must be implementing {0} interface".format(LastLayerLike.__name__))
 
         return last_layer.output_neuron_count
 
