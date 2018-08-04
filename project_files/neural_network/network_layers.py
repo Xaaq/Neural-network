@@ -54,6 +54,16 @@ class AbstractLayer(ABC):
         """
         raise NotImplementedError
 
+    @property
+    @abstractmethod
+    def output_neuron_count(self) -> int:
+        """
+        Returns number of output neurons from this layer.
+
+        :return: output neurons from this layer
+        """
+        raise NotImplementedError
+
 
 # TODO: wymyslec jakis lepszy sposob niz dziedziczenie z abstract layer
 class AbstractNumericallyComputableLayer(AbstractLayer):
@@ -160,11 +170,6 @@ class FullyConnectedLayer(AbstractLayer):
 
     @property
     def output_neuron_count(self) -> int:
-        """
-        Returns number of output neurons from this layer.
-
-        :return: output neurons from this layer
-        """
         return self.__output_neuron_count
 
     @property
