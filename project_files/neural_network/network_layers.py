@@ -100,12 +100,7 @@ class FlatteningLayer(AbstractLayer):
         pass
 
     @property
-    def __output_neuron_count(self) -> int:
-        """
-        Counts output neuron count of this layer based on number of input data dimensions.
-
-        :return: number of neurons coming out of this layer
-        """
+    def output_neuron_count(self) -> int:
         output_neuron_count = 1
 
         for dimension in self.__input_data_dimensions:
