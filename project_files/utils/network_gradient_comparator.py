@@ -117,29 +117,29 @@ class NetworkGradientComparator:
         gradient_matrix = np.zeros(weight_shape)
 
         for row_and_column in itertools.product(*[range(dimension) for dimension in weight_shape]):
-            error1 = self.__compute_single_weight_gradient(layer, row_and_column, input_data, data_labels, epsilon)
-            error2 = self.__compute_single_weight_gradient(layer, row_and_column, input_data, data_labels, -epsilon)
+            error1 = self.__compute_single_weight_error(layer, row_and_column, input_data, data_labels, epsilon)
+            error2 = self.__compute_single_weight_error(layer, row_and_column, input_data, data_labels, -epsilon)
             gradient_matrix[row_and_column] = (error1 - error2) / (2 * epsilon)
 
         return gradient_matrix
 
-    def __compute_single_weight_gradient(self, layer: WeightsHavingLayer, row_and_column: tuple, input_data: np.ndarray,
-                                         data_labels: np.ndarray, epsilon: float) -> float:
+    def __compute_single_weight_error(self, layer: WeightsHavingLayer, row_and_column: tuple, input_data: np.ndarray,
+                                      data_labels: np.ndarray, epsilon: float) -> float:
         """
-        Numerically computes gradient of single weight in provided layer.
+        Computes error of network with added epsilon value to single weight.
 
         :param layer: layer for which compute weight
         :param row_and_column: tuple of row and column of weight for which compute gradient
         :param input_data: data on which to compute gradient
         :param data_labels: matrix of data labels
         :param epsilon: epsilon term indicating how much to add to weight before cost computing function on it
-        :return: gradient of single weight
+        :return: error of network
         """
         weight_memento = layer.weight_data.save_weights()
 
         layer.weight_data.weights[row_and_column] += epsilon
         data_after_forward_pass = self.__network_engine.forward_propagation(input_data)
         single_weight_error = self.__error_function.count_error(data_after_forward_pass, data_labels)
-        layer.weight_data.restore_weights(weight_memento)
 
+        layer.weight_data.restore_weights(weight_memento)
         return single_weight_error
