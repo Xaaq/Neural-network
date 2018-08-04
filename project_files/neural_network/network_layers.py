@@ -140,20 +140,18 @@ class FullyConnectedLayer(WeightsHavingLayer, LastLayerLike):
     """
     __input_data_shape_length = 1
 
-    def __init__(self, output_neuron_count: int,
-                 activation_function: AbstractActivationFunction, is_last_layer=False):
+    def __init__(self, output_neuron_count: int, activation_function: AbstractActivationFunction):
         """
         Sets the number of output neurons from this layer.
 
         :param output_neuron_count: number of output neurons from this layer
         :param activation_function: activation function that will be used in this layer
-        :param is_last_layer: flag indicating if this is last layer of network
         """
         self.__output_neuron_count = output_neuron_count
         self.__activation_function = activation_function
-        self.__is_last_layer = is_last_layer
         self.__gradient_calculator = GradientCalculator()
         self.__weight_data: WeightData = None
+        self.__do_multiply_by_gradient = True
         self.__data_before_forward_activation: np.ndarray = None
 
     def initialize_layer(self, input_data_dimensions: tuple) -> tuple:
@@ -174,19 +172,19 @@ class FullyConnectedLayer(WeightsHavingLayer, LastLayerLike):
         return activated_data
 
     def backward_propagation(self, input_data: np.ndarray) -> np.ndarray:
-        if self.__is_last_layer:
-            data_after_gradient = input_data
-        else:
-            data_after_gradient = input_data * self.__activation_function.calculate_gradient(
-                self.__data_before_forward_activation)
+        if self.__do_multiply_by_gradient:
+            input_data *= self.__activation_function.calculate_gradient(self.__data_before_forward_activation)
 
-        self.__gradient_calculator.before_backward_multiplication = data_after_gradient
-        multiplied_data = self.__multiply_by_weights(data_after_gradient)
+        self.__gradient_calculator.before_backward_multiplication = input_data
+        multiplied_data = self.__multiply_by_weights(input_data)
         data_with_removed_bias = self.__remove_bias(multiplied_data)
         return data_with_removed_bias
 
     def update_weights(self, learning_rate: float):
         self.weight_data.update_weights(learning_rate, self.__gradient_calculator)
+
+    def mark_as_let_trough(self):
+        self.__do_multiply_by_gradient = False
 
     @property
     def output_neuron_count(self) -> int:
