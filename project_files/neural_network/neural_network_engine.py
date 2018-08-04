@@ -68,5 +68,10 @@ class NeuralNetworkEngine:
                 layer.update_weights(learning_rate)
 
     @property
-    def layer_list(self):
+    def layer_list(self) -> List[AbstractLayer]:
+        """
+        Returns list of layers of this network engine.
+
+        :return: list of layers
+        """
         return self.__layer_list
