@@ -2,7 +2,7 @@ from typing import List
 
 import numpy as np
 
-from project_files.neural_network.network_layers import AbstractLayer, FullyConnectedLayer
+from project_files.neural_network.network_layers import AbstractLayer, FullyConnectedLayer, WeightsHavingLayer
 
 
 class NeuralNetworkEngine:
@@ -59,12 +59,13 @@ class NeuralNetworkEngine:
 
     def update_weights(self, learning_rate: float):
         """
-        Updates weights in all layers in this network based on data from forward and backward propagation.
+        Updates weights in layers in this network based on data from forward and backward propagation.
 
         :param learning_rate: value specifying how much to adjust weights in respect to gradient
         """
         for layer in self.__layer_list:
-            layer.update_weights(learning_rate)
+            if isinstance(layer, WeightsHavingLayer):
+                layer.update_weights(learning_rate)
 
     @property
     def layer_list(self):
