@@ -44,10 +44,11 @@ class DataProcessor:
         """
         Converts vector of values (labels) to matrix representation. For example when 5 `number_of_labels` provided it
         converts following vector:
-
-        :math:`[1, 3, 2, 1, 0]`
+        ::
+            [1, 3, 2, 1, 0]
 
         To following matrix:
+        ::
             [[0, 1, 0, 0, 0],
              [0, 0, 0, 1, 0],
              [0, 0, 1, 0, 0],
@@ -58,7 +59,6 @@ class DataProcessor:
         :param number_of_labels: number of possible data labels
         :return: matrix of labels
         """
-        # TODO: naprawic tego docstringa bo sie macierz zle wyswietla
         label_matrix = []
 
         for label_value in label_vector:
@@ -72,7 +72,7 @@ class DataProcessor:
     def convert_label_matrix_to_vector(label_matrix: np.ndarray) -> np.ndarray:
         """
         Converts matrix of values (labels) to vector representation. For example converts following matrix:
-
+        ::
             [[0, 1, 0, 0, 0],
              [0, 0, 0, 1, 0],
              [0, 0, 1, 0, 0],
@@ -80,12 +80,11 @@ class DataProcessor:
              [1, 0, 0, 0, 0]]
 
         To following vector:
-
-        :math:`[1, 3, 2, 1, 0]`
+        ::
+            [1, 3, 2, 1, 0]
 
         :param label_matrix: matrix of labels
         :return: vector of labels
         """
-        # TODO: naprawic tego docstringa bo sie macierz zle wyswietla
         output_class_vector = np.argmax(label_matrix, axis=1)
         return output_class_vector

@@ -49,8 +49,8 @@ class NeuralNetwork:
 
         for _ in progress_bar:
             data_after_forward_pass = self.__network_engine.forward_propagation(normalized_data)
-            error_vector = data_after_forward_pass - label_matrix
-            self.__network_engine.backward_propagation(error_vector)
+            error_matrix = data_after_forward_pass - label_matrix
+            self.__network_engine.backward_propagation(error_matrix)
             self.__network_engine.update_weights(learning_rate)
 
             error = self.__error_function.count_error(data_after_forward_pass, label_matrix)

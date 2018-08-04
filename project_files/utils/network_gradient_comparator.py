@@ -33,13 +33,13 @@ class NetworkGradientComparator:
         self.__error_function = error_function
         self.__data_processor = data_processor
 
-    def get_average_layer_gradient_list(self, input_data: np.ndarray, label_vector: np.ndarray) -> List[int]:
+    def compute_gradient_difference_magnitudes(self, input_data: np.ndarray, label_vector: np.ndarray) -> List[int]:
         """
         Computes gradient of network in two ways: numerically and by propagation. Then computes average difference of
-        gradients computed in both ways and returns list of order of magnitude for every layer.
+        gradients computed in both ways and returns list of order of magnitude of every layer.
 
         :param input_data: input data on which to compute gradients
-        :param label_vector: vector of labels for every data sample
+        :param label_vector: vector of data labels
         :return: list of every layer order of magnitude
         """
         numerical_gradient_list = self.compute_numerical_gradient(input_data, label_vector)
@@ -70,13 +70,11 @@ class NetworkGradientComparator:
         gradient_list = []
 
         for layer in self.__network_engine.layer_list:
-            if not isinstance(layer, WeightsHavingLayer):
-                continue
-
-            data_after_forward_pass = self.__network_engine.forward_propagation(normalized_data)
-            error_vector = data_after_forward_pass - label_matrix
-            self.__network_engine.backward_propagation(error_vector)
-            gradient_list.append(layer.gradient_calculator.count_weight_gradient())
+            if isinstance(layer, WeightsHavingLayer):
+                data_after_forward_pass = self.__network_engine.forward_propagation(normalized_data)
+                error_vector = data_after_forward_pass - label_matrix
+                self.__network_engine.backward_propagation(error_vector)
+                gradient_list.append(layer.gradient_calculator.count_weight_gradient())
 
         return gradient_list
 
@@ -94,11 +92,9 @@ class NetworkGradientComparator:
         gradient_list = []
 
         for layer in self.__network_engine.layer_list:
-            if not isinstance(layer, WeightsHavingLayer):
-                continue
-
-            layer_gradient = self.__compute_single_layer_gradient(layer, normalized_data, label_matrix)
-            gradient_list.append(layer_gradient)
+            if isinstance(layer, WeightsHavingLayer):
+                layer_gradient = self.__compute_single_layer_gradient(layer, normalized_data, label_matrix)
+                gradient_list.append(layer_gradient)
 
         return gradient_list
 
@@ -113,10 +109,10 @@ class NetworkGradientComparator:
         :return: gradient of all weights in provided layer
         """
         epsilon = 1e-3
-        weight_shape = np.shape(layer.weight_data.weights)
-        gradient_matrix = np.zeros(weight_shape)
+        weight_matrix_shape = np.shape(layer.weight_data.weights)
+        gradient_matrix = np.zeros(weight_matrix_shape)
 
-        for row_and_column in itertools.product(*[range(dimension) for dimension in weight_shape]):
+        for row_and_column in itertools.product(*[range(dimension) for dimension in weight_matrix_shape]):
             error1 = self.__compute_single_weight_error(layer, row_and_column, input_data, data_labels, epsilon)
             error2 = self.__compute_single_weight_error(layer, row_and_column, input_data, data_labels, -epsilon)
             gradient_matrix[row_and_column] = (error1 - error2) / (2 * epsilon)
@@ -132,7 +128,7 @@ class NetworkGradientComparator:
         :param row_and_column: tuple of row and column of weight for which compute gradient
         :param input_data: data on which to compute gradient
         :param data_labels: matrix of data labels
-        :param epsilon: epsilon term indicating how much to add to weight before cost computing function on it
+        :param epsilon: epsilon term indicating how much to add to weight before computing error function on it
         :return: error of network
         """
         weight_memento = layer.weight_data.save_weights()
