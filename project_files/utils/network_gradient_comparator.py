@@ -9,7 +9,7 @@ from typing import List
 import numpy as np
 
 from project_files.neural_network.error_functions import AbstractErrorFunction
-from project_files.neural_network.network_layers import FullyConnectedLayer, AbstractLayer
+from project_files.neural_network.network_layers import WeightsHavingLayer
 from project_files.neural_network.neural_network import NeuralNetworkEngine
 from project_files.utils.data_processor import DataProcessor
 
@@ -70,8 +70,7 @@ class NetworkGradientComparator:
         gradient_list = []
 
         for layer in self.__network_engine.layer_list:
-            if not isinstance(layer, FullyConnectedLayer):
-                # TODO: obmyslic jak robic ten check (czy jakas inna klase abstrakcyjna, ktora mowi ze tej klasy thete mozna brac)
+            if not isinstance(layer, WeightsHavingLayer):
                 continue
 
             data_after_forward_pass = self.__network_engine.forward_propagation(normalized_data)
@@ -95,8 +94,7 @@ class NetworkGradientComparator:
         gradient_list = []
 
         for layer in self.__network_engine.layer_list:
-            if not isinstance(layer, FullyConnectedLayer):
-                # TODO: obmyslic jak robic ten check (czy jakas inna klase abstrakcyjna, ktora mowi ze tej klasy thete mozna brac)
+            if not isinstance(layer, WeightsHavingLayer):
                 continue
 
             layer_gradient = self.__compute_single_layer_gradient(layer, normalized_data, label_matrix)
@@ -104,7 +102,7 @@ class NetworkGradientComparator:
 
         return gradient_list
 
-    def __compute_single_layer_gradient(self, layer: AbstractLayer, input_data: np.ndarray,
+    def __compute_single_layer_gradient(self, layer: WeightsHavingLayer, input_data: np.ndarray,
                                         data_labels: np.ndarray) -> np.ndarray:
         """
         Numerically computes gradient of all weights in single layer.
@@ -125,7 +123,7 @@ class NetworkGradientComparator:
 
         return gradient_matrix
 
-    def __compute_single_weight_gradient(self, layer: AbstractLayer, row_and_column: tuple, input_data: np.ndarray,
+    def __compute_single_weight_gradient(self, layer: WeightsHavingLayer, row_and_column: tuple, input_data: np.ndarray,
                                          data_labels: np.ndarray, epsilon: float) -> float:
         """
         Numerically computes gradient of single weight in provided layer.
