@@ -6,7 +6,7 @@ from typing import List
 import numpy as np
 
 from project_files.neural_network.error_functions import CrossEntropyErrorFunction, AbstractErrorFunction
-from project_files.neural_network.network_layers import AbstractLayer, WeightsHavingLayer
+from project_files.neural_network.network_layers import AbstractLayer, WeightsHavingLayer, WeightsHavingLastLayerLike
 from project_files.neural_network.neural_network_engine import NeuralNetworkEngine
 from project_files.utils.data_processor import DataProcessor
 from project_files.utils.network_gradient_comparator import NetworkGradientComparator
@@ -148,7 +148,6 @@ class NeuralNetworkBuilder:
             next_layer_dimensions = layer.initialize_layer(next_layer_dimensions)
 
         for layer in reversed(self.__layer_list):
-            if isinstance(layer, WeightsHavingLayer):
+            if isinstance(layer, WeightsHavingLastLayerLike):
                 layer.mark_as_let_trough()
-                # TODO: zrobic mechanizm zeby sprawdzalo czy jest odpowiednim layerem i mozna bylo bez warningu wykonac to wyzej
                 break

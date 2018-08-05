@@ -98,6 +98,12 @@ class LastLayerLike(AbstractLayer):
         raise NotImplementedError
 
 
+class WeightsHavingLastLayerLike(WeightsHavingLayer, LastLayerLike):
+    @abstractmethod
+    def mark_as_let_trough(self):
+        raise NotImplementedError
+
+
 class FlatteningLayer(LastLayerLike):
     """
     Layer that flattens data. Can be used to flatten data that are output of convolutional layers, so fully-connected
@@ -134,7 +140,7 @@ class FlatteningLayer(LastLayerLike):
         return output_neuron_count
 
 
-class FullyConnectedLayer(WeightsHavingLayer, LastLayerLike):
+class FullyConnectedLayer(WeightsHavingLastLayerLike):
     """
     Layer, in which every neuron from previous layer is connected to every neuron in next layer.
     """
