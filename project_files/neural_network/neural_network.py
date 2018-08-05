@@ -145,7 +145,7 @@ class NeuralNetworkBuilder:
         next_layer_dimensions = input_data_dimensions
 
         for layer in self.__layer_list:
-            next_layer_dimensions = layer.initialize_layer(next_layer_dimensions)
+            next_layer_dimensions = layer.initialize(next_layer_dimensions)
 
         for layer in reversed(self.__layer_list):
             if isinstance(layer, WeightsHavingLastLayerLike):

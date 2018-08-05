@@ -15,7 +15,7 @@ class AbstractLayer(ABC):
     """
 
     @abstractmethod
-    def initialize_layer(self, input_data_dimensions: tuple) -> tuple:
+    def initialize(self, input_data_dimensions: tuple) -> tuple:
         """
         Initializes this layer parameters based on provided data. Also returns dimensions of data coming out of this
         layer.
@@ -116,7 +116,7 @@ class FlatteningLayer(LastLayerLike):
         """
         self.__input_data_dimensions = None
 
-    def initialize_layer(self, input_data_dimensions: tuple) -> tuple:
+    def initialize(self, input_data_dimensions: tuple) -> tuple:
         self.__input_data_dimensions = input_data_dimensions
         return (self.output_neuron_count,)
 
@@ -160,7 +160,7 @@ class FullyConnectedLayer(WeightsHavingLastLayerLike):
         self.__do_multiply_by_gradient = True
         self.__data_before_forward_activation: np.ndarray = None
 
-    def initialize_layer(self, input_data_dimensions: tuple) -> tuple:
+    def initialize(self, input_data_dimensions: tuple) -> tuple:
         if len(input_data_dimensions) != self.__input_data_shape_length:
             raise ValueError("Provided data dimensions shape is wrong")
 
@@ -255,7 +255,7 @@ class ConvolutionalLayer(WeightsHavingLayer):
     only chosen neurons from previous to next layer.
     """
 
-    def initialize_layer(self, input_data_dimensions: tuple) -> tuple:
+    def initialize(self, input_data_dimensions: tuple) -> tuple:
         pass
 
     def forward_propagation(self, input_data: np.ndarray) -> np.ndarray:
