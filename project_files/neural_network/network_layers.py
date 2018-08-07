@@ -100,7 +100,7 @@ class LastLayerLike(AbstractLayer):
 
 class WeightsHavingLastLayerLike(WeightsHavingLayer, LastLayerLike):
     @abstractmethod
-    def mark_as_let_trough(self):
+    def mark_as_let_through(self):
         raise NotImplementedError
 
 
@@ -189,7 +189,7 @@ class FullyConnectedLayer(WeightsHavingLastLayerLike):
     def update_weights(self, learning_rate: float):
         self.weight_data.update_weights(learning_rate, self.__gradient_calculator)
 
-    def mark_as_let_trough(self):
+    def mark_as_let_through(self):
         self.__do_multiply_by_gradient = False
 
     @property

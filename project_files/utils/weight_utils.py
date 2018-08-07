@@ -41,14 +41,14 @@ class WeightData:
         """
         self.__weights = self.__generate_random_weight_matrix(weight_dimensions)
 
-    def update_weights(self, learning_rate: float, gradient_helper_data: GradientCalculator):
+    def update_weights(self, learning_rate: float, gradient_calculator: GradientCalculator):
         """
         Updates weights using provided data.
 
         :param learning_rate: multiplier of weights update
-        :param gradient_helper_data: additional data needed to compute weight gradient
+        :param gradient_calculator: gradient calculator needed to compute weight gradient
         """
-        self.__weights -= learning_rate * gradient_helper_data.count_weight_gradient()
+        self.__weights -= learning_rate * gradient_calculator.count_weight_gradient()
 
     def save_weights(self) -> WeightMemento:
         """

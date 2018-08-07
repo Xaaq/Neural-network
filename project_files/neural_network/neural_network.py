@@ -149,5 +149,5 @@ class NeuralNetworkBuilder:
 
         for layer in reversed(self.__layer_list):
             if isinstance(layer, WeightsHavingLastLayerLike):
-                layer.mark_as_let_trough()
+                layer.mark_as_let_through()
                 break

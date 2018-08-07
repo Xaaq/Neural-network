@@ -2,8 +2,7 @@ from typing import List
 
 import numpy as np
 
-from project_files.neural_network.network_layers import AbstractLayer, FullyConnectedLayer, WeightsHavingLayer, \
-    LastLayerLike
+from project_files.neural_network.network_layers import AbstractLayer, WeightsHavingLayer, LastLayerLike
 
 
 class NeuralNetworkEngine:
