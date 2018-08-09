@@ -41,6 +41,24 @@ class WeightData:
         """
         self.__weights = self.__generate_random_weight_matrix(weight_dimensions)
 
+    def __getitem__(self, indices: tuple) -> float:
+        """
+        Gets single weight from given indices.
+
+        :param indices: indices of weight to get
+        :return: single weight
+        """
+        return self.weights[indices]
+
+    def __setitem__(self, indices: tuple, value: float):
+        """
+        Sets particular weight to given value.
+
+        :param indices: indices of weights element to set
+        :param value: value to set
+        """
+        self.__weights[indices] = value
+
     def update_weights(self, learning_rate: float, gradient_calculator: GradientCalculator):
         """
         Updates weights using provided data.
@@ -69,11 +87,11 @@ class WeightData:
     @property
     def weights(self) -> np.ndarray:
         """
-        Returns stored weights.
+        Returns copy of stored weights.
 
-        :return: stored weights
+        :return: copy of stored weights
         """
-        return self.__weights
+        return self.__weights.copy()
 
     @staticmethod
     def __generate_random_weight_matrix(weight_dimensions: tuple) -> np.ndarray:

@@ -119,13 +119,13 @@ class NetworkGradientComparator:
 
         return gradient_matrix
 
-    def __compute_single_weight_error(self, layer: WeightsHavingLayer, row_and_column: tuple, input_data: np.ndarray,
+    def __compute_single_weight_error(self, layer: WeightsHavingLayer, weight_indices: tuple, input_data: np.ndarray,
                                       data_labels: np.ndarray, epsilon: float) -> float:
         """
         Computes error of network with added epsilon value to single weight.
 
         :param layer: layer for which compute weight
-        :param row_and_column: tuple of row and column of weight for which compute gradient
+        :param weight_indices: indices of weight for which compute gradient
         :param input_data: data on which to compute gradient
         :param data_labels: matrix of data labels
         :param epsilon: epsilon term indicating how much to add to weight before computing error function on it
@@ -133,7 +133,7 @@ class NetworkGradientComparator:
         """
         weight_memento = layer.weight_data.save_weights()
 
-        layer.weight_data.weights[row_and_column] += epsilon
+        layer.weight_data[weight_indices] += epsilon
         data_after_forward_pass = self.__network_engine.forward_propagation(input_data)
         single_weight_error = self.__error_function.count_error(data_after_forward_pass, data_labels)
 
