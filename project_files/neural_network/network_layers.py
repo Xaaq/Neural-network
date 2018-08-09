@@ -98,6 +98,7 @@ class LastLayerLike(AbstractLayer):
         raise NotImplementedError
 
 
+# TODO: zaorac ten interfejs i jego logike przeniesc do WeightsHavingLayer
 class WeightsHavingLastLayerLike(WeightsHavingLayer, LastLayerLike):
     @abstractmethod
     def mark_as_let_through(self):

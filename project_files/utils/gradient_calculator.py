@@ -31,6 +31,7 @@ class GradientCalculator:
 
         return weight_gradient
 
+    # TODO: usunac gettery
     @property
     def before_forward_multiplication(self) -> np.ndarray:
         """
