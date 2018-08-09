@@ -1,8 +1,24 @@
+from abc import ABC
 from typing import List
 
 import numpy as np
 
 from project_files.neural_network.network_layers import AbstractLayer, WeightsHavingLayer, LastLayerLike
+
+
+class GradientCalculatorLike(ABC):
+    def calculate_gradient(self, layer_list: List[AbstractLayer]) -> List[np.ndarray]:
+        raise NotImplementedError
+
+
+class NumericalGradientCalculator(GradientCalculatorLike):
+    def calculate_gradient(self, layer_list: List[AbstractLayer]) -> List[np.ndarray]:
+        pass
+
+
+class RegularGradientCalculator(GradientCalculatorLike):
+    def calculate_gradient(self, layer_list: List[AbstractLayer]) -> List[np.ndarray]:
+        pass
 
 
 class NeuralNetworkEngine:
