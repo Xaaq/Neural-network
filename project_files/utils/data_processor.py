@@ -10,8 +10,8 @@ class DataProcessor:
     """
     Class that provides tools to pre-process data that are input to neural network and post-process its output.
     """
-
-    def preprocess_data(self, input_data: np.ndarray, label_vector: np.ndarray,
+    @classmethod
+    def preprocess_data(cls, input_data: np.ndarray, label_vector: np.ndarray,
                         number_of_labels: int) -> Tuple[np.ndarray, np.ndarray]:
         """
         Preprocesses input data by normalizing it and label vector by converting it to matrix.
@@ -21,8 +21,8 @@ class DataProcessor:
         :param number_of_labels: number of possible labels
         :return: normalized input data, matrix of labels
         """
-        normalized_data = self.normalize_data(input_data)
-        label_matrix = self.convert_label_vector_to_matrix(label_vector, number_of_labels)
+        normalized_data = cls.normalize_data(input_data)
+        label_matrix = cls.convert_label_vector_to_matrix(label_vector, number_of_labels)
         return normalized_data, label_matrix
 
     @staticmethod
