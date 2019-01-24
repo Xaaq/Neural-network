@@ -41,10 +41,10 @@ class NumericalGradientCalculator(GradientCalculatorLike):
         weight_matrix_shape = np.shape(layer.weight_data.weights)
         gradient_matrix = np.zeros(weight_matrix_shape)
 
-        for row_and_column in itertools.product(*[range(dimension) for dimension in weight_matrix_shape]):
-            error1 = self.__compute_single_weight_error(layer, row_and_column, input_data, data_labels, epsilon)
-            error2 = self.__compute_single_weight_error(layer, row_and_column, input_data, data_labels, -epsilon)
-            gradient_matrix[row_and_column] = (error1 - error2) / (2 * epsilon)
+        for item_indices in itertools.product(*[range(dimension) for dimension in weight_matrix_shape]):
+            error1 = self.__compute_single_weight_error(layer, item_indices, input_data, data_labels, epsilon)
+            error2 = self.__compute_single_weight_error(layer, item_indices, input_data, data_labels, -epsilon)
+            gradient_matrix[item_indices] = (error1 - error2) / (2 * epsilon)
 
         return gradient_matrix
 
