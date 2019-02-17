@@ -30,6 +30,6 @@ class NeuralNetworkProgressBar(tqdm):
 
         :param error: error function value
         """
-        formatted_error = "{0:.4f}".format(error)
+        formatted_error = f"{error:.4f}"
         self.set_description_str(formatted_error)
         self.ncols = self.__column_width + len(formatted_error)

@@ -6,7 +6,7 @@ from typing import List
 import numpy as np
 
 from project_files.neural_network.error_functions import CrossEntropyErrorFunction, AbstractErrorFunction
-from project_files.neural_network.network_layers import AbstractLayer, WeightsHavingLayer, WeightsHavingLastLayerLike
+from project_files.neural_network.network_layers import AbstractLayer, WeightsHavingLastLayerLike
 from project_files.neural_network.neural_network_engine import NeuralNetworkEngine
 from project_files.utils.data_processor import DataProcessor
 from project_files.utils.network_gradient_comparator import NetworkGradientComparator
