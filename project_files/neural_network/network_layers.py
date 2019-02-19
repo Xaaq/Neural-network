@@ -141,7 +141,7 @@ class FlatteningLayer(LastLayerLike):
         return output_neuron_count
 
 
-class FullyConnectedLayer(WeightsHavingLayer):
+class FullyConnectedLayer(WeightsHavingLayer, LastLayerLike):
     """
     Layer, in which every neuron from previous layer is connected to every neuron in next layer.
     """
