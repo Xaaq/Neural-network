@@ -61,6 +61,13 @@ class WeightsHavingLayer(AbstractLayer):
         """
         raise NotImplementedError
 
+    @abstractmethod
+    def mark_as_let_through(self):
+        """
+        Marks layer, so when doing backpropagation it won't multiply values by activation function gradient.
+        """
+        raise NotImplementedError
+
     @property
     @abstractmethod
     def weight_data(self) -> WeightData:
@@ -95,13 +102,6 @@ class LastLayerLike(AbstractLayer):
 
         :return: output neurons from this layer
         """
-        raise NotImplementedError
-
-
-# TODO: zaorac ten interfejs i jego logike przeniesc do WeightsHavingLayer
-class WeightsHavingLastLayerLike(WeightsHavingLayer, LastLayerLike):
-    @abstractmethod
-    def mark_as_let_through(self):
         raise NotImplementedError
 
 
@@ -141,7 +141,7 @@ class FlatteningLayer(LastLayerLike):
         return output_neuron_count
 
 
-class FullyConnectedLayer(WeightsHavingLastLayerLike):
+class FullyConnectedLayer(WeightsHavingLayer):
     """
     Layer, in which every neuron from previous layer is connected to every neuron in next layer.
     """
@@ -266,6 +266,9 @@ class ConvolutionalLayer(WeightsHavingLayer):
         pass
 
     def update_weights(self, learning_rate: float):
+        pass
+
+    def mark_as_let_through(self):
         pass
 
     @property
