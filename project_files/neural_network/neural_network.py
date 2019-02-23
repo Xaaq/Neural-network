@@ -7,7 +7,7 @@ import numpy as np
 
 from project_files.neural_network.error_functions import CrossEntropyErrorFunction, AbstractErrorFunction
 from project_files.neural_network.network_layers import AbstractLayer, WeightsHavingLayer
-from project_files.neural_network.neural_network_engine import NeuralNetworkEngine
+from project_files.neural_network.neural_network_manager import NetworkLayerManager
 from project_files.utils.data_processor import DataProcessor
 from project_files.utils.network_gradient_comparator import NetworkGradientComparator
 from project_files.utils.neural_network_progress_bar import NeuralNetworkProgressBar
@@ -19,7 +19,7 @@ class NeuralNetwork:
     To create instance of this class use :class:`NeuralNetworkBuilder`.
     """
 
-    def __init__(self, network_engine: NeuralNetworkEngine, error_function: AbstractErrorFunction,
+    def __init__(self, network_engine: NetworkLayerManager, error_function: AbstractErrorFunction,
                  data_processor: DataProcessor):
         """
         Initializes this neural network components.
@@ -131,7 +131,7 @@ class NeuralNetworkBuilder:
         """
         self.__initialize_layers(input_data_dimensions)
 
-        network_engine = NeuralNetworkEngine(self.__layer_list)
+        network_engine = NetworkLayerManager(self.__layer_list)
         neural_network = NeuralNetwork(network_engine, self.__error_function, self.__data_processor)
         return neural_network
 

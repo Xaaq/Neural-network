@@ -10,7 +10,7 @@ import numpy as np
 
 from project_files.neural_network.error_functions import AbstractErrorFunction
 from project_files.neural_network.network_layers import WeightsHavingLayer
-from project_files.neural_network.neural_network import NeuralNetworkEngine
+from project_files.neural_network.neural_network import NetworkLayerManager
 from project_files.utils.data_processor import DataProcessor
 
 
@@ -20,7 +20,7 @@ class NetworkGradientComparator:
     these gradients to check how big is difference between them.
     """
 
-    def __init__(self, network_engine: NeuralNetworkEngine, error_function: AbstractErrorFunction,
+    def __init__(self, network_engine: NetworkLayerManager, error_function: AbstractErrorFunction,
                  data_processor: DataProcessor):
         """
         Initializes this gradient comparator components.

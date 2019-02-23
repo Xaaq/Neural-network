@@ -76,7 +76,7 @@ class RegularGradientCalculator(GradientCalculatorLike):
         pass
 
 
-class NeuralNetworkEngine:
+class NetworkLayerManager:
     """
     Engine of neural network, that has all core tools needed in neural network computing.
     """
