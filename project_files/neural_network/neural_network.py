@@ -32,10 +32,10 @@ class NeuralNetwork:
         self.__error_function = error_function
         self.__data_processor = data_processor
 
-    def teach_network(self, input_data: np.ndarray, label_vector: np.ndarray, iteration_count: int,
-                      learning_rate: float = 1):
+    def fit(self, input_data: np.ndarray, label_vector: np.ndarray, iteration_count: int,
+            learning_rate: float = 1):
         """
-        Teaches neural network on given data.
+        Fit this network to given data.
 
         :param input_data: matrix of data on which network has to learn on
         :param label_vector: vector of labels of input data

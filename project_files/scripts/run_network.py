@@ -19,7 +19,7 @@ neural_network = (NeuralNetworkBuilder()
                                FullyConnectedLayer(50, SigmoidFunction()),
                                FullyConnectedLayer(10, SigmoidFunction(), True)])
                   .build(shape))
-neural_network.teach_network(train_data_x, train_data_y, 100, learning_rate=1)
+neural_network.fit(train_data_x, train_data_y, 100, learning_rate=1)
 after = neural_network.predict(train_data_x)
 
 print(after)
