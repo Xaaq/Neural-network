@@ -74,14 +74,14 @@ class NetworkGradientComparator:
                 data_after_forward_pass = self.__network_engine.forward_propagation(normalized_data)
                 error_vector = data_after_forward_pass - label_matrix
                 self.__network_engine.backward_propagation(error_vector)
-                gradient_list.append(layer.gradient_calculator.count_weight_gradient())
+                gradient_list.append(layer.gradient_calculator.compute_weight_gradient())
 
         return gradient_list
 
     def compute_numerical_gradient(self, input_data: np.ndarray, label_vector: np.ndarray) -> List[np.ndarray]:
         """
         Computes and returns gradient of weights in network based on provided data in numerical way. This method is very
-        slow and should be used only to check if gradient counted by other methods is computed correctly.
+        slow and should be used only to check if gradient computed by other methods is correct.
 
         :param input_data: data on which compute gradient
         :param label_vector: vector of data labels
@@ -136,7 +136,7 @@ class NetworkGradientComparator:
 
         layer.weight_data[weight_indices] += epsilon
         data_after_forward_pass = self.__network_engine.forward_propagation(input_data)
-        single_weight_error = self.__error_function.count_error(data_after_forward_pass, data_labels)
+        single_weight_error = self.__error_function.compute_error(data_after_forward_pass, data_labels)
 
         layer.weight_data.restore_weights(weight_memento)
         return single_weight_error

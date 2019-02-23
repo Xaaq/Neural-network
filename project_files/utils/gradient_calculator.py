@@ -17,9 +17,9 @@ class GradientCalculator:
         self.__before_forward_multiplication: np.ndarray = None
         self.__before_backward_multiplication: np.ndarray = None
 
-    def count_weight_gradient(self) -> np.ndarray:
+    def compute_weight_gradient(self) -> np.ndarray:
         """
-        Counts and returns gradient of weights based on earlier saved data.
+        Computes gradient of weights based on earlier saved data.
 
         :return: gradient of weights of this layer
         """

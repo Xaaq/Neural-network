@@ -53,7 +53,7 @@ class NeuralNetwork:
             self.__network_engine.backward_propagation(error_matrix)
             self.__network_engine.update_weights(learning_rate)
 
-            error = self.__error_function.count_error(data_after_forward_pass, label_matrix)
+            error = self.__error_function.compute_error(data_after_forward_pass, label_matrix)
             progress_bar.update_error(error)
 
     def predict(self, input_data: np.ndarray) -> np.ndarray:

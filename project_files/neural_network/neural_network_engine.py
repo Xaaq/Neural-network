@@ -64,7 +64,7 @@ class NumericalGradientCalculator(GradientCalculatorLike):
 
         layer.weight_data[weight_indices] += epsilon
         data_after_forward_pass = self.__network_engine.forward_propagation(input_data)
-        single_weight_error = self.__error_function.count_error(data_after_forward_pass, data_labels)
+        single_weight_error = self.__error_function.compute_error(data_after_forward_pass, data_labels)
 
         layer.weight_data.restore_weights(weight_memento)
         return single_weight_error
