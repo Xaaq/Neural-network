@@ -7,7 +7,7 @@ import numpy as np
 
 from project_files.neural_network.error_functions import CrossEntropyErrorFunction, AbstractErrorFunction
 from project_files.neural_network.network_layers import AbstractLayer, WeightsHavingLayer
-from project_files.neural_network.neural_network_manager import NetworkLayerManager
+from project_files.neural_network.neural_layer_manager import NetworkLayerManager
 from project_files.utils.data_processor import DataProcessor
 from project_files.utils.network_gradient_comparator import NetworkGradientComparator
 from project_files.utils.neural_network_progress_bar import NeuralNetworkProgressBar
