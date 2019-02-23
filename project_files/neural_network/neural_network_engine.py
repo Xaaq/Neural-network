@@ -117,13 +117,13 @@ class NeuralNetworkEngine:
 
         return data_for_next_layer
 
-    def backward_propagation(self, input_data: np.ndarray):
+    def backward_propagation(self, data_error: np.ndarray):
         """
         Does backward propagation for every layer in this network based on given data.
 
-        :param input_data: data that are output of neural network, used to do backward pass
+        :param data_error: error of data that are output of neural network
         """
-        data_for_previous_layer = input_data
+        data_for_previous_layer = data_error
 
         for layer in reversed(self.__layer_list):
             data_for_previous_layer = layer.backward_propagation(data_for_previous_layer)

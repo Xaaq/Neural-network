@@ -44,7 +44,6 @@ class NeuralNetwork:
         """
         label_count = self.__network_engine.get_network_output_neuron_count()
         normalized_data, label_matrix = self.__data_processor.preprocess_data(input_data, label_vector, label_count)
-
         progress_bar = NeuralNetworkProgressBar(iteration_count)
 
         for _ in progress_bar:
