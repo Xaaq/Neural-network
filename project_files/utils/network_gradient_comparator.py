@@ -111,8 +111,9 @@ class NetworkGradientComparator:
         epsilon = 1e-3
         weight_matrix_shape = np.shape(layer.weight_data.weights)
         gradient_matrix = np.zeros(weight_matrix_shape)
+        weight_matrix_index_ranges = [range(dimension) for dimension in weight_matrix_shape]
 
-        for row_and_column in itertools.product(*[range(dimension) for dimension in weight_matrix_shape]):
+        for row_and_column in itertools.product(*weight_matrix_index_ranges):
             error1 = self.__compute_single_weight_error(layer, row_and_column, input_data, data_labels, epsilon)
             error2 = self.__compute_single_weight_error(layer, row_and_column, input_data, data_labels, -epsilon)
             gradient_matrix[row_and_column] = (error1 - error2) / (2 * epsilon)
