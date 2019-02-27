@@ -30,7 +30,7 @@ class WeightMemento:
 
 class WeightData:
     """
-    Data object that encapsulates layer weights and allows to do computing on them.
+    Data object that encapsulates single layer weights and allows to do computing on them.
     """
 
     def __init__(self, weight_dimensions: tuple):
