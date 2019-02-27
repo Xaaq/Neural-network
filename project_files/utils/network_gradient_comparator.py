@@ -20,16 +20,16 @@ class NetworkGradientComparator:
     these gradients to check how big is difference between them.
     """
 
-    def __init__(self, network_engine: NetworkLayerManager, error_function: AbstractErrorFunction,
+    def __init__(self, layer_manager: NetworkLayerManager, error_function: AbstractErrorFunction,
                  data_processor: DataProcessor):
         """
         Initializes this gradient comparator components.
 
-        :param network_engine: network engine to use
+        :param layer_manager: manager of neural network layers
         :param error_function: error function to use
         :param data_processor: data processor to use
         """
-        self.__network_engine = network_engine
+        self.__layer_manager = layer_manager
         self.__error_function = error_function
         self.__data_processor = data_processor
 
@@ -65,15 +65,15 @@ class NetworkGradientComparator:
         :param label_vector: vector of data labels
         :return: gradient of weights in this network
         """
-        label_count = self.__network_engine.get_network_output_neuron_count()
+        label_count = self.__layer_manager.get_network_output_neuron_count()
         normalized_data, label_matrix = self.__data_processor.preprocess_data(input_data, label_vector, label_count)
         gradient_list = []
 
-        for layer in self.__network_engine.layer_list:
+        for layer in self.__layer_manager.layer_list:
             if isinstance(layer, WeightsHavingLayer):
-                data_after_forward_pass = self.__network_engine.forward_propagation(normalized_data)
+                data_after_forward_pass = self.__layer_manager.forward_propagation(normalized_data)
                 error_vector = data_after_forward_pass - label_matrix
-                self.__network_engine.backward_propagation(error_vector)
+                self.__layer_manager.backward_propagation(error_vector)
                 gradient_list.append(layer.gradient_calculator.compute_weight_gradient())
 
         return gradient_list
@@ -87,11 +87,11 @@ class NetworkGradientComparator:
         :param label_vector: vector of data labels
         :return: gradient of weights in this network
         """
-        label_count = self.__network_engine.get_network_output_neuron_count()
+        label_count = self.__layer_manager.get_network_output_neuron_count()
         normalized_data, label_matrix = self.__data_processor.preprocess_data(input_data, label_vector, label_count)
         gradient_list = []
 
-        for layer in self.__network_engine.layer_list:
+        for layer in self.__layer_manager.layer_list:
             if isinstance(layer, WeightsHavingLayer):
                 layer_gradient = self.__compute_single_layer_gradient(layer, normalized_data, label_matrix)
                 gradient_list.append(layer_gradient)
@@ -135,7 +135,7 @@ class NetworkGradientComparator:
         weight_memento = layer.weight_data.save_weights()
 
         layer.weight_data[weight_indices] += epsilon
-        data_after_forward_pass = self.__network_engine.forward_propagation(input_data)
+        data_after_forward_pass = self.__layer_manager.forward_propagation(input_data)
         single_weight_error = self.__error_function.compute_error(data_after_forward_pass, data_labels)
 
         layer.weight_data.restore_weights(weight_memento)

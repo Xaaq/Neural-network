@@ -17,11 +17,11 @@ class GradientCalculatorLike(ABC):
 class NumericalGradientCalculator(GradientCalculatorLike):
     def calculate_gradient(self, layer_list: List[AbstractLayer], input_data: np.ndarray,
                            label_vector: np.ndarray) -> List[np.ndarray]:
-        label_count = self.__network_engine.get_network_output_neuron_count()
+        label_count = self.__layer_manager.get_network_output_neuron_count()
         normalized_data, label_matrix = self.__data_processor.preprocess_data(input_data, label_vector, label_count)
         gradient_list = []
 
-        for layer in self.__network_engine.layer_list:
+        for layer in self.__layer_manager.layer_list:
             if isinstance(layer, WeightsHavingLayer):
                 layer_gradient = self.__compute_single_layer_gradient(layer, normalized_data, label_matrix)
                 gradient_list.append(layer_gradient)
@@ -64,7 +64,7 @@ class NumericalGradientCalculator(GradientCalculatorLike):
         weight_memento = layer.weight_data.save_weights()
 
         layer.weight_data[weight_indices] += epsilon
-        data_after_forward_pass = self.__network_engine.forward_propagation(input_data)
+        data_after_forward_pass = self.__layer_manager.forward_propagation(input_data)
         single_weight_error = self.__error_function.compute_error(data_after_forward_pass, data_labels)
 
         layer.weight_data.restore_weights(weight_memento)

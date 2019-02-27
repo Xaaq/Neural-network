@@ -19,16 +19,16 @@ class NeuralNetwork:
     To create instance of this class use :class:`NeuralNetworkBuilder`.
     """
 
-    def __init__(self, network_engine: NetworkLayerManager, error_function: AbstractErrorFunction,
+    def __init__(self, layer_manager: NetworkLayerManager, error_function: AbstractErrorFunction,
                  data_processor: DataProcessor):
         """
         Initializes this neural network components.
 
-        :param network_engine: engine of this neural network
+        :param layer_manager: manager of neural network layers
         :param error_function: error function used by this network
         :param data_processor: processor of data
         """
-        self.__network_engine = network_engine
+        self.__layer_manager = layer_manager
         self.__error_function = error_function
         self.__data_processor = data_processor
 
@@ -42,15 +42,15 @@ class NeuralNetwork:
         :param iteration_count: how much learning iterations the network has to execute
         :param learning_rate: value specifying how much to adjust weights in respect to gradient
         """
-        label_count = self.__network_engine.get_network_output_neuron_count()
+        label_count = self.__layer_manager.get_network_output_neuron_count()
         normalized_data, label_matrix = self.__data_processor.preprocess_data(input_data, label_vector, label_count)
         progress_bar = NeuralNetworkProgressBar(iteration_count)
 
         for _ in progress_bar:
-            data_after_forward_pass = self.__network_engine.forward_propagation(normalized_data)
+            data_after_forward_pass = self.__layer_manager.forward_propagation(normalized_data)
             error_matrix = data_after_forward_pass - label_matrix
-            self.__network_engine.backward_propagation(error_matrix)
-            self.__network_engine.update_weights(learning_rate)
+            self.__layer_manager.backward_propagation(error_matrix)
+            self.__layer_manager.update_weights(learning_rate)
 
             error = self.__error_function.compute_error(data_after_forward_pass, label_matrix)
             progress_bar.update_error(error)
@@ -63,7 +63,7 @@ class NeuralNetwork:
         :return: vector of output classes for every data sample
         """
         normalized_data = self.__data_processor.normalize_data(input_data)
-        output_data = self.__network_engine.forward_propagation(normalized_data)
+        output_data = self.__layer_manager.forward_propagation(normalized_data)
         output_class_vector = self.__data_processor.convert_label_matrix_to_vector(output_data)
         return output_class_vector
 
@@ -75,7 +75,7 @@ class NeuralNetwork:
 
         :return: created numerical gradient calculator
         """
-        numerical_gradient_calculator = NetworkGradientComparator(self.__network_engine, self.__error_function,
+        numerical_gradient_calculator = NetworkGradientComparator(self.__layer_manager, self.__error_function,
                                                                   self.__data_processor)
         return numerical_gradient_calculator
 
@@ -131,8 +131,8 @@ class NeuralNetworkBuilder:
         """
         self.__initialize_layers(input_data_dimensions)
 
-        network_engine = NetworkLayerManager(self.__layer_list)
-        neural_network = NeuralNetwork(network_engine, self.__error_function, self.__data_processor)
+        layer_manager = NetworkLayerManager(self.__layer_list)
+        neural_network = NeuralNetwork(layer_manager, self.__error_function, self.__data_processor)
         return neural_network
 
     def __initialize_layers(self, input_data_dimensions: tuple):

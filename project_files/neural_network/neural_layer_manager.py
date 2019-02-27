@@ -10,7 +10,7 @@ from project_files.neural_network.network_layers import AbstractLayer, WeightsHa
 
 class NetworkLayerManager:
     """
-    Engine of neural network, that has all core tools needed in neural network computing.
+    Manager of neural network layers.
     """
 
     def __init__(self, list_of_layers: List[AbstractLayer]):
@@ -73,7 +73,7 @@ class NetworkLayerManager:
     @property
     def layer_list(self) -> List[AbstractLayer]:
         """
-        Returns list of layers of this network engine.
+        Returns this manager's list of layers.
 
         :return: list of layers
         """
