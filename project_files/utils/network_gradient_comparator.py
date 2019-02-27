@@ -74,7 +74,7 @@ class NetworkGradientComparator:
                 data_after_forward_pass = self.__layer_manager.forward_propagation(normalized_data)
                 error_vector = data_after_forward_pass - label_matrix
                 self.__layer_manager.backward_propagation(error_vector)
-                gradient_list.append(layer.gradient_calculator.compute_weight_gradient())
+                gradient_list.append(layer.gradient_calculator.compute_weights_gradient())
 
         return gradient_list
 

@@ -17,7 +17,7 @@ class GradientCalculator:
         self.__before_forward_multiplication: np.ndarray = None
         self.__before_backward_multiplication: np.ndarray = None
 
-    def compute_weight_gradient(self) -> np.ndarray:
+    def compute_weights_gradient(self) -> np.ndarray:
         """
         Computes gradient of weights based on earlier saved data.
 

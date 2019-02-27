@@ -66,7 +66,7 @@ class WeightData:
         :param learning_rate: multiplier of weights update
         :param gradient_calculator: gradient calculator needed to compute weight gradient
         """
-        self.__weights -= learning_rate * gradient_calculator.compute_weight_gradient()
+        self.__weights -= learning_rate * gradient_calculator.compute_weights_gradient()
 
     def save_weights(self) -> WeightMemento:
         """
