@@ -59,6 +59,7 @@ class WeightData:
         """
         self.__weights[indices] = value
 
+    # TODO: jesli sie da to wsadzic funkcjonalnosci zwiazane z obliczaniem gradientu (GradientCalculator) do tej klasy
     def update_weights(self, learning_rate: float, gradient_calculator: GradientCalculator):
         """
         Updates weights using provided data.
