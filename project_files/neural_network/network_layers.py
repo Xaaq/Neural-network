@@ -68,6 +68,15 @@ class WeightsHavingLayer(AbstractLayer):
         """
         raise NotImplementedError
 
+    @abstractmethod
+    def compute_weights_gradient(self) -> np.ndarray:
+        """
+        Computes this layer weight's gradient.
+
+        :return: weight's gradient
+        """
+        raise NotImplementedError
+
     @property
     @abstractmethod
     def weight_data(self) -> WeightData:
@@ -75,16 +84,6 @@ class WeightsHavingLayer(AbstractLayer):
         Getter for this layer's weight data.
 
         :return: this layer's weight data
-        """
-        raise NotImplementedError
-
-    @property
-    @abstractmethod
-    def gradient_calculator(self) -> GradientCalculator:
-        """
-        Getter for this layer's gradient calculator.
-
-        :return: this layer's gradient calculator
         """
         raise NotImplementedError
 
@@ -193,6 +192,9 @@ class FullyConnectedLayer(WeightsHavingLayer, LastLayerLike):
     def mark_as_let_through(self):
         self.__do_multiply_by_gradient = False
 
+    def compute_weights_gradient(self) -> np.ndarray:
+        return self.__gradient_calculator.compute_weights_gradient()
+
     @property
     def output_neuron_count(self) -> int:
         return self.__output_neuron_count
@@ -200,10 +202,6 @@ class FullyConnectedLayer(WeightsHavingLayer, LastLayerLike):
     @property
     def weight_data(self) -> WeightData:
         return self.__weight_data
-
-    @property
-    def gradient_calculator(self) -> GradientCalculator:
-        return self.__gradient_calculator
 
     @staticmethod
     def __add_bias(input_data: np.ndarray) -> np.ndarray:
@@ -271,10 +269,9 @@ class ConvolutionalLayer(WeightsHavingLayer):
     def mark_as_let_through(self):
         pass
 
-    @property
-    def weight_data(self) -> WeightData:
+    def compute_weights_gradient(self) -> np.ndarray:
         pass
 
     @property
-    def gradient_calculator(self) -> GradientCalculator:
+    def weight_data(self) -> WeightData:
         pass
