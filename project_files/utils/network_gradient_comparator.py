@@ -70,11 +70,8 @@ class NetworkGradientComparator:
         self.__layer_manager.two_way_propagation(normalized_data, label_matrix)
 
         gradient_list = []
-
-        for layer in self.__layer_manager.layer_list:
-            if isinstance(layer, WeightsHavingLayerLike):
-                gradient_list.append(layer.compute_weights_gradient())
-
+        self.__layer_manager.for_each_layer(lambda layer: gradient_list.append(layer.compute_weights_gradient()),
+                                            WeightsHavingLayerLike)
         return gradient_list
 
     def compute_numerical_gradient(self, input_data: np.ndarray, label_vector: np.ndarray) -> List[np.ndarray]:
@@ -88,13 +85,11 @@ class NetworkGradientComparator:
         """
         label_count = self.__layer_manager.get_network_output_neuron_count()
         normalized_data, label_matrix = self.__data_processor.preprocess_data(input_data, label_vector, label_count)
+
         gradient_list = []
-
-        for layer in self.__layer_manager.layer_list:
-            if isinstance(layer, WeightsHavingLayerLike):
-                layer_gradient = self.__compute_single_layer_gradient(layer, normalized_data, label_matrix)
-                gradient_list.append(layer_gradient)
-
+        self.__layer_manager.for_each_layer(lambda layer: gradient_list.append(
+            self.__compute_single_layer_gradient(layer, normalized_data, label_matrix)
+        ), WeightsHavingLayerLike)
         return gradient_list
 
     def __compute_single_layer_gradient(self, layer: WeightsHavingLayerLike, input_data: np.ndarray,
@@ -119,7 +114,8 @@ class NetworkGradientComparator:
 
         return gradient_matrix
 
-    def __compute_single_weight_error(self, layer: WeightsHavingLayerLike, weight_indices: tuple, input_data: np.ndarray,
+    def __compute_single_weight_error(self, layer: WeightsHavingLayerLike, weight_indices: tuple,
+                                      input_data: np.ndarray,
                                       data_labels: np.ndarray, epsilon: float) -> float:
         """
         Computes error of network with added epsilon value to single weight.

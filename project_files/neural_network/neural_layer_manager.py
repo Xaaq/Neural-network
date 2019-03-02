@@ -1,7 +1,7 @@
 """
 Module containing manager of neural network layers.
 """
-from typing import List
+from typing import List, Callable, Type
 
 import numpy as np
 
@@ -81,11 +81,13 @@ class NetworkLayerManager:
 
         return last_layer.output_neuron_count
 
-    @property
-    def layer_list(self) -> List[LayerLike]:
+    def for_each_layer(self, function: Callable[[LayerLike], None], layer_type: Type[LayerLike] = LayerLike):
         """
-        Returns this manager's list of layers.
+        Executes given function on every layer of type specified as layer_type.
 
-        :return: list of layers
+        :param function: function to execute on layers
+        :param layer_type: type of layer to execute function on
         """
-        return self.__layer_list
+        for layer in self.__layer_list:
+            if isinstance(layer, layer_type):
+                function(layer)
