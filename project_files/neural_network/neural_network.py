@@ -6,7 +6,7 @@ from typing import List
 import numpy as np
 
 from project_files.neural_network.error_functions import CrossEntropyErrorFunction, AbstractErrorFunction
-from project_files.neural_network.network_layers import AbstractLayer, WeightsHavingLayer
+from project_files.neural_network.network_layers import LayerLike, WeightsHavingLayerLike
 from project_files.neural_network.neural_layer_manager import NetworkLayerManager
 from project_files.utils.data_processor import DataProcessor
 from project_files.utils.network_gradient_comparator import NetworkGradientComparator
@@ -88,11 +88,11 @@ class NeuralNetworkBuilder:
         """
         Initializes parameters used to build neural network.
         """
-        self.__layer_list: List[AbstractLayer] = []
+        self.__layer_list: List[LayerLike] = []
         self.__error_function = CrossEntropyErrorFunction()
         self.__data_processor = DataProcessor()
 
-    def set_layers(self, list_of_layers_to_set: List[AbstractLayer]) -> "NeuralNetworkBuilder":
+    def set_layers(self, list_of_layers_to_set: List[LayerLike]) -> "NeuralNetworkBuilder":
         """
         Sets network layers to given ones.
 
@@ -146,6 +146,6 @@ class NeuralNetworkBuilder:
             next_layer_dimensions = layer.initialize(next_layer_dimensions)
 
         for layer in reversed(self.__layer_list):
-            if isinstance(layer, WeightsHavingLayer):
+            if isinstance(layer, WeightsHavingLayerLike):
                 layer.mark_as_let_through()
                 break

@@ -5,7 +5,7 @@ from typing import List
 
 import numpy as np
 
-from project_files.neural_network.network_layers import AbstractLayer, WeightsHavingLayer, LastLayerLike
+from project_files.neural_network.network_layers import LayerLike, WeightsHavingLayerLike, LastLayerLike
 
 
 class NetworkLayerManager:
@@ -13,7 +13,7 @@ class NetworkLayerManager:
     Manager of neural network layers.
     """
 
-    def __init__(self, list_of_layers: List[AbstractLayer]):
+    def __init__(self, list_of_layers: List[LayerLike]):
         """
         Initializes empty layer list for this neural network.
 
@@ -64,7 +64,7 @@ class NetworkLayerManager:
         :param learning_rate: value specifying how much to adjust weights in respect to gradient
         """
         for layer in self.__layer_list:
-            if isinstance(layer, WeightsHavingLayer):
+            if isinstance(layer, WeightsHavingLayerLike):
                 layer.update_weights(learning_rate)
 
     def get_network_output_neuron_count(self) -> int:
@@ -82,7 +82,7 @@ class NetworkLayerManager:
         return last_layer.output_neuron_count
 
     @property
-    def layer_list(self) -> List[AbstractLayer]:
+    def layer_list(self) -> List[LayerLike]:
         """
         Returns this manager's list of layers.
 

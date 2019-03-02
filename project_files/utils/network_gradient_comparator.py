@@ -9,7 +9,7 @@ from typing import List
 import numpy as np
 
 from project_files.neural_network.error_functions import AbstractErrorFunction
-from project_files.neural_network.network_layers import WeightsHavingLayer
+from project_files.neural_network.network_layers import WeightsHavingLayerLike
 from project_files.neural_network.neural_network import NetworkLayerManager
 from project_files.utils.data_processor import DataProcessor
 
@@ -72,7 +72,7 @@ class NetworkGradientComparator:
         gradient_list = []
 
         for layer in self.__layer_manager.layer_list:
-            if isinstance(layer, WeightsHavingLayer):
+            if isinstance(layer, WeightsHavingLayerLike):
                 gradient_list.append(layer.compute_weights_gradient())
 
         return gradient_list
@@ -91,13 +91,13 @@ class NetworkGradientComparator:
         gradient_list = []
 
         for layer in self.__layer_manager.layer_list:
-            if isinstance(layer, WeightsHavingLayer):
+            if isinstance(layer, WeightsHavingLayerLike):
                 layer_gradient = self.__compute_single_layer_gradient(layer, normalized_data, label_matrix)
                 gradient_list.append(layer_gradient)
 
         return gradient_list
 
-    def __compute_single_layer_gradient(self, layer: WeightsHavingLayer, input_data: np.ndarray,
+    def __compute_single_layer_gradient(self, layer: WeightsHavingLayerLike, input_data: np.ndarray,
                                         data_labels: np.ndarray) -> np.ndarray:
         """
         Numerically computes gradient of all weights in single layer.
@@ -119,7 +119,7 @@ class NetworkGradientComparator:
 
         return gradient_matrix
 
-    def __compute_single_weight_error(self, layer: WeightsHavingLayer, weight_indices: tuple, input_data: np.ndarray,
+    def __compute_single_weight_error(self, layer: WeightsHavingLayerLike, weight_indices: tuple, input_data: np.ndarray,
                                       data_labels: np.ndarray, epsilon: float) -> float:
         """
         Computes error of network with added epsilon value to single weight.

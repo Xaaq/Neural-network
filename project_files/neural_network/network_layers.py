@@ -9,7 +9,7 @@ from project_files.neural_network.activation_functions import AbstractActivation
 from project_files.utils.weight_utils import WeightData, GradientCalculator
 
 
-class AbstractLayer(ABC):
+class LayerLike(ABC):
     """
     Base interface for all types of layers in neural network.
     """
@@ -47,7 +47,7 @@ class AbstractLayer(ABC):
         raise NotImplementedError
 
 
-class WeightsHavingLayer(AbstractLayer):
+class WeightsHavingLayerLike(LayerLike):
     """
     Interface for layers that have weights.
     """
@@ -88,7 +88,7 @@ class WeightsHavingLayer(AbstractLayer):
         raise NotImplementedError
 
 
-class LastLayerLike(AbstractLayer):
+class LastLayerLike(LayerLike):
     """
     Interface specifying that layer has possibility of being last layer of neural network.
     """
@@ -140,7 +140,7 @@ class FlatteningLayer(LastLayerLike):
         return output_neuron_count
 
 
-class FullyConnectedLayer(WeightsHavingLayer, LastLayerLike):
+class FullyConnectedLayer(WeightsHavingLayerLike, LastLayerLike):
     """
     Layer, in which every neuron from previous layer is connected to every neuron in next layer.
     """
@@ -248,7 +248,7 @@ class FullyConnectedLayer(WeightsHavingLayer, LastLayerLike):
         return multiplied_data
 
 
-class ConvolutionalLayer(WeightsHavingLayer):
+class ConvolutionalLayer(WeightsHavingLayerLike):
     """
     Layer which does convolution on provided data samples. It works similarly to fully connected layer, but it connects
     only chosen neurons from previous to next layer.
