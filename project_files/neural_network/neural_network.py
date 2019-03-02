@@ -32,8 +32,7 @@ class NeuralNetwork:
         self.__error_function = error_function
         self.__data_processor = data_processor
 
-    def fit(self, input_data: np.ndarray, label_vector: np.ndarray, iteration_count: int,
-            learning_rate: float = 1):
+    def fit(self, input_data: np.ndarray, label_vector: np.ndarray, iteration_count: int, learning_rate: float = 1):
         """
         Fit this network to given data.
 
