@@ -9,7 +9,6 @@ from project_files.neural_network.error_functions import CrossEntropyErrorFuncti
 from project_files.neural_network.network_layers import LayerLike, WeightsHavingLayerLike
 from project_files.neural_network.neural_layer_manager import NetworkLayerManager
 from project_files.utils.data_processor import DataProcessor
-from project_files.utils.network_gradient_comparator import NetworkGradientComparator
 from project_files.utils.neural_network_progress_bar import NeuralNetworkProgressBar
 
 
@@ -65,18 +64,6 @@ class NeuralNetwork:
         output_data = self.__layer_manager.forward_propagation(normalized_data)
         output_class_vector = self.__data_processor.convert_label_matrix_to_vector(output_data)
         return output_class_vector
-
-    def create_numerical_gradient_calculator(self) -> NetworkGradientComparator:
-        """
-        Creates and returns calculator that allows to numerically calculate this network gradient. This calculator is a
-        lot slower than gradient computing that is made during network learning. Therefore it can be used to make sure
-        that this network works properly.
-
-        :return: created numerical gradient calculator
-        """
-        numerical_gradient_calculator = NetworkGradientComparator(self.__layer_manager, self.__error_function,
-                                                                  self.__data_processor)
-        return numerical_gradient_calculator
 
 
 class NeuralNetworkBuilder:
