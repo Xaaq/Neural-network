@@ -21,19 +21,16 @@ class NetworkLayerManager:
         """
         self.__layer_list = list_of_layers
 
-    def get_network_output_neuron_count(self) -> int:
+    def two_way_propagation(self, input_data: np.ndarray, label_matrix: np.ndarray):
         """
-        Gets number of neurons from last layer from this network.
+        Executes forward and then backward propagation.
 
-        :return: number of this network output neurons
-        :raises TypeError: if last layer isn't designed to be last one
+        :param input_data: data on which to make forward pass
+        :param label_matrix: matrix of real data labels
         """
-        last_layer = self.__layer_list[-1]
-
-        if not isinstance(last_layer, LastLayerLike):
-            raise TypeError(f"Last layer must be implementing {LastLayerLike.__name__} interface")
-
-        return last_layer.output_neuron_count
+        data_after_forward_pass = self.forward_propagation(input_data)
+        error_matrix = data_after_forward_pass - label_matrix
+        self.backward_propagation(error_matrix)
 
     def forward_propagation(self, input_data: np.ndarray) -> np.ndarray:
         """
@@ -69,6 +66,20 @@ class NetworkLayerManager:
         for layer in self.__layer_list:
             if isinstance(layer, WeightsHavingLayer):
                 layer.update_weights(learning_rate)
+
+    def get_network_output_neuron_count(self) -> int:
+        """
+        Gets number of neurons from last layer from this network.
+
+        :return: number of this network output neurons
+        :raises TypeError: if last layer isn't designed to be last one
+        """
+        last_layer = self.__layer_list[-1]
+
+        if not isinstance(last_layer, LastLayerLike):
+            raise TypeError(f"Last layer must be implementing {LastLayerLike.__name__} interface")
+
+        return last_layer.output_neuron_count
 
     @property
     def layer_list(self) -> List[AbstractLayer]:
