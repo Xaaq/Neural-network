@@ -67,13 +67,12 @@ class NetworkGradientComparator:
         """
         label_count = self.__layer_manager.get_network_output_neuron_count()
         normalized_data, label_matrix = self.__data_processor.preprocess_data(input_data, label_vector, label_count)
+        self.__layer_manager.two_way_propagation(normalized_data, label_matrix)
+
         gradient_list = []
 
         for layer in self.__layer_manager.layer_list:
             if isinstance(layer, WeightsHavingLayer):
-                data_after_forward_pass = self.__layer_manager.forward_propagation(normalized_data)
-                error_vector = data_after_forward_pass - label_matrix
-                self.__layer_manager.backward_propagation(error_vector)
                 gradient_list.append(layer.compute_weights_gradient())
 
         return gradient_list
