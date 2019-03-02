@@ -39,7 +39,7 @@ class NumericalGradientCalculator(GradientCalculatorLike):
         :return: gradient of all weights in provided layer
         """
         epsilon = 1e-3
-        weight_matrix_shape = np.shape(layer.weight_data.weights)
+        weight_matrix_shape = np.shape(layer.weight_data.weights_copy)
         gradient_matrix = np.zeros(weight_matrix_shape)
 
         for item_indices in itertools.product(*[range(dimension) for dimension in weight_matrix_shape]):

@@ -233,7 +233,7 @@ class FullyConnectedLayer(WeightsHavingLayer, LastLayerLike):
         :param input_data: data to multiply by transposed weight matrix
         :return: data multiplied by transposed weight matrix
         """
-        transposed_weights = np.transpose(self.weight_data.weights)
+        transposed_weights = np.transpose(self.weight_data.weights_copy)
         multiplied_data = input_data @ transposed_weights
         return multiplied_data
 
@@ -244,7 +244,7 @@ class FullyConnectedLayer(WeightsHavingLayer, LastLayerLike):
         :param input_data: data to multiply by weight matrix
         :return: data multiplied by weight matrix
         """
-        multiplied_data = input_data @ self.weight_data.weights
+        multiplied_data = input_data @ self.weight_data.weights_copy
         return multiplied_data
 
 
