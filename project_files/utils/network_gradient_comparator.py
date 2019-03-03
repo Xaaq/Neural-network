@@ -9,7 +9,7 @@ from typing import List
 import numpy as np
 
 from project_files.neural_network.error_functions import AbstractErrorFunction
-from project_files.neural_network.network_layers import WeightsHavingLayer
+from project_files.neural_network.network_layers import WeightsHavingLayerLike
 from project_files.neural_network.neural_network import NetworkLayerManager
 from project_files.utils.data_processor import DataProcessor
 
@@ -67,15 +67,11 @@ class NetworkGradientComparator:
         """
         label_count = self.__layer_manager.get_network_output_neuron_count()
         normalized_data, label_matrix = self.__data_processor.preprocess_data(input_data, label_vector, label_count)
+        self.__layer_manager.two_way_propagation(normalized_data, label_matrix)
+
         gradient_list = []
-
-        for layer in self.__layer_manager.layer_list:
-            if isinstance(layer, WeightsHavingLayer):
-                data_after_forward_pass = self.__layer_manager.forward_propagation(normalized_data)
-                error_vector = data_after_forward_pass - label_matrix
-                self.__layer_manager.backward_propagation(error_vector)
-                gradient_list.append(layer.gradient_calculator.compute_weights_gradient())
-
+        self.__layer_manager.for_each_layer(lambda layer: gradient_list.append(layer.compute_weights_gradient()),
+                                            WeightsHavingLayerLike)
         return gradient_list
 
     def compute_numerical_gradient(self, input_data: np.ndarray, label_vector: np.ndarray) -> List[np.ndarray]:
@@ -89,16 +85,14 @@ class NetworkGradientComparator:
         """
         label_count = self.__layer_manager.get_network_output_neuron_count()
         normalized_data, label_matrix = self.__data_processor.preprocess_data(input_data, label_vector, label_count)
+
         gradient_list = []
-
-        for layer in self.__layer_manager.layer_list:
-            if isinstance(layer, WeightsHavingLayer):
-                layer_gradient = self.__compute_single_layer_gradient(layer, normalized_data, label_matrix)
-                gradient_list.append(layer_gradient)
-
+        self.__layer_manager.for_each_layer(lambda layer: gradient_list.append(
+            self.__compute_single_layer_gradient(layer, normalized_data, label_matrix)
+        ), WeightsHavingLayerLike)
         return gradient_list
 
-    def __compute_single_layer_gradient(self, layer: WeightsHavingLayer, input_data: np.ndarray,
+    def __compute_single_layer_gradient(self, layer: WeightsHavingLayerLike, input_data: np.ndarray,
                                         data_labels: np.ndarray) -> np.ndarray:
         """
         Numerically computes gradient of all weights in single layer.
@@ -109,7 +103,7 @@ class NetworkGradientComparator:
         :return: gradient of all weights in provided layer
         """
         epsilon = 1e-3
-        weight_matrix_shape = np.shape(layer.weight_data.weights)
+        weight_matrix_shape = np.shape(layer.weight_data.weights_copy)
         gradient_matrix = np.zeros(weight_matrix_shape)
         weight_matrix_index_ranges = [range(dimension) for dimension in weight_matrix_shape]
 
@@ -120,7 +114,8 @@ class NetworkGradientComparator:
 
         return gradient_matrix
 
-    def __compute_single_weight_error(self, layer: WeightsHavingLayer, weight_indices: tuple, input_data: np.ndarray,
+    def __compute_single_weight_error(self, layer: WeightsHavingLayerLike, weight_indices: tuple,
+                                      input_data: np.ndarray,
                                       data_labels: np.ndarray, epsilon: float) -> float:
         """
         Computes error of network with added epsilon value to single weight.

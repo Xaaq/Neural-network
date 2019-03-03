@@ -1,11 +1,11 @@
 """
 Module containing manager of neural network layers.
 """
-from typing import List
+from typing import List, Callable, Type
 
 import numpy as np
 
-from project_files.neural_network.network_layers import AbstractLayer, WeightsHavingLayer, LastLayerLike
+from project_files.neural_network.network_layers import LayerLike, WeightsHavingLayerLike, LastLayerLike
 
 
 class NetworkLayerManager:
@@ -13,7 +13,7 @@ class NetworkLayerManager:
     Manager of neural network layers.
     """
 
-    def __init__(self, list_of_layers: List[AbstractLayer]):
+    def __init__(self, list_of_layers: List[LayerLike]):
         """
         Initializes empty layer list for this neural network.
 
@@ -21,19 +21,16 @@ class NetworkLayerManager:
         """
         self.__layer_list = list_of_layers
 
-    def get_network_output_neuron_count(self) -> int:
+    def two_way_propagation(self, input_data: np.ndarray, label_matrix: np.ndarray):
         """
-        Gets number of neurons from last layer from this network.
+        Executes forward and then backward propagation.
 
-        :return: number of this network output neurons
-        :raises TypeError: if last layer isn't designed to be last one
+        :param input_data: data on which to make forward pass
+        :param label_matrix: matrix of real data labels
         """
-        last_layer = self.__layer_list[-1]
-
-        if not isinstance(last_layer, LastLayerLike):
-            raise TypeError(f"Last layer must be implementing {LastLayerLike.__name__} interface")
-
-        return last_layer.output_neuron_count
+        data_after_forward_pass = self.forward_propagation(input_data)
+        error_matrix = data_after_forward_pass - label_matrix
+        self.backward_propagation(error_matrix)
 
     def forward_propagation(self, input_data: np.ndarray) -> np.ndarray:
         """
@@ -67,14 +64,30 @@ class NetworkLayerManager:
         :param learning_rate: value specifying how much to adjust weights in respect to gradient
         """
         for layer in self.__layer_list:
-            if isinstance(layer, WeightsHavingLayer):
+            if isinstance(layer, WeightsHavingLayerLike):
                 layer.update_weights(learning_rate)
 
-    @property
-    def layer_list(self) -> List[AbstractLayer]:
+    def get_network_output_neuron_count(self) -> int:
         """
-        Returns this manager's list of layers.
+        Gets number of neurons from last layer from this network.
 
-        :return: list of layers
+        :return: number of this network output neurons
+        :raises TypeError: if last layer isn't designed to be last one
         """
-        return self.__layer_list
+        last_layer = self.__layer_list[-1]
+
+        if not isinstance(last_layer, LastLayerLike):
+            raise TypeError(f"Last layer must be implementing {LastLayerLike.__name__} interface")
+
+        return last_layer.output_neuron_count
+
+    def for_each_layer(self, function: Callable[[LayerLike], None], layer_type: Type[LayerLike] = LayerLike):
+        """
+        Executes given function on every layer of type specified as layer_type.
+
+        :param function: function to execute on layers
+        :param layer_type: type of layer to execute function on
+        """
+        for layer in self.__layer_list:
+            if isinstance(layer, layer_type):
+                function(layer)

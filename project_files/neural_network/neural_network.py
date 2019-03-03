@@ -6,10 +6,9 @@ from typing import List
 import numpy as np
 
 from project_files.neural_network.error_functions import CrossEntropyErrorFunction, AbstractErrorFunction
-from project_files.neural_network.network_layers import AbstractLayer, WeightsHavingLayer
+from project_files.neural_network.network_layers import LayerLike, WeightsHavingLayerLike
 from project_files.neural_network.neural_layer_manager import NetworkLayerManager
 from project_files.utils.data_processor import DataProcessor
-from project_files.utils.network_gradient_comparator import NetworkGradientComparator
 from project_files.utils.neural_network_progress_bar import NeuralNetworkProgressBar
 
 
@@ -32,8 +31,7 @@ class NeuralNetwork:
         self.__error_function = error_function
         self.__data_processor = data_processor
 
-    def fit(self, input_data: np.ndarray, label_vector: np.ndarray, iteration_count: int,
-            learning_rate: float = 1):
+    def fit(self, input_data: np.ndarray, label_vector: np.ndarray, iteration_count: int, learning_rate: float = 1):
         """
         Fit this network to given data.
 
@@ -67,18 +65,6 @@ class NeuralNetwork:
         output_class_vector = self.__data_processor.convert_label_matrix_to_vector(output_data)
         return output_class_vector
 
-    def create_numerical_gradient_calculator(self) -> NetworkGradientComparator:
-        """
-        Creates and returns calculator that allows to numerically calculate this network gradient. This calculator is a
-        lot slower than gradient computing that is made during network learning. Therefore it can be used to make sure
-        that this network works properly.
-
-        :return: created numerical gradient calculator
-        """
-        numerical_gradient_calculator = NetworkGradientComparator(self.__layer_manager, self.__error_function,
-                                                                  self.__data_processor)
-        return numerical_gradient_calculator
-
 
 class NeuralNetworkBuilder:
     """
@@ -89,11 +75,11 @@ class NeuralNetworkBuilder:
         """
         Initializes parameters used to build neural network.
         """
-        self.__layer_list: List[AbstractLayer] = []
+        self.__layer_list: List[LayerLike] = []
         self.__error_function = CrossEntropyErrorFunction()
         self.__data_processor = DataProcessor()
 
-    def set_layers(self, list_of_layers_to_set: List[AbstractLayer]) -> "NeuralNetworkBuilder":
+    def set_layers(self, list_of_layers_to_set: List[LayerLike]) -> "NeuralNetworkBuilder":
         """
         Sets network layers to given ones.
 
@@ -147,6 +133,6 @@ class NeuralNetworkBuilder:
             next_layer_dimensions = layer.initialize(next_layer_dimensions)
 
         for layer in reversed(self.__layer_list):
-            if isinstance(layer, WeightsHavingLayer):
+            if isinstance(layer, WeightsHavingLayerLike):
                 layer.mark_as_let_through()
                 break

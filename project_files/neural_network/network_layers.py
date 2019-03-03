@@ -9,7 +9,7 @@ from project_files.neural_network.activation_functions import AbstractActivation
 from project_files.utils.weight_utils import WeightData, GradientCalculator
 
 
-class AbstractLayer(ABC):
+class LayerLike(ABC):
     """
     Base interface for all types of layers in neural network.
     """
@@ -47,7 +47,7 @@ class AbstractLayer(ABC):
         raise NotImplementedError
 
 
-class WeightsHavingLayer(AbstractLayer):
+class WeightsHavingLayerLike(LayerLike):
     """
     Interface for layers that have weights.
     """
@@ -68,6 +68,15 @@ class WeightsHavingLayer(AbstractLayer):
         """
         raise NotImplementedError
 
+    @abstractmethod
+    def compute_weights_gradient(self) -> np.ndarray:
+        """
+        Computes this layer weight's gradient.
+
+        :return: weight's gradient
+        """
+        raise NotImplementedError
+
     @property
     @abstractmethod
     def weight_data(self) -> WeightData:
@@ -78,18 +87,8 @@ class WeightsHavingLayer(AbstractLayer):
         """
         raise NotImplementedError
 
-    @property
-    @abstractmethod
-    def gradient_calculator(self) -> GradientCalculator:
-        """
-        Getter for this layer's gradient calculator.
 
-        :return: this layer's gradient calculator
-        """
-        raise NotImplementedError
-
-
-class LastLayerLike(AbstractLayer):
+class LastLayerLike(LayerLike):
     """
     Interface specifying that layer has possibility of being last layer of neural network.
     """
@@ -141,7 +140,7 @@ class FlatteningLayer(LastLayerLike):
         return output_neuron_count
 
 
-class FullyConnectedLayer(WeightsHavingLayer, LastLayerLike):
+class FullyConnectedLayer(WeightsHavingLayerLike, LastLayerLike):
     """
     Layer, in which every neuron from previous layer is connected to every neuron in next layer.
     """
@@ -193,6 +192,9 @@ class FullyConnectedLayer(WeightsHavingLayer, LastLayerLike):
     def mark_as_let_through(self):
         self.__do_multiply_by_gradient = False
 
+    def compute_weights_gradient(self) -> np.ndarray:
+        return self.__gradient_calculator.compute_weights_gradient()
+
     @property
     def output_neuron_count(self) -> int:
         return self.__output_neuron_count
@@ -200,10 +202,6 @@ class FullyConnectedLayer(WeightsHavingLayer, LastLayerLike):
     @property
     def weight_data(self) -> WeightData:
         return self.__weight_data
-
-    @property
-    def gradient_calculator(self) -> GradientCalculator:
-        return self.__gradient_calculator
 
     @staticmethod
     def __add_bias(input_data: np.ndarray) -> np.ndarray:
@@ -235,7 +233,7 @@ class FullyConnectedLayer(WeightsHavingLayer, LastLayerLike):
         :param input_data: data to multiply by transposed weight matrix
         :return: data multiplied by transposed weight matrix
         """
-        transposed_weights = np.transpose(self.weight_data.weights)
+        transposed_weights = np.transpose(self.weight_data.weights_copy)
         multiplied_data = input_data @ transposed_weights
         return multiplied_data
 
@@ -246,11 +244,11 @@ class FullyConnectedLayer(WeightsHavingLayer, LastLayerLike):
         :param input_data: data to multiply by weight matrix
         :return: data multiplied by weight matrix
         """
-        multiplied_data = input_data @ self.weight_data.weights
+        multiplied_data = input_data @ self.weight_data.weights_copy
         return multiplied_data
 
 
-class ConvolutionalLayer(WeightsHavingLayer):
+class ConvolutionalLayer(WeightsHavingLayerLike):
     """
     Layer which does convolution on provided data samples. It works similarly to fully connected layer, but it connects
     only chosen neurons from previous to next layer.
@@ -271,10 +269,9 @@ class ConvolutionalLayer(WeightsHavingLayer):
     def mark_as_let_through(self):
         pass
 
-    @property
-    def weight_data(self) -> WeightData:
+    def compute_weights_gradient(self) -> np.ndarray:
         pass
 
     @property
-    def gradient_calculator(self) -> GradientCalculator:
+    def weight_data(self) -> WeightData:
         pass

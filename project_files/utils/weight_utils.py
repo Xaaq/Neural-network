@@ -48,7 +48,7 @@ class WeightData:
         :param indices: indices of weight to get
         :return: single weight
         """
-        return self.weights[indices]
+        return self.__weights[indices]
 
     def __setitem__(self, indices: tuple, value: float):
         """
@@ -75,7 +75,7 @@ class WeightData:
 
         :return: memento object with saved weights
         """
-        return WeightMemento(self.weights)
+        return WeightMemento(self.weights_copy)
 
     def restore_weights(self, memento: WeightMemento):
         """
@@ -86,7 +86,7 @@ class WeightData:
         self.__weights = memento.get_weights()
 
     @property
-    def weights(self) -> np.ndarray:
+    def weights_copy(self) -> np.ndarray:
         """
         Returns copy of stored weights.
 
