@@ -23,46 +23,25 @@ class GradientCalculator:
 
         :return: gradient of weights of this layer
         """
-        transposed_backward_data = np.transpose(self.before_backward_multiplication)
-        weight_gradient = transposed_backward_data @ self.before_forward_multiplication
+        transposed_backward_data = np.transpose(self.__before_backward_multiplication)
+        weight_gradient = transposed_backward_data @ self.__before_forward_multiplication
 
-        number_of_data_samples = np.shape(self.before_forward_multiplication)[0]
+        number_of_data_samples = np.shape(self.__before_forward_multiplication)[0]
         weight_gradient /= number_of_data_samples
 
         return weight_gradient
 
-    # TODO: usunac gettery
-    @property
-    def before_forward_multiplication(self) -> np.ndarray:
+    def save_data_before_forward_multiplication(self, value: np.ndarray):
         """
-        Getter for data before forward multiplication.
-
-        :return: data before forward multiplication
-        """
-        return self.__before_forward_multiplication
-
-    @before_forward_multiplication.setter
-    def before_forward_multiplication(self, value: np.ndarray):
-        """
-        Setter for data before forward multiplication.
+        Saves data before forward multiplication, so it can be used to compute gradient of weights.
 
         :param value: new value for data before forward multiplication
         """
         self.__before_forward_multiplication = value
 
-    @property
-    def before_backward_multiplication(self) -> np.ndarray:
+    def save_data_before_backward_multiplication(self, value: np.ndarray):
         """
-        Getter for data before backward multiplication.
-
-        :return: data before backward multiplication
-        """
-        return self.__before_backward_multiplication
-
-    @before_backward_multiplication.setter
-    def before_backward_multiplication(self, value: np.ndarray):
-        """
-        Setter for data before backward multiplication.
+        Saves data before backward multiplication, so it can be used to compute gradient of weights.
 
         :param value: new value for data before backward multiplication
         """

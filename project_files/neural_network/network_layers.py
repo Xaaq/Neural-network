@@ -173,7 +173,7 @@ class FullyConnectedLayer(WeightsHavingLayerLike, LastLayerLike):
         multiplied_data = self.__multiply_by_transposed_weights(data_with_bias)
         activated_data = self.__activation_function.calculate_result(multiplied_data)
 
-        self.__gradient_calculator.before_forward_multiplication = data_with_bias
+        self.__gradient_calculator.save_data_before_forward_multiplication(data_with_bias)
         self.__data_before_forward_activation = multiplied_data
         return activated_data
 
@@ -181,7 +181,7 @@ class FullyConnectedLayer(WeightsHavingLayerLike, LastLayerLike):
         if self.__do_multiply_by_gradient:
             input_data *= self.__activation_function.calculate_gradient(self.__data_before_forward_activation)
 
-        self.__gradient_calculator.before_backward_multiplication = input_data
+        self.__gradient_calculator.save_data_before_backward_multiplication(input_data)
         multiplied_data = self.__multiply_by_weights(input_data)
         data_with_removed_bias = self.__remove_bias(multiplied_data)
         return data_with_removed_bias
