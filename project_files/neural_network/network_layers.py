@@ -6,7 +6,7 @@ from abc import ABC, abstractmethod
 import numpy as np
 
 from project_files.neural_network.activation_functions import AbstractActivationFunction
-from project_files.utils.weight_utils import WeightData, GradientCalculator
+from project_files.utils.weight_utils import WeightData, GradientComputer
 
 
 class LayerLike(ABC):
@@ -155,7 +155,7 @@ class FullyConnectedLayer(WeightsHavingLayerLike, LastLayerLike):
         """
         self.__output_neuron_count = output_neuron_count
         self.__activation_function = activation_function
-        self.__gradient_calculator = GradientCalculator()
+        self.__gradient_computer = GradientComputer()
         self.__weight_data: WeightData = None
         self.__do_multiply_by_gradient = True
         self.__data_before_forward_activation: np.ndarray = None
@@ -173,7 +173,7 @@ class FullyConnectedLayer(WeightsHavingLayerLike, LastLayerLike):
         multiplied_data = self.__multiply_by_transposed_weights(data_with_bias)
         activated_data = self.__activation_function.calculate_result(multiplied_data)
 
-        self.__gradient_calculator.save_data_before_forward_multiplication(data_with_bias)
+        self.__gradient_computer.save_data_before_forward_multiplication(data_with_bias)
         self.__data_before_forward_activation = multiplied_data
         return activated_data
 
@@ -181,19 +181,19 @@ class FullyConnectedLayer(WeightsHavingLayerLike, LastLayerLike):
         if self.__do_multiply_by_gradient:
             input_data *= self.__activation_function.calculate_gradient(self.__data_before_forward_activation)
 
-        self.__gradient_calculator.save_data_before_backward_multiplication(input_data)
+        self.__gradient_computer.save_data_before_backward_multiplication(input_data)
         multiplied_data = self.__multiply_by_weights(input_data)
         data_with_removed_bias = self.__remove_bias(multiplied_data)
         return data_with_removed_bias
 
     def update_weights(self, learning_rate: float):
-        self.weight_data.update_weights(learning_rate, self.__gradient_calculator)
+        self.weight_data.update_weights(learning_rate, self.__gradient_computer)
 
     def mark_as_let_through(self):
         self.__do_multiply_by_gradient = False
 
     def compute_weights_gradient(self) -> np.ndarray:
-        return self.__gradient_calculator.compute_weights_gradient()
+        return self.__gradient_computer.compute_weights_gradient()
 
     @property
     def output_neuron_count(self) -> int:

@@ -3,7 +3,7 @@ Module containing utilities related to neural network layer's weights.
 """
 import numpy as np
 
-from project_files.utils.gradient_calculator import GradientCalculator
+from project_files.utils.gradient_computer import GradientComputer
 
 
 class WeightMemento:
@@ -59,15 +59,15 @@ class WeightData:
         """
         self.__weights[indices] = value
 
-    # TODO: jesli sie da to wsadzic funkcjonalnosci zwiazane z obliczaniem gradientu (GradientCalculator) do tej klasy
-    def update_weights(self, learning_rate: float, gradient_calculator: GradientCalculator):
+    # TODO: jesli sie da to wsadzic funkcjonalnosci zwiazane z obliczaniem gradientu (GradientComputer) do tej klasy
+    def update_weights(self, learning_rate: float, gradient_computer: GradientComputer):
         """
         Updates weights using provided data.
 
         :param learning_rate: multiplier of weights update
-        :param gradient_calculator: gradient calculator needed to compute weight gradient
+        :param gradient_computer: gradient computer needed to compute weight gradient
         """
-        self.__weights -= learning_rate * gradient_calculator.compute_weights_gradient()
+        self.__weights -= learning_rate * gradient_computer.compute_weights_gradient()
 
     def save_weights(self) -> WeightMemento:
         """

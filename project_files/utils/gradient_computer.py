@@ -1,13 +1,13 @@
 """
-Module containing gradient calculator used to compute gradient of weights of neural network layers.
+Module containing gradient computer used to compute gradient of weights of neural network layers.
 """
 import numpy as np
 
 
-class GradientCalculator:
+class GradientComputer:
     """
-    Data object that can store byproduct values of forward and backward propagation of neural network. Using them, it
-    can compute weight gradient.
+    Class that can store byproduct values of forward and backward propagation of neural network. Using them, it can
+    compute weights' gradient.
     """
 
     def __init__(self):
