@@ -1,7 +1,7 @@
 """
 Module containing neural network class and builder needed to create it.
 """
-from typing import List
+from typing import List, Tuple
 
 import numpy as np
 
@@ -109,30 +109,13 @@ class NeuralNetworkBuilder:
         self.__data_processor = data_processor
         return self
 
-    def build(self, input_data_dimensions: tuple) -> NeuralNetwork:
+    def build(self, input_data_dimensions: Tuple[int]) -> NeuralNetwork:
         """
         Initializes and returns neural network with earlier provided layers.
 
+        :param input_data_dimensions: dimensions of single data sample
         :return: built neural network
         """
-        self.__initialize_layers(input_data_dimensions)
-
-        layer_manager = NetworkLayerManager(self.__layer_list)
+        layer_manager = NetworkLayerManager(self.__layer_list, input_data_dimensions)
         neural_network = NeuralNetwork(layer_manager, self.__error_function, self.__data_processor)
         return neural_network
-
-    def __initialize_layers(self, input_data_dimensions: tuple):
-        """
-        Initializes layers of built network.
-
-        :param input_data_dimensions: dimensions of single input data sample
-        """
-        next_layer_dimensions = input_data_dimensions
-
-        for layer in self.__layer_list:
-            next_layer_dimensions = layer.initialize(next_layer_dimensions)
-
-        for layer in reversed(self.__layer_list):
-            if isinstance(layer, WeightsHavingLayerLike):
-                layer.mark_as_let_through()
-                break
