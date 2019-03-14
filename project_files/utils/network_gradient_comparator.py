@@ -115,8 +115,7 @@ class NetworkGradientComparator:
         return gradient_matrix
 
     def __compute_single_weight_error(self, layer: WeightsHavingLayerLike, weight_indices: tuple,
-                                      input_data: np.ndarray,
-                                      data_labels: np.ndarray, epsilon: float) -> float:
+                                      input_data: np.ndarray, data_labels: np.ndarray, epsilon: float) -> float:
         """
         Computes error of network with added epsilon value to single weight.
 
