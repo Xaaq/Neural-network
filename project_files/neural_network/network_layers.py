@@ -2,6 +2,7 @@
 Module containing types of layers used in neural networks.
 """
 from abc import ABC, abstractmethod
+from typing import Optional
 
 import numpy as np
 
@@ -156,9 +157,9 @@ class FullyConnectedLayer(WeightsHavingLayerLike, LastLayerLike):
         self.__output_neuron_count = output_neuron_count
         self.__activation_function = activation_function
         self.__gradient_computer = GradientComputer()
-        self.__weight_data: WeightData = None
+        self.__weight_data: Optional[WeightData] = None
         self.__do_multiply_by_gradient = True
-        self.__data_before_forward_activation: np.ndarray = None
+        self.__data_before_forward_activation: Optional[np.ndarray] = None
 
     def initialize(self, input_data_dimensions: tuple) -> tuple:
         if len(input_data_dimensions) != self.__input_data_shape_length:
