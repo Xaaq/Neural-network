@@ -1,6 +1,8 @@
 """
 Module containing gradient computer used to compute gradient of weights of neural network layers.
 """
+from typing import Optional
+
 import numpy as np
 
 
@@ -14,8 +16,8 @@ class GradientComputer:
         """
         Initializes this data container data to empty values
         """
-        self.__before_forward_multiplication: np.ndarray = None
-        self.__before_backward_multiplication: np.ndarray = None
+        self.__before_forward_multiplication: Optional[np.ndarray] = None
+        self.__before_backward_multiplication: Optional[np.ndarray] = None
 
     def compute_weights_gradient(self) -> np.ndarray:
         """
