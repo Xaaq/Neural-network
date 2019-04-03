@@ -60,14 +60,14 @@ class WeightData:
         self.__weights[indices] = value
 
     # TODO: jesli sie da to wsadzic funkcjonalnosci zwiazane z obliczaniem gradientu (GradientComputer) do tej klasy
-    def update_weights(self, learning_rate: float, gradient_computer: GradientComputer):
+    def update_weights(self, learning_rate: float, weights_gradient: np.ndarray):
         """
         Updates weights using provided data.
 
         :param learning_rate: multiplier of weights update
-        :param gradient_computer: gradient computer needed to compute weight gradient
+        :param weights_gradient: gradient of weights
         """
-        self.__weights -= learning_rate * gradient_computer.compute_weights_gradient()
+        self.__weights -= learning_rate * weights_gradient
 
     def save_weights(self) -> WeightMemento:
         """

@@ -188,7 +188,7 @@ class FullyConnectedLayer(WeightsHavingLayerLike, LastLayerLike):
         return data_with_removed_bias
 
     def update_weights(self, learning_rate: float):
-        self.weight_data.update_weights(learning_rate, self.__gradient_computer)
+        self.weight_data.update_weights(learning_rate, self.compute_weights_gradient())
 
     def mark_as_let_through(self):
         self.__do_multiply_by_gradient = False
