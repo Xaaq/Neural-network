@@ -1,6 +1,6 @@
 """
-Module containing numerical gradient comparator that allows to numerically compute gradient of neural network layers'
-weights and compare results with gradient computed by propagation.
+Module containing gradient comparator that computes gradient of neural network layers' in numerical and propagation way
+and then compares them.
 """
 import itertools
 from math import log10
@@ -42,8 +42,8 @@ class NetworkGradientComparator:
         :param label_vector: vector of data labels
         :return: list of every layer order of magnitude
         """
-        numerical_gradient_list = self.compute_numerical_gradient(input_data, label_vector)
-        propagation_gradient_list = self.compute_propagation_gradient(input_data, label_vector)
+        numerical_gradient_list = self.__compute_numerical_gradient(input_data, label_vector)
+        propagation_gradient_list = self.__compute_propagation_gradient(input_data, label_vector)
         gradient_list = []
 
         for numerical_gradient, propagation_gradient in zip(numerical_gradient_list, propagation_gradient_list):
@@ -56,7 +56,7 @@ class NetworkGradientComparator:
 
         return gradient_list
 
-    def compute_propagation_gradient(self, input_data: np.ndarray, label_vector: np.ndarray) -> List[np.ndarray]:
+    def __compute_propagation_gradient(self, input_data: np.ndarray, label_vector: np.ndarray) -> List[np.ndarray]:
         """
         Computes and returns gradient of weights in network based on provided data using forward and backward
         propagation.
@@ -74,7 +74,7 @@ class NetworkGradientComparator:
                                             WeightsHavingLayerLike)
         return gradient_list
 
-    def compute_numerical_gradient(self, input_data: np.ndarray, label_vector: np.ndarray) -> List[np.ndarray]:
+    def __compute_numerical_gradient(self, input_data: np.ndarray, label_vector: np.ndarray) -> List[np.ndarray]:
         """
         Computes and returns gradient of weights in network based on provided data in numerical way. This method is very
         slow and should be used only to check if gradient computed by other methods is correct.
@@ -107,10 +107,10 @@ class NetworkGradientComparator:
         gradient_matrix = np.zeros(weight_matrix_shape)
         weight_matrix_index_ranges = [range(dimension) for dimension in weight_matrix_shape]
 
-        for row_and_column in itertools.product(*weight_matrix_index_ranges):
-            error1 = self.__compute_single_weight_error(layer, row_and_column, input_data, data_labels, epsilon)
-            error2 = self.__compute_single_weight_error(layer, row_and_column, input_data, data_labels, -epsilon)
-            gradient_matrix[row_and_column] = (error1 - error2) / (2 * epsilon)
+        for indices in itertools.product(*weight_matrix_index_ranges):
+            error1 = self.__compute_single_weight_error(layer, indices, input_data, data_labels, epsilon)
+            error2 = self.__compute_single_weight_error(layer, indices, input_data, data_labels, -epsilon)
+            gradient_matrix[indices] = (error1 - error2) / (2 * epsilon)
 
         return gradient_matrix
 
