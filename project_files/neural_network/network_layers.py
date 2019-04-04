@@ -182,9 +182,10 @@ class FullyConnectedLayer(WeightsHavingLayerLike, LastLayerLike):
         if self.__do_multiply_by_gradient:
             input_data *= self.__activation_function.calculate_gradient(self.__data_before_forward_activation)
 
-        self.__gradient_computer.save_data_before_backward_multiplication(input_data)
         multiplied_data = self.__multiply_by_weights(input_data)
         data_with_removed_bias = self.__remove_bias(multiplied_data)
+
+        self.__gradient_computer.save_data_before_backward_multiplication(input_data)
         return data_with_removed_bias
 
     def update_weights(self, learning_rate: float):
