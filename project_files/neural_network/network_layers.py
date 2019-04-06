@@ -22,6 +22,9 @@ class LayerLike(ABC):
         Initializes this layer parameters based on provided data. Also returns dimensions of data coming out of this
         layer.
 
+        This method is called by NeuralNetworkBuilder, so when not manually creating `NeuralNetwork` there is no need to
+        call it.
+
         :param input_data_dimensions: tuple of dimensions of data sample coming into this layer
         :return: tuple of dimensions of single data sample coming out of this layer
         :raises ValueError: if provided data dimensions can't be handled by this layer
