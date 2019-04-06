@@ -104,9 +104,9 @@ class NetworkGradientComparator:
         weight_matrix_index_ranges = [range(dimension) for dimension in weight_matrix_shape]
 
         for indices in itertools.product(*weight_matrix_index_ranges):
-            error1 = self.__compute_single_weight_error(layer, indices, input_data, data_labels, epsilon)
-            error2 = self.__compute_single_weight_error(layer, indices, input_data, data_labels, -epsilon)
-            gradient_matrix[indices] = (error1 - error2) / (2 * epsilon)
+            positive_error = self.__compute_single_weight_error(layer, indices, input_data, data_labels, epsilon)
+            negative_error = self.__compute_single_weight_error(layer, indices, input_data, data_labels, -epsilon)
+            gradient_matrix[indices] = (positive_error - negative_error) / (2 * epsilon)
 
         return gradient_matrix
 
