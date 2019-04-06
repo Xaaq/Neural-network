@@ -89,13 +89,13 @@ class NetworkGradientComparator:  # pylint: disable = too-few-public-methods
         return gradient_list
 
     def __compute_single_layer_gradient(self, layer: WeightsHavingLayerLike, input_data: np.ndarray,
-                                        data_labels: np.ndarray) -> np.ndarray:
+                                        label_matrix: np.ndarray) -> np.ndarray:
         """
         Numerically computes gradient of all weights in single layer.
 
         :param layer: layer for which compute weights
         :param input_data: data on which to compute gradient
-        :param data_labels: matrix of data labels
+        :param label_matrix: matrix of data labels
         :return: gradient of all weights in provided layer
         """
         epsilon = 1e-3
@@ -104,21 +104,21 @@ class NetworkGradientComparator:  # pylint: disable = too-few-public-methods
         weight_matrix_index_ranges = [range(dimension) for dimension in weight_matrix_shape]
 
         for indices in itertools.product(*weight_matrix_index_ranges):
-            positive_error = self.__compute_single_weight_error(layer, indices, input_data, data_labels, epsilon)
-            negative_error = self.__compute_single_weight_error(layer, indices, input_data, data_labels, -epsilon)
+            positive_error = self.__compute_single_weight_error(layer, indices, input_data, label_matrix, epsilon)
+            negative_error = self.__compute_single_weight_error(layer, indices, input_data, label_matrix, -epsilon)
             gradient_matrix[indices] = (positive_error - negative_error) / (2 * epsilon)
 
         return gradient_matrix
 
     def __compute_single_weight_error(self, layer: WeightsHavingLayerLike, weight_indices: Tuple[int, ...],
-                                      input_data: np.ndarray, data_labels: np.ndarray, epsilon: float) -> float:
+                                      input_data: np.ndarray, label_matrix: np.ndarray, epsilon: float) -> float:
         """
         Computes error of network with added epsilon value to single weight.
 
         :param layer: layer for which compute weight
         :param weight_indices: indices of weight for which compute gradient
         :param input_data: data on which to compute gradient
-        :param data_labels: matrix of data labels
+        :param label_matrix: matrix of data labels
         :param epsilon: epsilon term indicating how much to add to weight before computing error function on it
         :return: error of network
         """
@@ -126,7 +126,7 @@ class NetworkGradientComparator:  # pylint: disable = too-few-public-methods
 
         layer.weight_data[weight_indices] += epsilon
         data_after_forward_pass = self.__layer_manager.forward_propagation(input_data)
-        single_weight_error = self.__error_function.compute_error(data_after_forward_pass, data_labels)
+        single_weight_error = self.__error_function.compute_error(data_after_forward_pass, label_matrix)
 
         layer.weight_data.restore_weights(weight_memento)
         return single_weight_error
