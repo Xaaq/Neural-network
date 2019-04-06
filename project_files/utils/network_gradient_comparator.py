@@ -47,11 +47,8 @@ class NetworkGradientComparator:
         gradient_list = []
 
         for numerical_gradient, propagation_gradient in zip(numerical_gradient_list, propagation_gradient_list):
-            average_numerical_gradient = np.average(numerical_gradient)
-            average_propagation_gradient = np.average(propagation_gradient)
-
-            gradient_difference = average_numerical_gradient - average_propagation_gradient
-            gradient_magnitude = round(log10(abs(gradient_difference)))
+            gradient_difference = numerical_gradient - propagation_gradient
+            gradient_magnitude = round(log10(np.average(abs(gradient_difference))))
             gradient_list.append(gradient_magnitude)
 
         return gradient_list
