@@ -42,8 +42,12 @@ class NetworkGradientComparator:
         :param label_vector: vector of data labels
         :return: every layer order of magnitude
         """
-        numerical_gradient_list = self.__compute_numerical_gradient(input_data, label_vector)
-        propagation_gradient_list = self.__compute_propagation_gradient(input_data, label_vector)
+        label_count = self.__layer_manager.get_network_output_neuron_count()
+        normalized_data, label_matrix = self.__data_processor.preprocess_data(input_data, label_vector, label_count)
+
+        numerical_gradient_list = self.__compute_numerical_gradient(normalized_data, label_matrix)
+        propagation_gradient_list = self.__compute_propagation_gradient(normalized_data, label_matrix)
+
         gradient_list = []
 
         for numerical_gradient, propagation_gradient in zip(numerical_gradient_list, propagation_gradient_list):
@@ -53,39 +57,34 @@ class NetworkGradientComparator:
 
         return gradient_list
 
-    def __compute_propagation_gradient(self, input_data: np.ndarray, label_vector: np.ndarray) -> List[np.ndarray]:
+    def __compute_propagation_gradient(self, input_data: np.ndarray, label_matrix: np.ndarray) -> List[np.ndarray]:
         """
         Computes and returns gradient of weights in network based on provided data using forward and backward
         propagation.
 
         :param input_data: data on which compute gradient
-        :param label_vector: vector of data labels
+        :param label_matrix: matrix of data labels
         :return: gradient of weights in this network
         """
-        label_count = self.__layer_manager.get_network_output_neuron_count()
-        normalized_data, label_matrix = self.__data_processor.preprocess_data(input_data, label_vector, label_count)
-        self.__layer_manager.two_way_propagation(normalized_data, label_matrix)
+        self.__layer_manager.two_way_propagation(input_data, label_matrix)
 
         gradient_list = []
         self.__layer_manager.for_each_layer(lambda layer: gradient_list.append(layer.compute_weights_gradient()),
                                             WeightsHavingLayerLike)
         return gradient_list
 
-    def __compute_numerical_gradient(self, input_data: np.ndarray, label_vector: np.ndarray) -> List[np.ndarray]:
+    def __compute_numerical_gradient(self, input_data: np.ndarray, label_matrix: np.ndarray) -> List[np.ndarray]:
         """
         Computes and returns gradient of weights in network based on provided data in numerical way. This method is very
         slow and should be used only to check if gradient computed by other methods is correct.
 
         :param input_data: data on which compute gradient
-        :param label_vector: vector of data labels
+        :param label_matrix: matrix of data labels
         :return: gradient of weights in this network
         """
-        label_count = self.__layer_manager.get_network_output_neuron_count()
-        normalized_data, label_matrix = self.__data_processor.preprocess_data(input_data, label_vector, label_count)
-
         gradient_list = []
         self.__layer_manager.for_each_layer(lambda layer: gradient_list.append(
-            self.__compute_single_layer_gradient(layer, normalized_data, label_matrix)
+            self.__compute_single_layer_gradient(layer, input_data, label_matrix)
         ), WeightsHavingLayerLike)
         return gradient_list
 
