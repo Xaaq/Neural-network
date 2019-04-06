@@ -40,7 +40,7 @@ class NetworkGradientComparator:
 
         :param input_data: input data on which to compute gradients
         :param label_vector: vector of data labels
-        :return: list of every layer order of magnitude
+        :return: every layer order of magnitude
         """
         numerical_gradient_list = self.__compute_numerical_gradient(input_data, label_vector)
         propagation_gradient_list = self.__compute_propagation_gradient(input_data, label_vector)
