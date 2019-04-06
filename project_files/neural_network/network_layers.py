@@ -7,12 +7,13 @@ from typing import Optional
 import numpy as np
 
 from project_files.neural_network.activation_functions import AbstractActivationFunction
-from project_files.utils.weight_utils import WeightData, GradientComputer
+from project_files.utils.gradient_computer import GradientComputer
+from project_files.utils.weight_utils import WeightData
 
 
 class LayerLike(ABC):
     """
-    Base interface for all types of layers in neural network.
+    Interface for all types of layers in neural network.
     """
 
     @abstractmethod
