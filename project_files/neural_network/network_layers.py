@@ -146,7 +146,6 @@ class FullyConnectedLayer(WeightsHavingLayerLike, LastLayerLike):
     """
     Layer, in which every neuron from previous layer is connected to every neuron in next layer.
     """
-    __input_data_shape_length = 1
 
     def __init__(self, output_neuron_count: int, activation_function: AbstractActivationFunction):
         """
@@ -163,7 +162,9 @@ class FullyConnectedLayer(WeightsHavingLayerLike, LastLayerLike):
         self.__data_before_forward_activation: Optional[np.ndarray] = None
 
     def initialize(self, input_data_dimensions: Tuple[int, ...]) -> Tuple[int, ...]:
-        if len(input_data_dimensions) != self.__input_data_shape_length:
+        input_data_shape_length = 1
+
+        if len(input_data_dimensions) != input_data_shape_length:
             raise ValueError("Provided data dimensions shape is wrong")
 
         input_neuron_count = input_data_dimensions[0]
