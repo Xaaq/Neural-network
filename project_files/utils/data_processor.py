@@ -10,6 +10,7 @@ class DataProcessor:
     """
     Class that provides tools to pre-process data that are input to neural network and post-process its output.
     """
+
     @classmethod
     def preprocess_data(cls, input_data: np.ndarray, label_vector: np.ndarray,
                         number_of_labels: int) -> Tuple[np.ndarray, np.ndarray]:

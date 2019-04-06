@@ -107,7 +107,7 @@ class NeuralNetworkBuilder:
         self.__data_processor = data_processor
         return self
 
-    def build(self, input_data_dimensions: Tuple[int]) -> NeuralNetwork:
+    def build(self, input_data_dimensions: Tuple[int, ...]) -> NeuralNetwork:
         """
         Initializes and returns neural network with earlier provided layers.
 

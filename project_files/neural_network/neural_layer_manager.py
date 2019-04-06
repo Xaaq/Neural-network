@@ -13,7 +13,7 @@ class NetworkLayerManager:
     Manager of neural network layers.
     """
 
-    def __init__(self, list_of_layers: List[LayerLike], input_data_dimensions: Tuple[int]):
+    def __init__(self, list_of_layers: List[LayerLike], input_data_dimensions: Tuple[int, ...]):
         """
         Initializes empty layer list for this neural network.
 
@@ -96,7 +96,7 @@ class NetworkLayerManager:
                 function(layer)
 
     @staticmethod
-    def __initialize_layers(network_layers: List[LayerLike], input_data_dimensions: Tuple[int]) -> List[LayerLike]:
+    def __initialize_layers(network_layers: List[LayerLike], input_data_dimensions: Tuple[int, ...]) -> List[LayerLike]:
         """
         Initializes layers.
 

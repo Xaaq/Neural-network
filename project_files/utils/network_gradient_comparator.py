@@ -4,7 +4,7 @@ and then compares them.
 """
 import itertools
 from math import log10
-from typing import List
+from typing import List, Tuple
 
 import numpy as np
 
@@ -110,7 +110,7 @@ class NetworkGradientComparator:
 
         return gradient_matrix
 
-    def __compute_single_weight_error(self, layer: WeightsHavingLayerLike, weight_indices: tuple,
+    def __compute_single_weight_error(self, layer: WeightsHavingLayerLike, weight_indices: Tuple[int, ...],
                                       input_data: np.ndarray, data_labels: np.ndarray, epsilon: float) -> float:
         """
         Computes error of network with added epsilon value to single weight.

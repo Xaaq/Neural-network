@@ -2,7 +2,7 @@
 Module containing types of layers used in neural networks.
 """
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Optional, Tuple
 
 import numpy as np
 
@@ -17,7 +17,7 @@ class LayerLike(ABC):
     """
 
     @abstractmethod
-    def initialize(self, input_data_dimensions: tuple) -> tuple:
+    def initialize(self, input_data_dimensions: Tuple[int, ...]) -> Tuple[int, ...]:
         """
         Initializes this layer parameters based on provided data. Also returns dimensions of data coming out of this
         layer.
@@ -118,7 +118,7 @@ class FlatteningLayer(LastLayerLike):
         """
         self.__input_data_dimensions = None
 
-    def initialize(self, input_data_dimensions: tuple) -> tuple:
+    def initialize(self, input_data_dimensions: Tuple[int, ...]) -> Tuple[int, ...]:
         self.__input_data_dimensions = input_data_dimensions
         return (self.output_neuron_count,)
 
@@ -162,7 +162,7 @@ class FullyConnectedLayer(WeightsHavingLayerLike, LastLayerLike):
         self.__do_multiply_by_gradient = True
         self.__data_before_forward_activation: Optional[np.ndarray] = None
 
-    def initialize(self, input_data_dimensions: tuple) -> tuple:
+    def initialize(self, input_data_dimensions: Tuple[int, ...]) -> Tuple[int, ...]:
         if len(input_data_dimensions) != self.__input_data_shape_length:
             raise ValueError("Provided data dimensions shape is wrong")
 
@@ -257,7 +257,7 @@ class ConvolutionalLayer(WeightsHavingLayerLike):
     only chosen neurons from previous to next layer.
     """
 
-    def initialize(self, input_data_dimensions: tuple) -> tuple:
+    def initialize(self, input_data_dimensions: Tuple[int, ...]) -> Tuple[int, ...]:
         pass
 
     def forward_propagation(self, input_data: np.ndarray) -> np.ndarray:

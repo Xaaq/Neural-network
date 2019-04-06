@@ -1,6 +1,8 @@
 """
 Module containing utilities related to neural network layer's weights.
 """
+from typing import Tuple
+
 import numpy as np
 
 
@@ -31,7 +33,7 @@ class WeightData:
     Data object that encapsulates single layer weights and allows to do computing on them.
     """
 
-    def __init__(self, weight_dimensions: tuple):
+    def __init__(self, weight_dimensions: Tuple[int, ...]):
         """
         Initializes this data container weights with provided dimensions.
 
@@ -39,7 +41,7 @@ class WeightData:
         """
         self.__weights = self.__generate_random_weight_matrix(weight_dimensions)
 
-    def __getitem__(self, indices: tuple) -> float:
+    def __getitem__(self, indices: Tuple[int, ...]) -> float:
         """
         Gets single weight from given indices.
 
@@ -48,7 +50,7 @@ class WeightData:
         """
         return self.__weights[indices]
 
-    def __setitem__(self, indices: tuple, value: float):
+    def __setitem__(self, indices: Tuple[int, ...], value: float):
         """
         Sets particular weight to given value.
 
@@ -92,7 +94,7 @@ class WeightData:
         return self.__weights.copy()
 
     @staticmethod
-    def __generate_random_weight_matrix(weight_dimensions: tuple) -> np.ndarray:
+    def __generate_random_weight_matrix(weight_dimensions: Tuple[int, ...]) -> np.ndarray:
         """
         Randomly initializes weight matrix based on provided dimensions. All values in matrix are initialized in range
         [-0.5, 0.5].
