@@ -22,16 +22,18 @@ class NetworkLayerManager:
         """
         self.__layer_list = self.__initialize_layers(list_of_layers, input_data_dimensions)
 
-    def two_way_propagation(self, input_data: np.ndarray, label_matrix: np.ndarray):
+    def two_way_propagation(self, input_data: np.ndarray, label_matrix: np.ndarray) -> np.ndarray:
         """
-        Executes forward and then backward propagation.
+        Executes forward and then backward propagation. Returns data after forward pass,
 
         :param input_data: data on which to make forward pass
         :param label_matrix: matrix of real data labels
+        :return: data after forward pass
         """
         data_after_forward_pass = self.forward_propagation(input_data)
         error_matrix = data_after_forward_pass - label_matrix
         self.backward_propagation(error_matrix)
+        return data_after_forward_pass
 
     def forward_propagation(self, input_data: np.ndarray) -> np.ndarray:
         """

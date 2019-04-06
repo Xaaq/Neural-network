@@ -45,9 +45,7 @@ class NeuralNetwork:
         progress_bar = NeuralNetworkProgressBar(iteration_count)
 
         for _ in progress_bar:
-            data_after_forward_pass = self.__layer_manager.forward_propagation(normalized_data)
-            error_matrix = data_after_forward_pass - label_matrix
-            self.__layer_manager.backward_propagation(error_matrix)
+            data_after_forward_pass = self.__layer_manager.two_way_propagation(normalized_data, label_matrix)
             self.__layer_manager.update_weights(learning_rate)
 
             error = self.__error_function.compute_error(data_after_forward_pass, label_matrix)
