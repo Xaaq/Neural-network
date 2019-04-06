@@ -13,9 +13,9 @@ class AbstractErrorFunction(ABC):
 
     @classmethod
     @abstractmethod
-    def count_error(cls, label_probabilities_matrix: np.ndarray, actual_label_matrix: np.ndarray) -> float:
+    def compute_error(cls, label_probabilities_matrix: np.ndarray, actual_label_matrix: np.ndarray) -> float:
         """
-        Counts error of provided data.
+        Computes error of provided data.
 
         :param label_probabilities_matrix: predicted data labels probabilities
         :param actual_label_matrix: actual data labels
@@ -34,21 +34,21 @@ class CrossEntropyErrorFunction(AbstractErrorFunction):
     """
 
     @classmethod
-    def count_error(cls, label_probabilities_matrix: np.ndarray, actual_label_matrix: np.ndarray) -> float:
+    def compute_error(cls, label_probabilities_matrix: np.ndarray, actual_label_matrix: np.ndarray) -> float:
         error_sum = 0
 
         for label_probability_vector, actual_label_vector in zip(label_probabilities_matrix, actual_label_matrix):
-            error_sum += cls.__count_single_data_sample_error(label_probability_vector, actual_label_vector)
+            error_sum += cls.__compute_single_data_sample_error(label_probability_vector, actual_label_vector)
 
         data_samples_count = np.shape(actual_label_matrix)[0]
         average_error = error_sum / data_samples_count
         return average_error
 
     @staticmethod
-    def __count_single_data_sample_error(label_probabilities_vector: np.ndarray,
-                                         actual_label_vector: np.ndarray) -> float:
+    def __compute_single_data_sample_error(label_probabilities_vector: np.ndarray,
+                                           actual_label_vector: np.ndarray) -> float:
         """
-        Counts error between label probability vector and actual label vector.
+        Computes error between label probability vector and actual label vector.
 
         :param label_probabilities_vector: vector with labels probabilities
         :param actual_label_vector: vector with actual labels

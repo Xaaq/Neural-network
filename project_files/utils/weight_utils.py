@@ -3,8 +3,6 @@ Module containing utilities related to neural network layer's weights.
 """
 import numpy as np
 
-from project_files.utils.gradient_calculator import GradientCalculator
-
 
 class WeightMemento:
     """
@@ -30,7 +28,7 @@ class WeightMemento:
 
 class WeightData:
     """
-    Data object that encapsulates layer weights and allows to do computing on them.
+    Data object that encapsulates single layer weights and allows to do computing on them.
     """
 
     def __init__(self, weight_dimensions: tuple):
@@ -41,14 +39,32 @@ class WeightData:
         """
         self.__weights = self.__generate_random_weight_matrix(weight_dimensions)
 
-    def update_weights(self, learning_rate: float, gradient_helper_data: GradientCalculator):
+    def __getitem__(self, indices: tuple) -> float:
+        """
+        Gets single weight from given indices.
+
+        :param indices: indices of weight to get
+        :return: single weight
+        """
+        return self.__weights[indices]
+
+    def __setitem__(self, indices: tuple, value: float):
+        """
+        Sets particular weight to given value.
+
+        :param indices: indices of weights element to set
+        :param value: value to set
+        """
+        self.__weights[indices] = value
+
+    def update_weights(self, learning_rate: float, weights_gradient: np.ndarray):
         """
         Updates weights using provided data.
 
         :param learning_rate: multiplier of weights update
-        :param gradient_helper_data: additional data needed to compute weight gradient
+        :param weights_gradient: gradient of weights
         """
-        self.__weights -= learning_rate * gradient_helper_data.count_weight_gradient()
+        self.__weights -= learning_rate * weights_gradient
 
     def save_weights(self) -> WeightMemento:
         """
@@ -56,7 +72,7 @@ class WeightData:
 
         :return: memento object with saved weights
         """
-        return WeightMemento(self.weights)
+        return WeightMemento(self.weights_copy)
 
     def restore_weights(self, memento: WeightMemento):
         """
@@ -67,13 +83,13 @@ class WeightData:
         self.__weights = memento.get_weights()
 
     @property
-    def weights(self) -> np.ndarray:
+    def weights_copy(self) -> np.ndarray:
         """
-        Returns stored weights.
+        Returns copy of stored weights.
 
-        :return: stored weights
+        :return: copy of stored weights
         """
-        return self.__weights
+        return self.__weights.copy()
 
     @staticmethod
     def __generate_random_weight_matrix(weight_dimensions: tuple) -> np.ndarray:
