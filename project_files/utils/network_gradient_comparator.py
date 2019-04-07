@@ -14,7 +14,7 @@ from project_files.neural_network.neural_network import NetworkLayerManager
 from project_files.utils.data_processor import DataProcessor
 
 
-class NetworkGradientComparator:  # pylint: disable = too-few-public-methods
+class NetworkGradientComparator:
     """
     Class that has functionality of computing gradient numerically and by propagation. Its main usage is to compare
     these gradients to check how big is difference between them.

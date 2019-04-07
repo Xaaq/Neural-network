@@ -1,7 +1,6 @@
 """
 Module containing error functions used in neural networks.
 """
-# pylint: disable = too-few-public-methods
 from abc import abstractmethod, ABC
 
 import numpy as np

@@ -6,7 +6,7 @@ from typing import Tuple
 import numpy as np
 
 
-class WeightMemento:  # pylint: disable = too-few-public-methods
+class WeightMemento:
     """
     Memento used to remember neural network layer's weights.
     """
