@@ -11,7 +11,6 @@ import numpy as np
 from src.neural_network.error_functions import AbstractErrorFunction
 from src.neural_network.network_layers import WeightsHavingLayerLike
 from src.neural_network.neural_network import NetworkLayerManager
-from src.utils.data_processor import DataProcessor
 
 
 class NetworkGradientComparator:
@@ -20,33 +19,27 @@ class NetworkGradientComparator:
     these gradients to check how big is difference between them.
     """
 
-    def __init__(self, layer_manager: NetworkLayerManager, error_function: AbstractErrorFunction,
-                 data_processor: DataProcessor):
+    def __init__(self, layer_manager: NetworkLayerManager, error_function: AbstractErrorFunction):
         """
         Initializes this gradient comparator components.
 
         :param layer_manager: manager of neural network layers
         :param error_function: error function to use
-        :param data_processor: data processor to use
         """
         self.__layer_manager = layer_manager
         self.__error_function = error_function
-        self.__data_processor = data_processor
 
-    def compute_gradient_difference_magnitudes(self, input_data: np.ndarray, label_vector: np.ndarray) -> List[int]:
+    def compute_gradient_difference_magnitudes(self, input_data: np.ndarray, label_matrix: np.ndarray) -> List[int]:
         """
         Computes gradient of network in two ways: numerically and by propagation. Then computes average difference of
         gradients computed in both ways and returns list of order of magnitude of every layer.
 
         :param input_data: input data on which to compute gradients
-        :param label_vector: vector of data labels
+        :param label_matrix: matrix of data labels
         :return: every layer order of magnitude
         """
-        label_count = self.__layer_manager.get_network_output_neuron_count()
-        normalized_data, label_matrix = self.__data_processor.preprocess_data(input_data, label_vector, label_count)
-
-        numerical_gradient_list = self.__compute_numerical_gradient(normalized_data, label_matrix)
-        propagation_gradient_list = self.__compute_propagation_gradient(normalized_data, label_matrix)
+        numerical_gradient_list = self.__compute_numerical_gradient(input_data, label_matrix)
+        propagation_gradient_list = self.__compute_propagation_gradient(input_data, label_matrix)
 
         gradient_list = []
 
