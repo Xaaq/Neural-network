@@ -47,11 +47,11 @@ def main():
     """
     Shows functionality of `NeuralNetwork` class.
     """
-    train_data_x = mnist.train_images()[:1000]
-    train_data_y = mnist.train_labels()[:1000]
+    train_data_x = mnist.train_images()
+    train_data_y = mnist.train_labels()
 
-    test_data_x = mnist.test_images()[:100]
-    test_data_y = mnist.test_labels()[:100]
+    test_data_x = mnist.test_images()
+    test_data_y = mnist.test_labels()
 
     shape = train_data_x[0].shape
 
