@@ -40,7 +40,7 @@ def predict_and_print_results(neural_network: NeuralNetwork, type_of_data: str, 
     predicted_data = neural_network.predict(data_samples)
     number_of_correct_labels = np.sum(predicted_data == data_labels)
     prediction_accuracy = number_of_correct_labels * 100 / len(predicted_data)
-    print(f"Accuracy on {type_of_data} data: {prediction_accuracy}%")
+    print(f"Accuracy on {type_of_data} data: {prediction_accuracy:.2f}%")
 
 
 def main():
