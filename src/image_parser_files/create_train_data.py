@@ -5,7 +5,7 @@ import numpy
 import numpy as np
 from tqdm import tqdm
 
-from project_files.image_parser_files.label_img import label_img
+from src.image_parser_files.label_img import label_img
 
 
 def create_train_data(train_dir, img_size):

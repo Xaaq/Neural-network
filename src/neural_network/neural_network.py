@@ -5,11 +5,11 @@ from typing import List, Tuple
 
 import numpy as np
 
-from project_files.neural_network.error_functions import CrossEntropyErrorFunction, AbstractErrorFunction
-from project_files.neural_network.network_layers import LayerLike
-from project_files.neural_network.neural_layer_manager import NetworkLayerManager
-from project_files.utils.data_processor import DataProcessor
-from project_files.utils.neural_network_progress_bar import NeuralNetworkProgressBar
+from src.neural_network.error_functions import CrossEntropyErrorFunction, AbstractErrorFunction
+from src.neural_network.network_layers import LayerLike
+from src.neural_network.neural_layer_manager import NetworkLayerManager
+from src.utils.data_processor import DataProcessor
+from src.utils.neural_network_progress_bar import NeuralNetworkProgressBar
 
 
 class NeuralNetwork:

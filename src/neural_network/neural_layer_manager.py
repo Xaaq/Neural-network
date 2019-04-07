@@ -5,7 +5,7 @@ from typing import List, Callable, Type, Tuple
 
 import numpy as np
 
-from project_files.neural_network.network_layers import LayerLike, WeightsHavingLayerLike, LastLayerLike
+from src.neural_network.network_layers import LayerLike, WeightsHavingLayerLike, LastLayerLike
 
 
 class NetworkLayerManager:

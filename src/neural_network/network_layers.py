@@ -6,9 +6,9 @@ from typing import Optional, Tuple
 
 import numpy as np
 
-from project_files.neural_network.activation_functions import AbstractActivationFunction
-from project_files.utils.gradient_computer import GradientComputer
-from project_files.utils.weight_utils import WeightData
+from src.neural_network.activation_functions import AbstractActivationFunction
+from src.utils.gradient_computer import GradientComputer
+from src.utils.weight_utils import WeightData
 
 
 class LayerLike(ABC):

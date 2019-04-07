@@ -8,10 +8,10 @@ from typing import List, Tuple
 
 import numpy as np
 
-from project_files.neural_network.error_functions import AbstractErrorFunction
-from project_files.neural_network.network_layers import WeightsHavingLayerLike
-from project_files.neural_network.neural_network import NetworkLayerManager
-from project_files.utils.data_processor import DataProcessor
+from src.neural_network.error_functions import AbstractErrorFunction
+from src.neural_network.network_layers import WeightsHavingLayerLike
+from src.neural_network.neural_network import NetworkLayerManager
+from src.utils.data_processor import DataProcessor
 
 
 class NetworkGradientComparator:
