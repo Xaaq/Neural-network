@@ -35,8 +35,8 @@ class DataProcessor:
         :return: normalized data
         """
         if self.__data_mean is None or self.__data_std_dev is None:
-            self.__data_mean = np.mean(data_to_normalize)
-            self.__data_std_dev = np.std(data_to_normalize)
+            self.__data_mean = np.mean(data_to_normalize, 0)
+            self.__data_std_dev = np.std(data_to_normalize, 0)
 
         normalized_data = (data_to_normalize - self.__data_mean) / self.__data_std_dev
         return normalized_data
