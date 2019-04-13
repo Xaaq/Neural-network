@@ -6,6 +6,7 @@ from typing import List, Callable, Type, Tuple
 import numpy as np
 
 from src.neural_network.network_layers import LayerLike, WeightsHavingLayerLike, LastLayerLike
+from src.utils.data_processor import Dataset
 
 
 class NetworkLayerManager:
@@ -22,25 +23,26 @@ class NetworkLayerManager:
         """
         self.__layer_list = self.__initialize_layers(list_of_layers, input_data_dimensions)
 
-    def two_way_propagation(self, input_data: np.ndarray, label_matrix: np.ndarray) -> np.ndarray:
+    def two_way_propagation(self, dataset: Dataset) -> Dataset:
         """
         Executes forward and then backward propagation. Returns data after forward pass,
 
-        :param input_data: data on which to make forward pass
-        :param label_matrix: matrix of real data labels
+        :param dataset: dataset used to do two-way propagation
         :return: data after forward pass
         """
-        data_after_forward_pass = self.forward_propagation(input_data)
-        error_matrix = data_after_forward_pass - label_matrix
+        data_after_forward_pass = self.forward_propagation(dataset.data)
+        error_matrix = data_after_forward_pass - dataset.label_matrix
         self.backward_propagation(error_matrix)
-        return data_after_forward_pass
+
+        output_dataset = Dataset(dataset.data, data_after_forward_pass)
+        return output_dataset
 
     def forward_propagation(self, input_data: np.ndarray) -> np.ndarray:
         """
         Does forward propagation for every layer in this network based on given data.
 
         :param input_data: data on which to make forward pass
-        :return: output data of network
+        :return: output labels in form of matrix
         """
         data_for_next_layer = input_data
 

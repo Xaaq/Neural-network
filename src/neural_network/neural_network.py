@@ -3,11 +3,10 @@ Module containing neural network class and builder needed to create it.
 """
 from typing import List, Tuple
 
-import numpy as np
-
 from src.neural_network.error_functions import CrossEntropyErrorFunction, AbstractErrorFunction
 from src.neural_network.network_layers import LayerLike
 from src.neural_network.neural_layer_manager import NetworkLayerManager
+from src.utils.data_processor import Dataset
 from src.utils.neural_network_progress_bar import NeuralNetworkProgressBar
 
 
@@ -27,33 +26,33 @@ class NeuralNetwork:
         self.__layer_manager = layer_manager
         self.__error_function = error_function
 
-    def fit(self, input_data: np.ndarray, label_matrix: np.ndarray, iteration_count: int, learning_rate: float = 1):
+    def fit(self, dataset: Dataset, iteration_count: int, learning_rate: float = 1):
         """
         Fit this network to given data.
 
-        :param input_data: matrix of data on which network has to learn on
-        :param label_matrix: matrix of input data labels
+        :param dataset: dataset on which to execute learning
         :param iteration_count: how much learning iterations the network has to execute
         :param learning_rate: value specifying how much to adjust weights in respect to gradient
         """
         progress_bar = NeuralNetworkProgressBar(iteration_count)
 
         for _ in progress_bar:
-            data_after_forward_pass = self.__layer_manager.two_way_propagation(input_data, label_matrix)
+            data_after_forward_pass = self.__layer_manager.two_way_propagation(dataset)
             self.__layer_manager.update_weights(learning_rate)
 
-            error = self.__error_function.compute_error(data_after_forward_pass, label_matrix)
+            error = self.__error_function.compute_error(data_after_forward_pass.label_matrix, dataset.label_matrix)
             progress_bar.update_error(error)
 
-    def predict(self, input_data: np.ndarray) -> np.ndarray:
+    def predict(self, dataset: Dataset) -> Dataset:
         """
         Predicts output classes of input data.
 
-        :param input_data: data to predict
-        :return: matrix of output labels
+        :param dataset: dataset with filled input data
+        :return: dataset with filled input data and data labels
         """
-        output_data = self.__layer_manager.forward_propagation(input_data)
-        return output_data
+        predicted_labels = self.__layer_manager.forward_propagation(dataset.data)
+        output_dataset = Dataset(dataset.data, predicted_labels)
+        return output_dataset
 
 
 class NeuralNetworkBuilder:
