@@ -9,7 +9,7 @@ from typing import List, Tuple
 import numpy as np
 
 from src.neural_network.error_functions import ErrorFunctionLike
-from src.neural_network.network_layers import WeightsHavingLayerLike
+from src.neural_network.layer_interfaces import WeightsHavingLayerLike
 from src.neural_network.neural_network import NetworkLayerManager
 from src.utils.data_processor import Dataset
 

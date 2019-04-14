@@ -7,7 +7,7 @@ import mnist
 import numpy as np
 
 from src.neural_network.activation_functions import SigmoidFunction
-from src.neural_network.network_layers import FullyConnectedLayer, FlatteningLayer
+from src.neural_network.layer_implementations import FullyConnectedLayer, FlatteningLayer
 from src.neural_network.neural_network import NeuralNetworkBuilder, NeuralNetwork
 from src.utils.data_processor import DataProcessor, Dataset
 
