@@ -6,9 +6,9 @@ from typing import Tuple
 import mnist
 import numpy as np
 
+from src.network_core_tools.neural_network import NeuralNetwork, NeuralNetworkBuilder
 from src.network_functions.activation_functions import SigmoidFunction
 from src.layer_tools.layer_implementations import FullyConnectedLayer, FlatteningLayer
-from src.neural_network.neural_network import NeuralNetworkBuilder, NeuralNetwork
 from src.data_processing.data_processor import DataProcessor
 from src.data_processing.dataset import Dataset
 

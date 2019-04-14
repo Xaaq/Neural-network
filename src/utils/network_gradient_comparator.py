@@ -8,9 +8,9 @@ from typing import List, Tuple
 
 import numpy as np
 
+from src.network_core_tools.neural_layer_manager import NetworkLayerManager
 from src.network_functions.error_functions import ErrorFunctionLike
 from src.layer_tools.layer_interfaces import WeightsHavingLayerLike
-from src.neural_network.neural_network import NetworkLayerManager
 from src.data_processing.dataset import Dataset
 
 
