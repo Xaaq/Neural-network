@@ -57,7 +57,7 @@ class NeuralNetwork:
 
 class NeuralNetworkBuilder:
     """
-    Builder used to build neural network with given layers.
+    Builder used to build neural network with given parameters.
     """
 
     def __init__(self):

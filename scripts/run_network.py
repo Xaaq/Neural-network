@@ -12,9 +12,30 @@ from src.neural_network.neural_network import NeuralNetworkBuilder, NeuralNetwor
 from src.utils.data_processor import DataProcessor, Dataset
 
 
+def prepare_datasets() -> Tuple[Dataset, Dataset]:
+    """
+    Gets MNIST train and test image datasets, wraps them into :class:`Dataset` classes and returns them.
+
+    :return: tuple of train and test datasets
+    """
+    train_data_x = mnist.train_images()
+    train_data_y = mnist.train_labels()
+
+    test_data_x = mnist.test_images()
+    test_data_y = mnist.test_labels()
+
+    data_processor = DataProcessor()
+    train_dataset = Dataset(data_processor.normalize_data(train_data_x),
+                            data_processor.convert_label_vector_to_matrix(train_data_y))
+    test_dataset = Dataset(data_processor.normalize_data(test_data_x),
+                           data_processor.convert_label_vector_to_matrix(test_data_y))
+
+    return test_dataset, train_dataset
+
+
 def build_network(shape: Tuple[int, ...]) -> NeuralNetwork:
     """
-    Creates `NeuralNetwork` instance.
+    Creates :class:`NeuralNetwork` instance.
 
     :param shape: shape of single data sample
     :return: built `NeuralNetwork` instance
@@ -46,20 +67,9 @@ def predict_and_print_results(neural_network: NeuralNetwork, type_of_data: str, 
 
 def main():
     """
-    Shows functionality of `NeuralNetwork` class.
+    Shows functionality of :class:`NeuralNetwork` class.
     """
-    train_data_x = mnist.train_images()
-    train_data_y = mnist.train_labels()
-
-    test_data_x = mnist.test_images()
-    test_data_y = mnist.test_labels()
-
-    data_processor = DataProcessor()
-    train_dataset = Dataset(data_processor.normalize_data(train_data_x),
-                            data_processor.convert_label_vector_to_matrix(train_data_y))
-    test_dataset = Dataset(data_processor.normalize_data(test_data_x),
-                           data_processor.convert_label_vector_to_matrix(test_data_y))
-
+    test_dataset, train_dataset = prepare_datasets()
     shape = train_dataset.data[0].shape
 
     neural_network = build_network(shape)
