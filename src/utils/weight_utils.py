@@ -17,7 +17,7 @@ class WeightMemento:
 
         :param weights: weights to memorize
         """
-        self.__weights = weights.copy()
+        self.__weights: np.ndarray = weights.copy()
 
     def get_weights(self) -> np.ndarray:
         """
@@ -39,7 +39,7 @@ class WeightData:
 
         :param weight_dimensions: dimensions of weights that will be generated
         """
-        self.__weights = self.__generate_random_weight_matrix(weight_dimensions)
+        self.__weights: np.ndarray = self.__generate_random_weight_matrix(weight_dimensions)
 
     def __getitem__(self, indices: Tuple[int, ...]) -> float:
         """

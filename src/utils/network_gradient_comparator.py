@@ -27,8 +27,8 @@ class NetworkGradientComparator:
         :param layer_manager: manager of neural network layers
         :param error_function: error function to use
         """
-        self.__layer_manager = layer_manager
-        self.__error_function = error_function
+        self.__layer_manager: NetworkLayerManager = layer_manager
+        self.__error_function: ErrorFunctionLike = error_function
 
     def compute_gradient_difference_magnitudes(self, dataset: Dataset) -> List[int]:
         """

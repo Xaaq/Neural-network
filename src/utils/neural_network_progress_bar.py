@@ -21,8 +21,8 @@ class NeuralNetworkProgressBar:
         :param iteration_count: number of iterations on which this progress bar will operate
         """
         bar_format = "Learning progress: [{bar}]     Remaining time: {remaining}s     Learning error: {desc}"
-        self.__tqdm_bar = tqdm(range(iteration_count), file=sys.stdout, ncols=self.__column_width,
-                               bar_format=bar_format)
+        self.__tqdm_bar: tqdm = tqdm(range(iteration_count), file=sys.stdout, ncols=self.__column_width,
+                                     bar_format=bar_format)
 
     def update_error(self, error: float):
         """

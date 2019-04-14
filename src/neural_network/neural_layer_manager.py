@@ -21,7 +21,7 @@ class NetworkLayerManager:
         :param list_of_layers: list of layers used by this network
         :param input_data_dimensions: dimensions of single data sample - used to initialize layers
         """
-        self.__layer_list = self.__initialize_layers(list_of_layers, input_data_dimensions)
+        self.__layer_list: List[LayerLike] = self.__initialize_layers(list_of_layers, input_data_dimensions)
 
     def two_way_propagation(self, dataset: Dataset) -> Dataset:
         """

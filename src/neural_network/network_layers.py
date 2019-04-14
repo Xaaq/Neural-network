@@ -119,7 +119,7 @@ class FlatteningLayer(LastLayerLike):
         """
         Creates this layer.
         """
-        self.__input_data_dimensions = None
+        self.__input_data_dimensions: Optional[Tuple[int, ...]] = None
 
     def initialize(self, input_data_dimensions: Tuple[int, ...]) -> Tuple[int, ...]:
         self.__input_data_dimensions = input_data_dimensions
@@ -157,11 +157,11 @@ class FullyConnectedLayer(WeightsHavingLayerLike, LastLayerLike):
         :param output_neuron_count: number of output neurons from this layer
         :param activation_function: activation function that will be used in this layer
         """
-        self.__output_neuron_count = output_neuron_count
-        self.__activation_function = activation_function
-        self.__gradient_computer = GradientComputer()
+        self.__output_neuron_count: int = output_neuron_count
+        self.__activation_function: ActivationFunctionLike = activation_function
+        self.__gradient_computer: GradientComputer = GradientComputer()
         self.__weight_data: Optional[WeightData] = None
-        self.__do_multiply_by_gradient = True
+        self.__do_multiply_by_gradient: bool = True
         self.__data_before_forward_activation: Optional[np.ndarray] = None
 
     def initialize(self, input_data_dimensions: Tuple[int, ...]) -> Tuple[int, ...]:

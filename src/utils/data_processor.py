@@ -12,8 +12,8 @@ class Dataset:
     """
 
     def __init__(self, data: np.ndarray, label_matrix: Optional[np.ndarray] = None):
-        self.__data = data
-        self.__label_matrix = label_matrix
+        self.__data: np.ndarray = data
+        self.__label_matrix: Optional[np.ndarray] = label_matrix
 
     @property
     def data(self) -> np.ndarray:

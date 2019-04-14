@@ -23,8 +23,8 @@ class NeuralNetwork:
         :param layer_manager: manager of neural network layers
         :param error_function: error function used by this network
         """
-        self.__layer_manager = layer_manager
-        self.__error_function = error_function
+        self.__layer_manager: NetworkLayerManager = layer_manager
+        self.__error_function: ErrorFunctionLike = error_function
 
     def fit(self, dataset: Dataset, iteration_count: int, learning_rate: float = 1):
         """
