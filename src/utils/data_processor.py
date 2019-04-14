@@ -112,24 +112,3 @@ class DataProcessor:
             label_matrix.append(row)
 
         return np.array(label_matrix)
-
-    @staticmethod
-    def convert_label_matrix_to_vector(label_matrix: np.ndarray) -> np.ndarray:
-        """
-        Converts matrix of values (labels) to vector representation. For example converts following matrix:
-        ::
-            [[0, 1, 0, 0, 0],
-             [0, 0, 0, 1, 0],
-             [0, 0, 1, 0, 0],
-             [0, 1, 0, 0, 0],
-             [1, 0, 0, 0, 0]]
-
-        To following vector:
-        ::
-            [1, 3, 2, 1, 0]
-
-        :param label_matrix: matrix of labels
-        :return: vector of labels
-        """
-        output_class_vector = np.argmax(label_matrix, axis=1)
-        return output_class_vector
