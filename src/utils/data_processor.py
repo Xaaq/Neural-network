@@ -62,12 +62,12 @@ class DataProcessor:
         :param data_to_normalize: data to process
         :return: normalized data
         """
-        # TODO: make mean and std be computed for every dimension separately
         if self.__data_mean is None or self.__data_std_dev is None:
-            self.__data_mean = np.mean(data_to_normalize)
-            self.__data_std_dev = np.std(data_to_normalize)
+            self.__data_mean = np.mean(data_to_normalize, 0)
+            self.__data_std_dev = np.std(data_to_normalize, 0)
 
-        normalized_data = (data_to_normalize - self.__data_mean) / self.__data_std_dev
+        data_with_subtracted_mean = data_to_normalize - self.__data_mean
+        normalized_data = np.divide(data_with_subtracted_mean, self.__data_std_dev, where=self.__data_std_dev != 0)
         return normalized_data
 
     def convert_label_vector_to_matrix(self, label_vector: np.ndarray) -> np.ndarray:
