@@ -176,7 +176,7 @@ class FullyConnectedLayer(WeightsHavingLayerLike, LastLayerLike):
 
     def forward_propagation(self, input_data: np.ndarray) -> np.ndarray:
         data_with_bias = self.__add_bias(input_data)
-        multiplied_data = self.__multiply_by_transposed_weights(data_with_bias)
+        multiplied_data = data_with_bias @ np.transpose(self.weight_data.weights_copy)
         activated_data = self.__activation_function.calculate_result(multiplied_data)
 
         self.__gradient_computer.save_data_before_forward_multiplication(data_with_bias)
@@ -187,8 +187,8 @@ class FullyConnectedLayer(WeightsHavingLayerLike, LastLayerLike):
         if self.__do_multiply_by_gradient:
             input_data *= self.__activation_function.calculate_gradient(self.__data_before_forward_activation)
 
-        multiplied_data = self.__multiply_by_weights(input_data)
-        data_with_removed_bias = self.__remove_bias(multiplied_data)
+        multiplied_data = input_data @ self.weight_data.weights_copy
+        data_with_removed_bias = multiplied_data[:, 1:]
 
         self.__gradient_computer.save_data_before_backward_multiplication(input_data)
         return data_with_removed_bias
@@ -222,37 +222,6 @@ class FullyConnectedLayer(WeightsHavingLayerLike, LastLayerLike):
         bias = np.ones((data_samples_count, 1))
         data_with_bias = np.concatenate((bias, input_data), 1)
         return data_with_bias
-
-    @staticmethod
-    def __remove_bias(input_data: np.ndarray) -> np.ndarray:
-        """
-        Removes bias term from given data.
-
-        :param input_data: data to remove bias term from
-        :return: data with removed bias term
-        """
-        return input_data[:, 1:]
-
-    def __multiply_by_transposed_weights(self, input_data: np.ndarray) -> np.ndarray:
-        """
-        Does multiplication of data by transposed weight matrix.
-
-        :param input_data: data to multiply by transposed weight matrix
-        :return: data multiplied by transposed weight matrix
-        """
-        transposed_weights = np.transpose(self.weight_data.weights_copy)
-        multiplied_data = input_data @ transposed_weights
-        return multiplied_data
-
-    def __multiply_by_weights(self, input_data: np.ndarray) -> np.ndarray:
-        """
-        Does multiplication of data by weight matrix.
-
-        :param input_data: data to multiply by weight matrix
-        :return: data multiplied by weight matrix
-        """
-        multiplied_data = input_data @ self.weight_data.weights_copy
-        return multiplied_data
 
 
 class ConvolutionalLayer(WeightsHavingLayerLike):
