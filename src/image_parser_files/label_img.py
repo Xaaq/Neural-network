@@ -1,3 +1,4 @@
+# pylint: skip-file
 def label_img(img):
     word_label = img.split('.')[-3]
     # conversion to one-hot array [cat,dog]

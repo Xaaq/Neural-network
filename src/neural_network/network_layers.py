@@ -2,13 +2,13 @@
 Module containing types of layers used in neural networks.
 """
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Optional, Tuple
 
 import numpy as np
 
-from project_files.neural_network.activation_functions import AbstractActivationFunction
-from project_files.utils.gradient_computer import GradientComputer
-from project_files.utils.weight_utils import WeightData
+from src.neural_network.activation_functions import AbstractActivationFunction
+from src.utils.gradient_computer import GradientComputer
+from src.utils.weight_utils import WeightData
 
 
 class LayerLike(ABC):
@@ -17,10 +17,13 @@ class LayerLike(ABC):
     """
 
     @abstractmethod
-    def initialize(self, input_data_dimensions: tuple) -> tuple:
+    def initialize(self, input_data_dimensions: Tuple[int, ...]) -> Tuple[int, ...]:
         """
         Initializes this layer parameters based on provided data. Also returns dimensions of data coming out of this
         layer.
+
+        This method is called by NeuralNetworkBuilder, so when not manually creating `NeuralNetwork` there is no need to
+        call it.
 
         :param input_data_dimensions: tuple of dimensions of data sample coming into this layer
         :return: tuple of dimensions of single data sample coming out of this layer
@@ -118,7 +121,7 @@ class FlatteningLayer(LastLayerLike):
         """
         self.__input_data_dimensions = None
 
-    def initialize(self, input_data_dimensions: tuple) -> tuple:
+    def initialize(self, input_data_dimensions: Tuple[int, ...]) -> Tuple[int, ...]:
         self.__input_data_dimensions = input_data_dimensions
         return (self.output_neuron_count,)
 
@@ -146,7 +149,6 @@ class FullyConnectedLayer(WeightsHavingLayerLike, LastLayerLike):
     """
     Layer, in which every neuron from previous layer is connected to every neuron in next layer.
     """
-    __input_data_shape_length = 1
 
     def __init__(self, output_neuron_count: int, activation_function: AbstractActivationFunction):
         """
@@ -162,8 +164,10 @@ class FullyConnectedLayer(WeightsHavingLayerLike, LastLayerLike):
         self.__do_multiply_by_gradient = True
         self.__data_before_forward_activation: Optional[np.ndarray] = None
 
-    def initialize(self, input_data_dimensions: tuple) -> tuple:
-        if len(input_data_dimensions) != self.__input_data_shape_length:
+    def initialize(self, input_data_dimensions: Tuple[int, ...]) -> Tuple[int, ...]:
+        input_data_shape_length = 1
+
+        if len(input_data_dimensions) != input_data_shape_length:
             raise ValueError("Provided data dimensions shape is wrong")
 
         input_neuron_count = input_data_dimensions[0]
@@ -257,7 +261,7 @@ class ConvolutionalLayer(WeightsHavingLayerLike):
     only chosen neurons from previous to next layer.
     """
 
-    def initialize(self, input_data_dimensions: tuple) -> tuple:
+    def initialize(self, input_data_dimensions: Tuple[int, ...]) -> Tuple[int, ...]:
         pass
 
     def forward_propagation(self, input_data: np.ndarray) -> np.ndarray:
