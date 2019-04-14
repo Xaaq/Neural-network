@@ -5,10 +5,10 @@ from typing import Optional, Tuple
 
 import numpy as np
 
-from src.neural_network.activation_functions import ActivationFunctionLike
-from src.neural_network.layer_interfaces import WeightsHavingLayerLike, LastLayerLike
-from src.utils.gradient_computer import GradientComputer
-from src.utils.weight_utils import WeightData
+from src.network_functions.activation_functions import ActivationFunctionLike
+from src.layer_tools.layer_interfaces import WeightsHavingLayerLike, LastLayerLike
+from src.layer_tools.gradient_computer import GradientComputer
+from src.layer_tools.weight_utils import WeightData
 
 
 class FlatteningLayer(LastLayerLike):

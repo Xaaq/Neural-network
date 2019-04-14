@@ -3,10 +3,10 @@ Module containing neural network class and builder needed to create it.
 """
 from typing import List, Tuple
 
-from src.neural_network.error_functions import CrossEntropyErrorFunction, ErrorFunctionLike
-from src.neural_network.layer_interfaces import LayerLike
+from src.network_functions.error_functions import CrossEntropyErrorFunction, ErrorFunctionLike
+from src.layer_tools.layer_interfaces import LayerLike
 from src.neural_network.neural_layer_manager import NetworkLayerManager
-from src.utils.data_processor import Dataset
+from src.data_processing.dataset import Dataset
 from src.utils.neural_network_progress_bar import NeuralNetworkProgressBar
 
 

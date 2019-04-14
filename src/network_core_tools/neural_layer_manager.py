@@ -5,8 +5,8 @@ from typing import List, Callable, Type, Tuple
 
 import numpy as np
 
-from src.neural_network.layer_interfaces import LayerLike, WeightsHavingLayerLike, LastLayerLike
-from src.utils.data_processor import Dataset
+from src.layer_tools.layer_interfaces import LayerLike, WeightsHavingLayerLike, LastLayerLike
+from src.data_processing.dataset import Dataset
 
 
 class NetworkLayerManager:

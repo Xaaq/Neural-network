@@ -6,10 +6,11 @@ from typing import Tuple
 import mnist
 import numpy as np
 
-from src.neural_network.activation_functions import SigmoidFunction
-from src.neural_network.layer_implementations import FullyConnectedLayer, FlatteningLayer
+from src.network_functions.activation_functions import SigmoidFunction
+from src.layer_tools.layer_implementations import FullyConnectedLayer, FlatteningLayer
 from src.neural_network.neural_network import NeuralNetworkBuilder, NeuralNetwork
-from src.utils.data_processor import DataProcessor, Dataset
+from src.data_processing.data_processor import DataProcessor
+from src.data_processing.dataset import Dataset
 
 
 def prepare_datasets() -> Tuple[Dataset, Dataset]:

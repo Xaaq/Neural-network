@@ -6,7 +6,7 @@ from typing import Tuple
 
 import numpy as np
 
-from src.utils.weight_utils import WeightData
+from src.layer_tools.weight_utils import WeightData
 
 
 class LayerLike(ABC):
