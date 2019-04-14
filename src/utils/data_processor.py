@@ -17,10 +17,20 @@ class Dataset:
 
     @property
     def data(self) -> np.ndarray:
+        """
+        Returns data samples.
+
+        :return: data samples
+        """
         return self.__data
 
     @property
     def label_matrix(self) -> Optional[np.ndarray]:
+        """
+        Returns labels in form of matrix.
+
+        :return: label matrix
+        """
         return self.__label_matrix
 
     @property
