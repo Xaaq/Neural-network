@@ -70,9 +70,9 @@ def main():
     Shows functionality of :class:`NeuralNetwork` class.
     """
     test_dataset, train_dataset = prepare_datasets()
-    shape = train_dataset.data[0].shape
+    single_data_sample_shape = train_dataset.data[0].shape
 
-    neural_network = build_network(shape)
+    neural_network = build_network(single_data_sample_shape)
     neural_network.fit(train_dataset, 100, learning_rate=1)
 
     predict_and_print_results(neural_network, "train", train_dataset)
