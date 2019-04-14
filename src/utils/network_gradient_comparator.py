@@ -8,7 +8,7 @@ from typing import List, Tuple
 
 import numpy as np
 
-from src.neural_network.error_functions import AbstractErrorFunction
+from src.neural_network.error_functions import ErrorFunctionLike
 from src.neural_network.network_layers import WeightsHavingLayerLike
 from src.neural_network.neural_network import NetworkLayerManager
 from src.utils.data_processor import Dataset
@@ -20,7 +20,7 @@ class NetworkGradientComparator:
     these gradients to check how big is difference between them.
     """
 
-    def __init__(self, layer_manager: NetworkLayerManager, error_function: AbstractErrorFunction):
+    def __init__(self, layer_manager: NetworkLayerManager, error_function: ErrorFunctionLike):
         """
         Initializes this gradient comparator components.
 

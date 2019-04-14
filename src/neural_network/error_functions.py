@@ -6,7 +6,7 @@ from abc import abstractmethod, ABC
 import numpy as np
 
 
-class AbstractErrorFunction(ABC):
+class ErrorFunctionLike(ABC):
     """
     Base class for types of error functions.
     """
@@ -24,7 +24,7 @@ class AbstractErrorFunction(ABC):
         raise NotImplementedError
 
 
-class CrossEntropyErrorFunction(AbstractErrorFunction):
+class CrossEntropyErrorFunction(ErrorFunctionLike):
     """
     Class that implements following error function:
         :math:`error = -(y log(p) + (1 - y) log(1 - p))`

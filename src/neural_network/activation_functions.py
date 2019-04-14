@@ -6,7 +6,7 @@ from abc import ABC, abstractmethod
 import numpy as np
 
 
-class AbstractActivationFunction(ABC):
+class ActivationFunctionLike(ABC):
     """
     Base class for activation functions used in neural networks.
     """
@@ -34,7 +34,7 @@ class AbstractActivationFunction(ABC):
         raise NotImplementedError
 
 
-class ReluFunction(AbstractActivationFunction):
+class ReluFunction(ActivationFunctionLike):
     """
     RELU function with following formula:
         `if x < 0 then y = 0`
@@ -53,7 +53,7 @@ class ReluFunction(AbstractActivationFunction):
         return output_data
 
 
-class SigmoidFunction(AbstractActivationFunction):
+class SigmoidFunction(ActivationFunctionLike):
     """
     Sigmoid function with following formula:
         :math:`y = 1 / (1 + e^{-x})`

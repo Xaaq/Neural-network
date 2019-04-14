@@ -6,7 +6,7 @@ from typing import Optional, Tuple
 
 import numpy as np
 
-from src.neural_network.activation_functions import AbstractActivationFunction
+from src.neural_network.activation_functions import ActivationFunctionLike
 from src.utils.gradient_computer import GradientComputer
 from src.utils.weight_utils import WeightData
 
@@ -150,7 +150,7 @@ class FullyConnectedLayer(WeightsHavingLayerLike, LastLayerLike):
     Layer, in which every neuron from previous layer is connected to every neuron in next layer.
     """
 
-    def __init__(self, output_neuron_count: int, activation_function: AbstractActivationFunction):
+    def __init__(self, output_neuron_count: int, activation_function: ActivationFunctionLike):
         """
         Sets the number of output neurons from this layer.
 

@@ -3,7 +3,7 @@ Module containing neural network class and builder needed to create it.
 """
 from typing import List, Tuple
 
-from src.neural_network.error_functions import CrossEntropyErrorFunction, AbstractErrorFunction
+from src.neural_network.error_functions import CrossEntropyErrorFunction, ErrorFunctionLike
 from src.neural_network.network_layers import LayerLike
 from src.neural_network.neural_layer_manager import NetworkLayerManager
 from src.utils.data_processor import Dataset
@@ -16,7 +16,7 @@ class NeuralNetwork:
     To create instance of this class use :class:`NeuralNetworkBuilder`.
     """
 
-    def __init__(self, layer_manager: NetworkLayerManager, error_function: AbstractErrorFunction):
+    def __init__(self, layer_manager: NetworkLayerManager, error_function: ErrorFunctionLike):
         """
         Initializes this neural network components.
 
@@ -77,7 +77,7 @@ class NeuralNetworkBuilder:
         self.__layer_list = list_of_layers_to_set
         return self
 
-    def set_error_function(self, error_function: AbstractErrorFunction) -> "NeuralNetworkBuilder":
+    def set_error_function(self, error_function: ErrorFunctionLike) -> "NeuralNetworkBuilder":
         """
         Sets error function used in neural network.
 
